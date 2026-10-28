@@ -74,10 +74,10 @@ would actually run. Arm B is `vinai/PhoWhisper-small`, trained on Vietnamese (VL
 family and a different corpus. Both get the *identical* 16 kHz float32 samples, decoded once by ffmpeg, so any
 disagreement is attributable to the models and not to two different audio decoders.
 
-Why two: Whisper is documented to invent fluent text over non-speech. *Careless Whisper* (FAccT 2024) measured
-roughly **1% of segments wholly invented, 38% of those harmful, and the rate rising with the duration of
-non-vocal audio**. A tired 90-year-old is mostly pauses. The failure therefore lands precisely on the recording
-you cannot re-make. A single model cannot tell you when it did this; two models disagreeing can.
+Why two: *Careless Whisper* (FAccT 2024) measured roughly **1% of Whisper segments wholly invented, 38% of
+those harmful, and the rate rising with the duration of non-vocal audio**. A tired 90-year-old is mostly
+pauses, so the failure lands on the recording you cannot re-make. One model cannot tell you when it did this;
+two models disagreeing can.
 
 **2. The guard is the product.** A claim survives only if (a) its quote is a normalised substring of what both
 arms produced, (b) that quote can be located at a timestamp, and (c) any lunar date in it is resolvable by the
@@ -120,10 +120,9 @@ external oracles rather than against itself:
 | Lunar → solar dates | 17 published Vietnamese dates (Tết 2020–2036, Ông Táo, Giỗ Tổ Hùng Vương, Rằm tháng Bảy, Trung Thu 2026) | **17/17 exact**, all round-trip |
 | Structural invariants | 41 lunar years, 2020–2060 | **0 violations** |
 
-The Rằm tháng Bảy case is the one that matters: in 2026 that new moon falls at **00:36 on 13 August in UTC+7**,
-which is 01:36 on 13 August in UTC+8. A Chinese-locale table would still get that day right — but the same
-minutes-wide margin falls the other way often enough that a Vietnamese ritual calendar anchored to the wrong
-time zone will eventually hand a family the wrong day.
+The Rằm tháng Bảy case is the one that matters: in 2026 that new moon falls at **00:36 on 13 August in UTC+7** —
+36 minutes past midnight. Anchor the calendar to UTC+8 instead and the same margin lands on the wrong day the
+first time a new moon falls a few minutes earlier.
 
 **The two models are not equally good, which is why there are two.** Syllable-level WER against the published
 FLEURS reference transcripts, 18 clips, 204 s of audio, CPU only:
@@ -133,8 +132,8 @@ FLEURS reference transcripts, 18 clips, 204 s of audio, CPU only:
 | `whisper` | `faster-whisper/small` int8 | 0.221 | 0.52× |
 | `phowhisper` | `vinai/PhoWhisper-small` | **0.140** | 0.21× |
 
-The Vietnamese-specific model is 36% more accurate and 2.5× slower. Neither number decides anything on its own;
-what decides is that they make *different* mistakes, and that difference is the product.
+The Vietnamese-specific model is 36% more accurate and 2.5× slower. Neither number decides anything; what
+decides is that they make *different* mistakes, and the difference is the product.
 
 **What they invented in silence.** I spliced verified digital silence (peak **-91 dBFS**) into real recordings
 at real speech pauses and asked each model to transcribe only the silent window. The reference for every one of
@@ -175,17 +174,12 @@ ever reached the quotable set in either version — which is why the guard, not 
 | `regex_all_dates` | the degenerate "every date is a giỗ" arm | 0.194 | 0.286 | 0.231 | 0 | 0.001 |
 | `gemma3:1b-it-qat` | local, Ollama, 1B | **0.000** | **0.000** | **0.000** | 0 | 36.3 |
 
-The `gemma3:1b-it-qat` row is the one I want to be honest about: **a 1B model scores zero**. It does not produce
-bad claims; it produces well-formed claims that are not the ones in the text, and the guard refuses or the
-matcher misses every one of them. "Just run a small model locally" is the assumption this table kills. The
-regex arm shows the mirror image — 0.857 precision and 0.286 recall, because a pattern is never wrong about a
-date it can see and blind to every date phrased differently. What wins is neither: it is a model trained for
-this one narrow job, which is what the two top rows are.
-
-Two more things I would rather not print and am printing anyway: the fine-tune costs **3× the latency** (7.8 s
-vs 2.6 s per passage — it writes more, so it pays more), and the training set is **16 authored passages**, at
-which size a loss that collapses to ~0.00002 by step 40 is memorisation as much as learning. The held-out F1 is
-the number I trust; the training curve is the number that should make you suspicious.
+Two rows deserve their own sentence. **A 1B model scores zero** — not badly, zero: it produces well-formed
+claims that are not the ones in the text, so "just run a small model locally" is the assumption this table
+kills. And a regex gets 0.857 precision at 0.286 recall, because a pattern is never wrong about a date it can
+see and blind to every date phrased differently. What wins is neither; it is a model trained for this one narrow
+job. Two things I would rather not print: the fine-tune costs **3× the latency**, and 16 training passages is
+small enough that a loss collapsing to ~0.00002 by step 40 is memorisation as much as learning.
 
 ## What Went Wrong
 
@@ -203,11 +197,9 @@ syllables and disagree somewhere in almost every sentence, so the filter returne
 clean recording. The fix was to align the two transcripts syllable by syllable and keep the runs they agree on.
 Same principle, one level finer — and the difference between a product and a demo that outputs nothing.
 
-**The leap month was numbered like the month after it.** My first implementation assigned `tháng 4 nhuận` the
-number 5. The calendar still round-tripped its own tests, because it was consistently wrong in both directions.
-It was only caught by checking against *published* dates: 17 of them, from Wikipedia's Tết table and Vietnamese
-government and press sources. That is the whole argument for an external oracle, and it is why every calendar
-number in this post is quoted with the source a reader can open.
+**The leap month was numbered like the month after it.** My first version gave `tháng 4 nhuận` the number 5, and
+it still round-tripped its own tests — consistently wrong in both directions. Only the 17 *published* dates
+caught it. That is the whole argument for an external oracle.
 
 ## Why Does Open Innovation Matter?
 
