@@ -1,0 +1,637 @@
+{
+  "new_moons": {
+    "rows": [
+      {
+        "date_ut": "2025-01-29 12:36",
+        "usno_ut": "12:36",
+        "ours_ut": "2025-01-29 12:36",
+        "delta_seconds": 33.4,
+        "vn_local": "2025-01-29 19:36"
+      },
+      {
+        "date_ut": "2025-02-28 00:45",
+        "usno_ut": "00:45",
+        "ours_ut": "2025-02-28 00:45",
+        "delta_seconds": 29.6,
+        "vn_local": "2025-02-28 07:45"
+      },
+      {
+        "date_ut": "2025-03-29 10:58",
+        "usno_ut": "10:58",
+        "ours_ut": "2025-03-29 10:58",
+        "delta_seconds": 39.1,
+        "vn_local": "2025-03-29 17:58"
+      },
+      {
+        "date_ut": "2025-04-27 19:31",
+        "usno_ut": "19:31",
+        "ours_ut": "2025-04-27 19:32",
+        "delta_seconds": 67.4,
+        "vn_local": "2025-04-28 02:32"
+      },
+      {
+        "date_ut": "2025-05-27 03:02",
+        "usno_ut": "03:02",
+        "ours_ut": "2025-05-27 03:03",
+        "delta_seconds": 70.8,
+        "vn_local": "2025-05-27 10:03"
+      },
+      {
+        "date_ut": "2025-06-25 10:31",
+        "usno_ut": "10:31",
+        "ours_ut": "2025-06-25 10:32",
+        "delta_seconds": 65.5,
+        "vn_local": "2025-06-25 17:32"
+      },
+      {
+        "date_ut": "2025-07-24 19:11",
+        "usno_ut": "19:11",
+        "ours_ut": "2025-07-24 19:11",
+        "delta_seconds": 22.4,
+        "vn_local": "2025-07-25 02:11"
+      },
+      {
+        "date_ut": "2025-08-23 06:06",
+        "usno_ut": "06:06",
+        "ours_ut": "2025-08-23 06:06",
+        "delta_seconds": 28.5,
+        "vn_local": "2025-08-23 13:06"
+      },
+      {
+        "date_ut": "2025-09-21 19:54",
+        "usno_ut": "19:54",
+        "ours_ut": "2025-09-21 19:53",
+        "delta_seconds": -3.9,
+        "vn_local": "2025-09-22 02:53"
+      },
+      {
+        "date_ut": "2025-10-21 12:25",
+        "usno_ut": "12:25",
+        "ours_ut": "2025-10-21 12:25",
+        "delta_seconds": 6.3,
+        "vn_local": "2025-10-21 19:25"
+      },
+      {
+        "date_ut": "2025-11-20 06:47",
+        "usno_ut": "06:47",
+        "ours_ut": "2025-11-20 06:47",
+        "delta_seconds": 25.8,
+        "vn_local": "2025-11-20 13:47"
+      },
+      {
+        "date_ut": "2025-12-20 01:43",
+        "usno_ut": "01:43",
+        "ours_ut": "2025-12-20 01:43",
+        "delta_seconds": 44.1,
+        "vn_local": "2025-12-20 08:43"
+      },
+      {
+        "date_ut": "2026-01-18 19:52",
+        "usno_ut": "19:52",
+        "ours_ut": "2026-01-18 19:52",
+        "delta_seconds": 36.2,
+        "vn_local": "2026-01-19 02:52"
+      },
+      {
+        "date_ut": "2026-02-17 12:01",
+        "usno_ut": "12:01",
+        "ours_ut": "2026-02-17 12:01",
+        "delta_seconds": 57.1,
+        "vn_local": "2026-02-17 19:01"
+      },
+      {
+        "date_ut": "2026-03-19 01:23",
+        "usno_ut": "01:23",
+        "ours_ut": "2026-03-19 01:24",
+        "delta_seconds": 84.2,
+        "vn_local": "2026-03-19 08:24"
+      },
+      {
+        "date_ut": "2026-04-17 11:52",
+        "usno_ut": "11:52",
+        "ours_ut": "2026-04-17 11:52",
+        "delta_seconds": 48.7,
+        "vn_local": "2026-04-17 18:52"
+      },
+      {
+        "date_ut": "2026-05-16 20:01",
+        "usno_ut": "20:01",
+        "ours_ut": "2026-05-16 20:02",
+        "delta_seconds": 60.9,
+        "vn_local": "2026-05-17 03:02"
+      },
+      {
+        "date_ut": "2026-06-15 02:54",
+        "usno_ut": "02:54",
+        "ours_ut": "2026-06-15 02:54",
+        "delta_seconds": 56.0,
+        "vn_local": "2026-06-15 09:54"
+      },
+      {
+        "date_ut": "2026-07-14 09:43",
+        "usno_ut": "09:43",
+        "ours_ut": "2026-07-14 09:44",
+        "delta_seconds": 64.1,
+        "vn_local": "2026-07-14 16:44"
+      },
+      {
+        "date_ut": "2026-08-12 17:37",
+        "usno_ut": "17:37",
+        "ours_ut": "2026-08-12 17:36",
+        "delta_seconds": -7.3,
+        "vn_local": "2026-08-13 00:36"
+      },
+      {
+        "date_ut": "2026-09-11 03:27",
+        "usno_ut": "03:27",
+        "ours_ut": "2026-09-11 03:26",
+        "delta_seconds": -2.9,
+        "vn_local": "2026-09-11 10:26"
+      },
+      {
+        "date_ut": "2026-10-10 15:50",
+        "usno_ut": "15:50",
+        "ours_ut": "2026-10-10 15:50",
+        "delta_seconds": 2.6,
+        "vn_local": "2026-10-10 22:50"
+      },
+      {
+        "date_ut": "2026-11-09 07:02",
+        "usno_ut": "07:02",
+        "ours_ut": "2026-11-09 07:02",
+        "delta_seconds": 9.8,
+        "vn_local": "2026-11-09 14:02"
+      },
+      {
+        "date_ut": "2026-12-09 00:52",
+        "usno_ut": "00:52",
+        "ours_ut": "2026-12-09 00:52",
+        "delta_seconds": 6.9,
+        "vn_local": "2026-12-09 07:52"
+      },
+      {
+        "date_ut": "2027-01-07 20:24",
+        "usno_ut": "20:24",
+        "ours_ut": "2027-01-07 20:24",
+        "delta_seconds": 48.3,
+        "vn_local": "2027-01-08 03:24"
+      },
+      {
+        "date_ut": "2027-02-06 15:56",
+        "usno_ut": "15:56",
+        "ours_ut": "2027-02-06 15:56",
+        "delta_seconds": 27.7,
+        "vn_local": "2027-02-06 22:56"
+      },
+      {
+        "date_ut": "2027-03-08 09:29",
+        "usno_ut": "09:29",
+        "ours_ut": "2027-03-08 09:29",
+        "delta_seconds": 48.7,
+        "vn_local": "2027-03-08 16:29"
+      },
+      {
+        "date_ut": "2027-04-06 23:51",
+        "usno_ut": "23:51",
+        "ours_ut": "2027-04-06 23:51",
+        "delta_seconds": 27.9,
+        "vn_local": "2027-04-07 06:51"
+      },
+      {
+        "date_ut": "2027-05-06 10:58",
+        "usno_ut": "10:58",
+        "ours_ut": "2027-05-06 10:58",
+        "delta_seconds": 52.4,
+        "vn_local": "2027-05-06 17:58"
+      },
+      {
+        "date_ut": "2027-06-04 19:40",
+        "usno_ut": "19:40",
+        "ours_ut": "2027-06-04 19:40",
+        "delta_seconds": 41.5,
+        "vn_local": "2027-06-05 02:40"
+      },
+      {
+        "date_ut": "2027-07-04 03:02",
+        "usno_ut": "03:02",
+        "ours_ut": "2027-07-04 03:02",
+        "delta_seconds": 29.4,
+        "vn_local": "2027-07-04 10:02"
+      },
+      {
+        "date_ut": "2027-08-02 10:05",
+        "usno_ut": "10:05",
+        "ours_ut": "2027-08-02 10:05",
+        "delta_seconds": 33.5,
+        "vn_local": "2027-08-02 17:05"
+      },
+      {
+        "date_ut": "2027-08-31 17:41",
+        "usno_ut": "17:41",
+        "ours_ut": "2027-08-31 17:41",
+        "delta_seconds": 30.5,
+        "vn_local": "2027-09-01 00:41"
+      },
+      {
+        "date_ut": "2027-09-30 02:36",
+        "usno_ut": "02:36",
+        "ours_ut": "2027-09-30 02:36",
+        "delta_seconds": 28.3,
+        "vn_local": "2027-09-30 09:36"
+      },
+      {
+        "date_ut": "2027-10-29 13:36",
+        "usno_ut": "13:36",
+        "ours_ut": "2027-10-29 13:36",
+        "delta_seconds": 51.9,
+        "vn_local": "2027-10-29 20:36"
+      },
+      {
+        "date_ut": "2027-11-28 03:24",
+        "usno_ut": "03:24",
+        "ours_ut": "2027-11-28 03:24",
+        "delta_seconds": 42.3,
+        "vn_local": "2027-11-28 10:24"
+      },
+      {
+        "date_ut": "2027-12-27 20:12",
+        "usno_ut": "20:12",
+        "ours_ut": "2027-12-27 20:12",
+        "delta_seconds": 44.9,
+        "vn_local": "2027-12-28 03:12"
+      }
+    ],
+    "n": 37,
+    "worst_abs_seconds": 84.2,
+    "within_2_minutes": 37
+  },
+  "anchors": {
+    "rows": [
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2020
+        ],
+        "expected": [
+          2020,
+          1,
+          25
+        ],
+        "computed": [
+          2020,
+          1,
+          25
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2021
+        ],
+        "expected": [
+          2021,
+          2,
+          12
+        ],
+        "computed": [
+          2021,
+          2,
+          12
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2022
+        ],
+        "expected": [
+          2022,
+          2,
+          1
+        ],
+        "computed": [
+          2022,
+          2,
+          1
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2023
+        ],
+        "expected": [
+          2023,
+          1,
+          22
+        ],
+        "computed": [
+          2023,
+          1,
+          22
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2024
+        ],
+        "expected": [
+          2024,
+          2,
+          10
+        ],
+        "computed": [
+          2024,
+          2,
+          10
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2025
+        ],
+        "expected": [
+          2025,
+          1,
+          29
+        ],
+        "computed": [
+          2025,
+          1,
+          29
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2026
+        ],
+        "expected": [
+          2026,
+          2,
+          17
+        ],
+        "computed": [
+          2026,
+          2,
+          17
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2027
+        ],
+        "expected": [
+          2027,
+          2,
+          6
+        ],
+        "computed": [
+          2027,
+          2,
+          6
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2032
+        ],
+        "expected": [
+          2032,
+          2,
+          11
+        ],
+        "computed": [
+          2032,
+          2,
+          11
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2033
+        ],
+        "expected": [
+          2033,
+          1,
+          31
+        ],
+        "computed": [
+          2033,
+          1,
+          31
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2034
+        ],
+        "expected": [
+          2034,
+          2,
+          19
+        ],
+        "computed": [
+          2034,
+          2,
+          19
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2035
+        ],
+        "expected": [
+          2035,
+          2,
+          8
+        ],
+        "computed": [
+          2035,
+          2,
+          8
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Tết Nguyên Đán",
+        "lunar": [
+          1,
+          1,
+          2036
+        ],
+        "expected": [
+          2036,
+          1,
+          28
+        ],
+        "computed": [
+          2036,
+          1,
+          28
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"
+      },
+      {
+        "what": "Ông Công Ông Táo (23 tháng Chạp)",
+        "lunar": [
+          23,
+          12,
+          2025
+        ],
+        "expected": [
+          2026,
+          2,
+          10
+        ],
+        "computed": [
+          2026,
+          2,
+          10
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://vietnamnet.vn/ong-cong-ong-tao-nam-2026-ngay-nao-y-nghia-ngay-23-thang-chap-2483056.html"
+      },
+      {
+        "what": "Giỗ Tổ Hùng Vương",
+        "lunar": [
+          10,
+          3,
+          2026
+        ],
+        "expected": [
+          2026,
+          4,
+          26
+        ],
+        "computed": [
+          2026,
+          4,
+          26
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://xaydungchinhsach.chinhphu.vn/lich-nghi-le-gio-to-hung-vuong-30-4-1-5-quoc-khanh-2-9-nam-2026-119260222"
+      },
+      {
+        "what": "Rằm tháng Bảy / Lễ Vu Lan",
+        "lunar": [
+          15,
+          7,
+          2026
+        ],
+        "expected": [
+          2026,
+          8,
+          27
+        ],
+        "computed": [
+          2026,
+          8,
+          27
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://vietnamnet.vn/le-vu-lan-bao-hieu-nam-2026-vao-ngay-nao-2548093.html"
+      },
+      {
+        "what": "Tết Trung Thu",
+        "lunar": [
+          15,
+          8,
+          2026
+        ],
+        "expected": [
+          2026,
+          9,
+          25
+        ],
+        "computed": [
+          2026,
+          9,
+          25
+        ],
+        "ok": true,
+        "roundtrip": true,
+        "source": "https://thuvienphapluat.vn/phap-luat/ho-tro-phap-luat/ram-trung-thu-2026-vao-thu-may-ngay-nao-15-thang-8-am-lich"
+      }
+    ],
+    "n": 17,
+    "passed": 17,
+    "misses": []
+  },
+  "structure": {
+    "years": 41,
+    "violations": []
+  },
+  "generated_utc": "2026-10-28T00:22:16+00:00"
+}

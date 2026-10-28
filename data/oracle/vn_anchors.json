@@ -1,0 +1,23 @@
+{
+  "note": "Published Vietnamese lunar->solar anchors. Every entry is a date a reader can check at the source URL. 'lunar' means the Vietnamese lunar date, 'solar' the Gregorian date Vietnam actually observes.",
+  "anchors": [
+    {"lunar": [1, 1, 2020], "solar": [2020, 1, 25],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2021], "solar": [2021, 2, 12],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2022], "solar": [2022, 2, 1],   "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2023], "solar": [2023, 1, 22],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2024], "solar": [2024, 2, 10],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2025], "solar": [2025, 1, 29],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2026], "solar": [2026, 2, 17],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2027], "solar": [2027, 2, 6],   "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2032], "solar": [2032, 2, 11],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2033], "solar": [2033, 1, 31],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2034], "solar": [2034, 2, 19],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2035], "solar": [2035, 2, 8],   "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+    {"lunar": [1, 1, 2036], "solar": [2036, 1, 28],  "what": "Tết Nguyên Đán", "source": "https://en.wikipedia.org/wiki/T%E1%BA%BFt"},
+
+    {"lunar": [23, 12, 2025], "solar": [2026, 2, 10], "what": "Ông Công Ông Táo (23 tháng Chạp)", "source": "https://vietnamnet.vn/ong-cong-ong-tao-nam-2026-ngay-nao-y-nghia-ngay-23-thang-chap-2483056.html"},
+    {"lunar": [10, 3, 2026],  "solar": [2026, 4, 26], "what": "Giỗ Tổ Hùng Vương", "source": "https://xaydungchinhsach.chinhphu.vn/lich-nghi-le-gio-to-hung-vuong-30-4-1-5-quoc-khanh-2-9-nam-2026-119260222"},
+    {"lunar": [15, 7, 2026],  "solar": [2026, 8, 27], "what": "Rằm tháng Bảy / Lễ Vu Lan", "source": "https://vietnamnet.vn/le-vu-lan-bao-hieu-nam-2026-vao-ngay-nao-2548093.html"},
+    {"lunar": [15, 8, 2026],  "solar": [2026, 9, 25], "what": "Tết Trung Thu", "source": "https://thuvienphapluat.vn/phap-luat/ho-tro-phap-luat/ram-trung-thu-2026-vao-thu-may-ngay-nao-15-thang-8-am-lich"}
+  ]
+}

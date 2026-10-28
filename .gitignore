@@ -7,3 +7,8 @@ data/private/
 *.wav
 *.mp3
 .env
+
+# model weights and audio are never committed
+data/models/
+corpus/audio/
+data/runs/*/audio.wav
