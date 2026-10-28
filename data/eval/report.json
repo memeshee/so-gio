@@ -11,7 +11,7 @@
     "torch": "2.14.1+cu130",
     "whisper_model": "Systran/faster-whisper-small (CTranslate2 int8, cpu)",
     "phowhisper_model": "vinai/PhoWhisper-small",
-    "run_at": "2026-10-28T08:39:55+07:00"
+    "run_at": "2026-10-28T09:02:42+07:00"
   },
   "corpus": {
     "name": "so-gio-vn-fleurs-dev",
@@ -22,10 +22,11 @@
     "inserted_silence_seconds": 15.0,
     "silence_licence": "CC-BY-4.0",
     "probes": {
+      "isolated": 3,
       "splice": 3,
       "tail": 6,
       "tail_seconds": 5.0,
-      "silence_seconds": 45.0
+      "silence_seconds": 49.25
     }
   },
   "asr": {
@@ -476,6 +477,64 @@
         "text_clean": "bản báo cáo mở đầu bằng lời biện hộ cho cuộc tranh luận mở và tạo lập sự đồng thuận của hoa kỳ về chính sách đối với trung đông."
       },
       {
+        "probe": "isolated",
+        "clip_id": "iso_silence_01",
+        "source_clip_id": "fleurs_vi_013",
+        "audio_path": "data/eval/probe/iso_silence_01_0.wav",
+        "arm": "whisper",
+        "window_start": 0.0,
+        "window_end": 5.583,
+        "window_seconds": 5.583,
+        "timestamp_usable": true,
+        "median_segment_seconds": 6.0,
+        "prev_segment_end": null,
+        "next_segment_start": null,
+        "syllables": 16,
+        "syllables_overlap50": 16,
+        "syllables_added": 16,
+        "added_text": "cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo",
+        "wpm_of_silence": 172.0,
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 6.0,
+            "text": "Cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo.",
+            "syllables": 16
+          }
+        ],
+        "text_probe": "Cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo.",
+        "text_clean": ""
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_01",
+        "source_clip_id": "fleurs_vi_013",
+        "audio_path": "data/eval/probe/iso_silence_01_0.wav",
+        "arm": "phowhisper",
+        "window_start": 0.0,
+        "window_end": 5.583,
+        "window_seconds": 5.583,
+        "timestamp_usable": true,
+        "median_segment_seconds": 5.58,
+        "prev_segment_end": null,
+        "next_segment_start": null,
+        "syllables": 11,
+        "syllables_overlap50": 11,
+        "syllables_added": 11,
+        "added_text": "điều này từ thành công của tài xế hạng cao hơn",
+        "wpm_of_silence": 118.2,
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 5.58,
+            "text": "điều này từ thành công của tài xế hạng cao hơn.",
+            "syllables": 11
+          }
+        ],
+        "text_probe": "điều này từ thành công của tài xế hạng cao hơn.",
+        "text_clean": ""
+      },
+      {
         "probe": "splice",
         "clip_id": "silence_02",
         "source_clip_id": "fleurs_vi_017",
@@ -527,6 +586,64 @@
         "text_clean": "tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường có hai người khuyết tật ngồi xe lăn mọi người cứ trầm lên và xô đẩy họ a khman vơ say nói."
       },
       {
+        "probe": "isolated",
+        "clip_id": "iso_silence_02",
+        "source_clip_id": "fleurs_vi_017",
+        "audio_path": "data/eval/probe/iso_silence_02_0.wav",
+        "arm": "whisper",
+        "window_start": 0.0,
+        "window_end": 6.459,
+        "window_seconds": 6.459,
+        "timestamp_usable": true,
+        "median_segment_seconds": 6.0,
+        "prev_segment_end": null,
+        "next_segment_start": null,
+        "syllables": 15,
+        "syllables_overlap50": 15,
+        "syllables_added": 15,
+        "added_text": "hãy subscribe cho kênh ghiền mì gõ để không bỏ lỡ những video hấp dẫn",
+        "wpm_of_silence": 139.3,
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 6.0,
+            "text": "Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn",
+            "syllables": 15
+          }
+        ],
+        "text_probe": "Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn",
+        "text_clean": ""
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_02",
+        "source_clip_id": "fleurs_vi_017",
+        "audio_path": "data/eval/probe/iso_silence_02_0.wav",
+        "arm": "phowhisper",
+        "window_start": 0.0,
+        "window_end": 6.459,
+        "window_seconds": 6.459,
+        "timestamp_usable": true,
+        "median_segment_seconds": 6.46,
+        "prev_segment_end": null,
+        "next_segment_start": null,
+        "syllables": 14,
+        "syllables_overlap50": 14,
+        "syllables_added": 14,
+        "added_text": "một trong những thay đổi đều được xem là một tài liệu sản phẩm",
+        "wpm_of_silence": 130.1,
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 6.46,
+            "text": "một trong những thay đổi đều được xem là một tài liệu sản phẩm.",
+            "syllables": 14
+          }
+        ],
+        "text_probe": "một trong những thay đổi đều được xem là một tài liệu sản phẩm.",
+        "text_clean": ""
+      },
+      {
         "probe": "splice",
         "clip_id": "silence_03",
         "source_clip_id": "fleurs_vi_008",
@@ -576,6 +693,57 @@
         ],
         "text_probe": "tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm hai mươi mốt hai mươi chấm dứt chuỗi mười lăm trận toàn thắng của oan tắc.",
         "text_clean": "tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm hai mươi mốt hai mươi chấm dứt chuỗi mười lăm trận toàn thắng của oan tắc."
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_03",
+        "source_clip_id": "fleurs_vi_008",
+        "audio_path": "data/eval/probe/iso_silence_03_0.wav",
+        "arm": "whisper",
+        "window_start": 0.0,
+        "window_end": 7.207,
+        "window_seconds": 7.207,
+        "timestamp_usable": true,
+        "median_segment_seconds": 0.0,
+        "prev_segment_end": null,
+        "next_segment_start": null,
+        "syllables": 0,
+        "syllables_overlap50": 0,
+        "syllables_added": 0,
+        "added_text": "",
+        "wpm_of_silence": 0.0,
+        "segments": [],
+        "text_probe": "",
+        "text_clean": ""
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_03",
+        "source_clip_id": "fleurs_vi_008",
+        "audio_path": "data/eval/probe/iso_silence_03_0.wav",
+        "arm": "phowhisper",
+        "window_start": 0.0,
+        "window_end": 7.207,
+        "window_seconds": 7.207,
+        "timestamp_usable": true,
+        "median_segment_seconds": 7.21,
+        "prev_segment_end": null,
+        "next_segment_start": null,
+        "syllables": 17,
+        "syllables_overlap50": 17,
+        "syllables_added": 17,
+        "added_text": "một trong những thay tòa soạn nhất là các tàu ngầm vũ trang sức và tính mạng",
+        "wpm_of_silence": 141.5,
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 7.21,
+            "text": "một trong những thay tòa soạn nhất là các tàu ngầm vũ trang sức và tính mạng.",
+            "syllables": 17
+          }
+        ],
+        "text_probe": "một trong những thay tòa soạn nhất là các tàu ngầm vũ trang sức và tính mạng.",
+        "text_clean": ""
       },
       {
         "probe": "tail",
@@ -844,17 +1012,49 @@
     ],
     "per_arm": {
       "whisper": {
-        "probes": 9,
-        "probes_with_invention": 0,
-        "invented_syllables": 0,
-        "syllables_in_window_by_timestamp": 0,
-        "silence_seconds": 45.0,
-        "wpm_of_silence": 0.0,
+        "probes": 12,
+        "probes_with_invention": 2,
+        "invented_syllables": 31,
+        "syllables_in_window_by_timestamp": 31,
+        "silence_seconds": 64.25,
+        "wpm_of_silence": 28.9,
         "timestamp_usable": false,
-        "timestamp_usable_probes": "5/9",
+        "timestamp_usable_probes": "8/12",
         "median_segment_seconds": 8.0,
-        "worst_examples": [],
+        "worst_examples": [
+          {
+            "clip_id": "iso_silence_01",
+            "audio": "data/eval/probe/iso_silence_01_0.wav",
+            "arm": "whisper",
+            "timestamp": "00:00–00:06",
+            "start": 0.0,
+            "end": 6.0,
+            "text": "Cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo.",
+            "syllables": 16,
+            "window": "00:00–00:06",
+            "located": true
+          },
+          {
+            "clip_id": "iso_silence_02",
+            "audio": "data/eval/probe/iso_silence_02_0.wav",
+            "arm": "whisper",
+            "timestamp": "00:00–00:06",
+            "start": 0.0,
+            "end": 6.0,
+            "text": "Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn",
+            "syllables": 15,
+            "window": "00:00–00:06",
+            "located": true
+          }
+        ],
         "by_probe": {
+          "isolated": {
+            "probes": 3,
+            "probes_with_invention": 2,
+            "invented_syllables": 31,
+            "silence_seconds": 19.25,
+            "wpm_of_silence": 96.6
+          },
           "splice": {
             "probes": 3,
             "probes_with_invention": 0,
@@ -872,17 +1072,49 @@
         }
       },
       "phowhisper": {
-        "probes": 9,
-        "probes_with_invention": 0,
-        "invented_syllables": 0,
-        "syllables_in_window_by_timestamp": 96,
-        "silence_seconds": 45.0,
-        "wpm_of_silence": 0.0,
+        "probes": 12,
+        "probes_with_invention": 3,
+        "invented_syllables": 42,
+        "syllables_in_window_by_timestamp": 138,
+        "silence_seconds": 64.25,
+        "wpm_of_silence": 39.2,
         "timestamp_usable": false,
-        "timestamp_usable_probes": "0/9",
-        "median_segment_seconds": 17.26,
-        "worst_examples": [],
+        "timestamp_usable_probes": "3/12",
+        "median_segment_seconds": 16.8,
+        "worst_examples": [
+          {
+            "clip_id": "iso_silence_03",
+            "audio": "data/eval/probe/iso_silence_03_0.wav",
+            "arm": "phowhisper",
+            "timestamp": "00:00–00:07",
+            "start": 0.0,
+            "end": 7.21,
+            "text": "một trong những thay tòa soạn nhất là các tàu ngầm vũ trang sức và tính mạng.",
+            "syllables": 17,
+            "window": "00:00–00:07",
+            "located": true
+          },
+          {
+            "clip_id": "iso_silence_02",
+            "audio": "data/eval/probe/iso_silence_02_0.wav",
+            "arm": "phowhisper",
+            "timestamp": "00:00–00:06",
+            "start": 0.0,
+            "end": 6.46,
+            "text": "một trong những thay đổi đều được xem là một tài liệu sản phẩm.",
+            "syllables": 14,
+            "window": "00:00–00:06",
+            "located": true
+          }
+        ],
         "by_probe": {
+          "isolated": {
+            "probes": 3,
+            "probes_with_invention": 3,
+            "invented_syllables": 42,
+            "silence_seconds": 19.25,
+            "wpm_of_silence": 130.9
+          },
           "splice": {
             "probes": 3,
             "probes_with_invention": 0,
@@ -900,8 +1132,9 @@
         }
       }
     },
-    "silence_seconds_total": 45.0,
+    "silence_seconds_total": 64.25,
     "probe_count": {
+      "isolated": 3,
       "splice": 3,
       "tail": 6
     }
@@ -933,6 +1166,30 @@
         "leaked_into_quotable_syllables": 0
       },
       {
+        "probe": "isolated",
+        "clip_id": "iso_silence_01",
+        "arm": "whisper",
+        "window": "00:00–00:06",
+        "invented_syllables": 16,
+        "invented_syllables_by_timestamp": 16,
+        "flagged": false,
+        "flagged_spans": [],
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_01",
+        "arm": "phowhisper",
+        "window": "00:00–00:06",
+        "invented_syllables": 11,
+        "invented_syllables_by_timestamp": 11,
+        "flagged": false,
+        "flagged_spans": [],
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      {
         "probe": "splice",
         "clip_id": "silence_02",
         "arm": "whisper",
@@ -951,6 +1208,30 @@
         "window": "00:08–00:13",
         "invented_syllables": 0,
         "invented_syllables_by_timestamp": 37,
+        "flagged": false,
+        "flagged_spans": [],
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_02",
+        "arm": "whisper",
+        "window": "00:00–00:06",
+        "invented_syllables": 15,
+        "invented_syllables_by_timestamp": 15,
+        "flagged": false,
+        "flagged_spans": [],
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_02",
+        "arm": "phowhisper",
+        "window": "00:00–00:06",
+        "invented_syllables": 14,
+        "invented_syllables_by_timestamp": 14,
         "flagged": false,
         "flagged_spans": [],
         "flagged_syllables": 0,
@@ -978,6 +1259,36 @@
         "flagged": false,
         "flagged_spans": [],
         "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_03",
+        "arm": "whisper",
+        "window": "00:00–00:07",
+        "invented_syllables": 0,
+        "invented_syllables_by_timestamp": 0,
+        "flagged": false,
+        "flagged_spans": [],
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      {
+        "probe": "isolated",
+        "clip_id": "iso_silence_03",
+        "arm": "phowhisper",
+        "window": "00:00–00:07",
+        "invented_syllables": 17,
+        "invented_syllables_by_timestamp": 17,
+        "flagged": true,
+        "flagged_spans": [
+          {
+            "start": 0.0,
+            "end": 7.207,
+            "text": "một trong những thay tòa soạn nhất là các tàu ngầm vũ trang sức và tính mạng."
+          }
+        ],
+        "flagged_syllables": 17,
         "leaked_into_quotable_syllables": 0
       },
       {
@@ -1125,36 +1436,36 @@
         "leaked_into_quotable_syllables": 0
       }
     ],
-    "probe_arm_pairs": 18,
-    "silences_with_invention": 0,
-    "flagged": 0,
-    "catch_rate": null,
+    "probe_arm_pairs": 24,
+    "silences_with_invention": 5,
+    "flagged": 1,
+    "catch_rate": 0.2,
     "per_arm": {
       "whisper": {
-        "pairs": 9,
-        "pairs_with_invention": 0,
+        "pairs": 12,
+        "pairs_with_invention": 2,
         "flagged": 0,
-        "catch_rate": null,
-        "invented_syllables": 0,
+        "catch_rate": 0.0,
+        "invented_syllables": 31,
         "flagged_syllables": 0,
         "leaked_into_quotable_syllables": 0,
-        "candidates": 6,
-        "suppressed_by_other_arm": 6
+        "candidates": 8,
+        "suppressed_by_other_arm": 8
       },
       "phowhisper": {
-        "pairs": 9,
-        "pairs_with_invention": 0,
-        "flagged": 0,
-        "catch_rate": null,
-        "invented_syllables": 0,
-        "flagged_syllables": 0,
+        "pairs": 12,
+        "pairs_with_invention": 3,
+        "flagged": 1,
+        "catch_rate": 0.333,
+        "invented_syllables": 42,
+        "flagged_syllables": 17,
         "leaked_into_quotable_syllables": 0,
-        "candidates": 3,
-        "suppressed_by_other_arm": 3
+        "candidates": 6,
+        "suppressed_by_other_arm": 5
       }
     },
-    "spans_fired_anywhere": 0,
-    "recordings_checked": 27,
+    "spans_fired_anywhere": 1,
+    "recordings_checked": 30,
     "false_positive": {
       "n_clean_clips": 18,
       "clips_with_invented_flag": 0,

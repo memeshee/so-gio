@@ -123,6 +123,16 @@ def run_whisper(audio, path: str = "", model=None) -> ArmResult:
                      segs, dt, audio_duration(path) or len(audio) / 16000)
 
 
+def probe_duration(path: str) -> float:
+    """Container duration in seconds, via ffprobe. Cheap; used for span attributes, not for decoding."""
+    proc = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                           "-of", "default=nw=1:nk=1", path], capture_output=True, text=True)
+    try:
+        return round(float(proc.stdout.strip()), 3)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def load_pcm(path: str, sr: int = 16000) -> "np.ndarray":
     """Decode any audio file to 16 kHz mono float32 with ffmpeg.
 

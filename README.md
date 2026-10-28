@@ -114,6 +114,7 @@ PASS — the timer lived in the server, not in the killed process.
 | Extraction | `core/extract.py` | A local model may only *suggest*; `enable_thinking=False` on every arm so a reasoning model cannot hide its answer. |
 | Durable timers | `workflows/gio.py` | One `GioWorkflow` per person, durable sleep, retrying activity, acknowledge signal, re-arms yearly. |
 | Static demo | `site/build_site.py` | Generated from real run data, no network calls, no framework, `.nojekyll`, prints correctly. |
+| Tracing | `core/telemetry.py` | One transaction per run, spans on every stage, and **no helper that accepts free text** — a trace of a private recording must not contain the recording. |
 | Evaluation | `eval/` | Four measurements, one command, cached so a re-run is fast. |
 
 **Deviation from the usual stack, stated:** the backend is Python, not Rust, because the core *is* the ASR
@@ -129,7 +130,7 @@ pip install faster-whisper transformers torch temporalio sentry-sdk numpy
 
 python data/extract/build_dataset.py          # verify the dataset's gold quotes
 python -m core.oracle                          # calendar vs USNO + 17 published dates
-python -m unittest discover -s tests           # 14 tests
+python -m unittest discover -s tests           # 19 tests
 python pipeline.py --self-test                 # guard on an authored fixture, no audio needed
 
 # the whole thing on real audio (models download on first run, ~1.2 GB)

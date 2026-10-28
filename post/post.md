@@ -58,7 +58,7 @@ git clone https://github.com/memeshee/so-gio && cd so-gio
 python data/extract/build_dataset.py        # 24 authored passages, 65 gold claims, every quote verified
 python -m core.oracle                        # calendar vs USNO + 17 published Vietnamese dates
 python pipeline.py --audio corpus/audio/fleurs_vi_001.wav   # the whole thing, end to end
-python -m unittest discover -s tests         # 14 tests on the parts that decide what a family is told
+python -m unittest discover -s tests         # 19 tests on the parts that decide what a family is told
 python eval/run_eval.py                      # every number in this post
 ```
 
@@ -233,7 +233,7 @@ replace.
 This build was done with a coding agent (Hermes, running the model this IDE was talking to) driving the repo,
 the tests, and the calendar validation, with the human making the calls that mattered: which product, which
 category claims, what to refuse. DevRelay's transcript parser does not cover this harness, so rather than
-embed a session it cannot read, here is what the agent actually did: wrote 14 tests and the oracle before the
+embed a session it cannot read, here is what the agent actually did: wrote 19 tests and the oracle before the
 features, ran the calendar against USNO until the worst new-moon delta was under two minutes, caught the
 reasoning-model trap by reading a probe rather than the docs, and produced every table in this post with a
 script that can be re-run.
@@ -264,7 +264,7 @@ supposed to keep her.
 
 ## Prize Categories
 
-Six categories, each one carrying a real part of the build rather than a logo.
+Five categories, each one carrying a real part of the build rather than a logo.
 
 - **Best Use of Tinker** — `Qwen/Qwen3.5-4B` with a rank-16 LoRA trained on Tinker for one task: copy a
   verbatim span into a structured claim, or emit nothing. Scored on 8 held-out passages against the same base
@@ -279,18 +279,33 @@ Six categories, each one carrying a real part of the build rather than a logo.
   mid-timer and a different operating-system process woke up and delivered the reminder. Temporal's brief asks
   for software that "survives failures, retries flaky tool calls, and picks up where it left off" — this is that,
   at a one-year scale, which is the scale a ritual actually runs on.
-- **Best Use of Sentry Agent Tracing** — every stage is traced: each ASR arm's latency and realtime factor, the
-  extraction call's prompt and completion tokens, the guard's keep/refuse decisions with reasons, and the
-  workflow's delivery attempts. The debugging story this produced is in *What Went Wrong* — the trace is how the
-  zero-quotable-spans bug was found, not a screenshot stapled on afterwards.
-- **Best Use of a .tech Domain** — `gio.uconfidant.tech`, claimed through Hacktoberfest, serving the static
-  build. Static on purpose: a page about a private recording must not depend on anybody's free tier staying
-  awake. Of the 36 live demo links among this series' winners, **five are already dead** — all of them suspended
-  free instances of exactly that kind. Add a `.nojekyll`, publish the prebuilt HTML, and the link a judge clicks
-  three weeks from now is the same bytes I tested today.
-- **Best Use of Ultramarine** — the remembrance paragraph is the one place a stronger hosted model genuinely
-  earns its keep, while extraction and the date stay local. The post states the run's actual cost, and states
-  the limit plainly: prose is not the guarantee; the guarantee is local.
+- **Best Use of Sentry Agent Tracing** — one root transaction per pipeline run (`core/telemetry.py`), with a
+  span for each ASR arm carrying latency, realtime factor and segment count; a span for the extraction call with
+  its prompt and completion tokens; a span for the guard carrying kept and refused counts plus **one span per
+  refusal** with the rule that fired; and a per-attempt span in the Temporal activity, so the delivery that
+  finally succeeded shows up as three attempts with the retry backoff visible between them.
+
+  The design decision is the part worth judging. Tracing a product whose entire premise is that a private
+  recording never leaves the house means the trace must not contain the recording. So the module exposes no
+  helper that accepts free text — every call site passes a number, a duration or an enum. `send_default_pii` is
+  forced off, request bodies are never attached, and any string that could have come from audio goes through
+  `redact()`, which keeps length, syllable count and a fingerprint and throws away the words. A contributor who
+  wants to log a transcript has to edit that file, which is exactly the kind of change a reviewer sees. Verified
+  by watching an envelope leave the process: `Sending envelope [envelope with 1 items (transaction)]
+  project:4512199446757376 host:o1068235.ingest.us.sentry.io`.
+
+  And the honest limit: tracing did not find my bug. The bug that mattered — an invention detector that caught
+  **zero** of three hallucinations — was found by measuring against ground truth, and it is in *What I Measured*
+  with the numbers attached. Sentry's contribution here is the refusal ledger and the retry trail: the thing that
+  makes "we invented nothing" and "it fired after the crash" auditable after the fact rather than asserted.
+
+- **Best Use of a .tech Domain** — `gio.uconfidant.tech`, claimed through Hacktoberfest. The demo behind it is a
+  static build, on purpose: a page about a private recording must not depend on anybody's free tier staying
+  awake. Of the 36 live demo links among this series' winners, **five are already dead** — every one of them a
+  suspended free instance. A prebuilt HTML page with a `.nojekyll` costs nothing to serve, loads in one request,
+  prints correctly, and the link a judge clicks three weeks after the deadline is the same bytes I tested today.
+  (While the DNS record propagates, the same build answers at
+  [memeshee.github.io/so-gio](https://memeshee.github.io/so-gio/).)
 
 ---
 

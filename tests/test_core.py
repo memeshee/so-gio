@@ -121,3 +121,55 @@ class TestGuard(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestTelemetryPrivacy(unittest.TestCase):
+    """The trace of a private recording must not contain the recording.
+
+    This is the one property in the project that a regression would silently violate: nobody notices
+    transcript text appearing in a trace until it is already in a third-party system.
+    """
+
+    PHRASE = "ngày giỗ của bà là mùng 10 tháng 3 âm lịch"
+
+    def test_redact_keeps_no_words(self):
+        from core import telemetry
+        out = telemetry.redact(self.PHRASE)
+        flat = repr(out)
+        # A two-character numeric token can coincide with digits inside any digest, so the assertion is on the
+        # words that could identify a family: nothing of three syllables' worth or more survives.
+        for syllable in self.PHRASE.split():
+            if len(syllable) >= 3:
+                self.assertNotIn(syllable, flat, f"redact leaked the syllable {syllable!r}")
+        self.assertRegex(out["fingerprint"], r"^[0-9a-f]{12}$")
+        self.assertEqual(out["syllables"], len(self.PHRASE.split()))
+        self.assertEqual(out["len"], len(self.PHRASE))
+
+    def test_redact_is_stable_within_a_process(self):
+        from core import telemetry
+        self.assertEqual(telemetry.redact(self.PHRASE), telemetry.redact(self.PHRASE))
+
+    def test_redact_is_not_a_commitment_across_processes(self):
+        """If two processes agreed on the fingerprint, a guess could be confirmed from the trace."""
+        import subprocess, sys
+        code = ("import sys; sys.path.insert(0,'.'); from core import telemetry; "
+                "print(telemetry.redact('ngày giỗ của bà là mùng 10 tháng 3')['fingerprint'])")
+        out = [subprocess.run([sys.executable, "-c", code], capture_output=True, text=True).stdout.strip()
+               for _ in range(2)]
+        self.assertNotEqual(out[0], out[1], "fingerprint must be keyed per process")
+
+    def test_redact_handles_empty(self):
+        from core import telemetry
+        self.assertEqual(telemetry.redact(None), {"len": 0, "syllables": 0})
+        self.assertEqual(telemetry.redact(""), {"len": 0, "syllables": 0})
+
+    def test_init_is_a_no_op_without_a_dsn(self):
+        from core import telemetry
+        saved = telemetry._INITIALISED
+        telemetry._INITIALISED = False
+        try:
+            import unittest.mock as mock
+            with mock.patch.object(telemetry, "dsn", return_value=None):
+                self.assertFalse(telemetry.init("test"))
+        finally:
+            telemetry._INITIALISED = saved

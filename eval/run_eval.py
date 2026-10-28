@@ -242,6 +242,7 @@ def build_probes(silence_manifest: dict, manifest: dict) -> list[dict]:
                deterministically, from the same clean clips.
     """
     probes = []
+    PROBE_DIR.mkdir(parents=True, exist_ok=True)
     for clip in silence_manifest["clips"]:
         for ins in clip["insertions"]:
             probes.append({
@@ -251,7 +252,24 @@ def build_probes(silence_manifest: dict, manifest: dict) -> list[dict]:
                 "window_end": round(ins["offset_seconds"] + ins["duration_seconds"], 3),
                 "note": "digital silence spliced into a detected mid-utterance pause",
             })
-    PROBE_DIR.mkdir(parents=True, exist_ok=True)
+        # Third condition: hand the verified non-vocal window to each model on its own. There is no
+        # speech in the input at all, so anything that comes back is fabrication by construction —
+        # no timestamps, no second opinion, no threshold to tune.
+        for i, win in enumerate(clip.get("silent_windows", [])):
+            out = PROBE_DIR / f"iso_{clip['id']}_{i}.wav"
+            if not out.exists():
+                import subprocess
+                subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(ROOT / clip["output_audio"]),
+                                "-ss", f"{win['start_seconds']:.3f}",
+                                "-t", f"{win['end_seconds'] - win['start_seconds']:.3f}",
+                                "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", str(out)], check=True)
+            probes.append({
+                "probe": "isolated", "clip_id": f"iso_{clip['id']}", "source_clip_id": clip["source_clip_id"],
+                "audio_path": str(out.relative_to(ROOT)), "clean_audio": None,
+                "window_start": 0.0,
+                "window_end": round(win["end_seconds"] - win["start_seconds"], 3),
+                "note": "verified non-vocal window fed to the model alone; the reference is nothing",
+            })
     for clip in manifest["clips"][::TAIL_STRIDE]:
         out = PROBE_DIR / f"tail_{clip['id']}.wav"
         if not out.exists():
@@ -286,12 +304,16 @@ def measure_invention(runner: Runner, probes: list[dict]) -> dict:
     events = []
     for p in probes:
         h = runner.hearing(p["audio_path"])
-        hc = runner.hearing(p["clean_audio"])
-        arms, clean_arms = arm_of(h), arm_of(hc)
+        hc = runner.hearing(p["clean_audio"]) if p["clean_audio"] else None
+        arms = arm_of(h)
+        clean_arms = arm_of(hc) if hc else {}
         for name in ("whisper", "phowhisper"):
             n_mid, segs_mid = syllables_in(arms[name], p["window_start"], p["window_end"], "midpoint")
             n_ov, _ = syllables_in(arms[name], p["window_start"], p["window_end"], "overlap50")
-            added, added_text = content_delta(clean_arms[name]["text"], arms[name]["text"])
+            # With no clean counterpart (isolated window) the reference is nothing, so every
+            # syllable the model returns is a content delta.
+            added, added_text = content_delta(
+                clean_arms[name]["text"] if clean_arms else "", arms[name]["text"])
             durs = sorted(s["end"] - s["start"] for s in arms[name]["segments"]) or [0.0]
             median_seg = durs[len(durs) // 2]
             before = [s["end"] for s in arms[name]["segments"] if s["end"] <= p["window_start"]]
@@ -313,7 +335,7 @@ def measure_invention(runner: Runner, probes: list[dict]) -> dict:
                 if p["window_end"] > p["window_start"] else 0.0,
                 "segments": segs_mid,
                 "text_probe": arms[name]["text"],
-                "text_clean": clean_arms[name]["text"],
+                "text_clean": clean_arms[name]["text"] if clean_arms else "",
             })
 
     per_arm, by_probe = {}, {}
@@ -358,7 +380,7 @@ def measure_invention(runner: Runner, probes: list[dict]) -> dict:
             "median_segment_seconds": round(sorted(e["median_segment_seconds"] for e in evs)[len(evs) // 2], 2) if evs else None,
             "worst_examples": worst_examples[:2],
         }
-        for kind in ("splice", "tail"):
+        for kind in ("isolated", "splice", "tail"):
             sub = [e for e in evs if e["probe"] == kind]
             sec = sum(e["window_seconds"] for e in sub)
             per_arm[name].setdefault("by_probe", {})[kind] = {
@@ -372,7 +394,7 @@ def measure_invention(runner: Runner, probes: list[dict]) -> dict:
             "silence_seconds_total": round(sum(e["window_seconds"] for e in events
                                                if e["arm"] == "whisper"), 2),
             "probe_count": {kind: sum(1 for p in probes if p["probe"] == kind)
-                            for kind in ("splice", "tail")}}
+                            for kind in ("isolated", "splice", "tail")}}
 
 
 # --------------------------------------------------------------------------- 3. does the diff catch it?
@@ -699,11 +721,13 @@ def main(argv=None) -> int:
                                              for i in c["insertions"]), 2),
         "silence_licence": silence_manifest["clips"][0]["licence"],
         "probes": {
+            "isolated": sum(len(c.get("silent_windows", [])) for c in silence_manifest["clips"]),
             "splice": len(silence_manifest["clips"]),
             "tail": len(manifest["clips"][::TAIL_STRIDE]),
             "tail_seconds": TAIL_SECONDS,
-            "silence_seconds": round(sum(i["duration_seconds"] for c in silence_manifest["clips"]
-                                         for i in c["insertions"])
+            "silence_seconds": round(sum(w["end_seconds"] - w["start_seconds"]
+                                         for c in silence_manifest["clips"]
+                                         for w in c.get("silent_windows", []))
                                      + TAIL_SECONDS * len(manifest["clips"][::TAIL_STRIDE]), 2),
         },
     }

@@ -1,0 +1,22 @@
+[1/4] ASR accuracy: 18 clips × 2 arms
+      whisper     mean WER 0.221  RTF 0.52x
+      phowhisper  mean WER 0.140  RTF 0.21x
+[2/4] invention over silence: 12 probes × 2 arms
+Loading weights:   0%|          | 0/480 [00:00<?, ?it/s]Loading weights:  21%|██        | 99/480 [00:00<00:00, 985.66it/s]Loading weights:  41%|████▏     | 199/480 [00:00<00:00, 990.61it/s]Loading weights:  67%|██████▋   | 322/480 [00:00<00:00, 1096.27it/s]Loading weights:  95%|█████████▌| 458/480 [00:00<00:00, 1198.16it/s]Loading weights: 100%|██████████| 480/480 [00:00<00:00, 1140.88it/s]
+[transformers] Using custom `forced_decoder_ids` from the (generation) config. This is deprecated in favor of the `task` and `language` flags/config options.
+[transformers] Transcription using a multilingual Whisper will default to language detection followed by transcription instead of translation to English. This might be a breaking change for your use case. If you want to instead always translate your audio to English, make sure to pass `language='en'`. See https://github.com/huggingface/transformers/pull/28687 for more details.
+[transformers] Passing `generation_config` together with generation-related arguments=({'begin_suppress_tokens', 'suppress_tokens'}) is deprecated and will be removed in future versions. Please pass either a `generation_config` object OR all generation parameters explicitly, but not both.
+[transformers] Both `max_new_tokens` (=225) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer WhisperTokenizer. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+Traceback (most recent call last):
+  File "/home/kiter/hackathon/so-gio/eval/run_eval.py", line 796, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/kiter/hackathon/so-gio/eval/run_eval.py", line 745, in main
+    report["invention"] = measure_invention(runner, probes)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kiter/hackathon/so-gio/eval/run_eval.py", line 338, in measure_invention
+    "text_clean": clean_arms[name]["text"],
+                  ~~~~~~~~~~^^^^^^
+KeyError: 'whisper'
+EXIT=1

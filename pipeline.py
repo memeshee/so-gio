@@ -18,7 +18,7 @@ import json
 import pathlib
 import sys
 
-from core import asr, extract, guard, textnorm, lunar
+from core import asr, extract, guard, telemetry, textnorm, lunar
 
 ROOT = pathlib.Path(__file__).resolve().parent
 TODAY = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7))).date()
@@ -57,25 +57,54 @@ def calendar_for(kept: list[extract.Claim], today: tuple[int, int, int], years: 
 
 def run(audio: pathlib.Path, out_dir: pathlib.Path, model: str) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
-    print(f"[1/4] hearing {audio.name} twice (whisper + phowhisper) …", flush=True)
-    hearing = asr.hear(str(audio))
-    for arm in hearing.arms:
-        print(f"      {arm.arm:11s} {arm.latency_s:6.1f}s for {arm.audio_seconds:5.1f}s audio "
-              f"({arm.realtime_factor:.2f}x realtime)")
+    traced = telemetry.init("pipeline")
 
-    quotable, excluded = grounded_pieces(hearing)
+    with telemetry.transaction("so-gio pipeline run", op="pipeline.run", model=model,
+                               audio_seconds=asr.probe_duration(str(audio))) as root:
+        print(f"[1/4] hearing {audio.name} twice (whisper + phowhisper) …", flush=True)
+        hearing = asr.hear(str(audio))
+        for arm in hearing.arms:
+            print(f"      {arm.arm:11s} {arm.latency_s:6.1f}s for {arm.audio_seconds:5.1f}s audio "
+                  f"({arm.realtime_factor:.2f}x realtime)")
+            # Numbers only. The transcript itself is never sent: see core/telemetry.py.
+            telemetry.trace_result("asr.arm", arm=arm.arm, model=arm.model,
+                                   latency_ms=round(arm.latency_s * 1000),
+                                   realtime_factor=round(arm.realtime_factor, 3),
+                                   chars=len(arm.text), segments=len(arm.segments or []))
+        telemetry.trace_result("asr.agreement", agreement_rate=round(hearing.agreement_rate, 4),
+                               silences=len(hearing.silences),
+                               invented_spans=len(hearing.invented_spans))
+
+    with telemetry.span("pipeline.ground") as _:
+        quotable, excluded = grounded_pieces(hearing)
+        telemetry.trace_result("ground.result", quotable=len(quotable), excluded=len(excluded),
+                               invented_over_silence=len(hearing.invented_spans))
     print(f"[2/4] {len(quotable)} quotable spans, {len(excluded)} excluded, "
           f"{len(hearing.invented_spans)} invented over silence, "
           f"agreement {hearing.agreement_rate:.1%}")
 
     print(f"[3/4] asking {model} for claims (it may only quote) …", flush=True)
-    prompt = extract.build_prompt([(t, text) for t, _, text in quotable])
-    claims, usage = extract.ollama_extract(prompt, model=model)
-    verdict = guard.review(claims, quotable, (TODAY.year, TODAY.month, TODAY.day))
+    with telemetry.span("pipeline.extract", model=model, quotable_pieces=len(quotable)) as sp:
+        prompt = extract.build_prompt([(t, text) for t, _, text in quotable])
+        claims, usage = extract.ollama_extract(prompt, model=model)
+        sp.set_data("prompt_tokens", (usage or {}).get("prompt_eval_count"))
+        sp.set_data("completion_tokens", (usage or {}).get("eval_count"))
+        sp.set_data("claims_suggested", len(claims))
+
+    with telemetry.span("pipeline.guard", claims=len(claims)):
+        verdict = guard.review(claims, quotable, (TODAY.year, TODAY.month, TODAY.day))
+        for claim in verdict.refused:
+            telemetry.capture_refusal(getattr(claim, "reason", "unknown"), claim.kind,
+                                      telemetry.redact(claim.quote))
+        telemetry.trace_result("guard.result", kept=len(verdict.kept), refused=len(verdict.refused),
+                               uncited_kept=verdict.uncited_kept)
     print(f"      {len(claims)} suggested → {len(verdict.kept)} kept, {len(verdict.refused)} refused")
 
     print("[4/4] computing dates …", flush=True)
-    cal = calendar_for(verdict.kept, (TODAY.year, TODAY.month, TODAY.day))
+    with telemetry.span("pipeline.calendar", kept=len(verdict.kept)):
+        cal = calendar_for(verdict.kept, (TODAY.year, TODAY.month, TODAY.day))
+        telemetry.trace_result("calendar.result", years=len(cal),
+                               dates_resolved=sum(1 for c in cal if c.get("solar_next")))
 
     result = {
         "audio": str(audio),
@@ -100,6 +129,8 @@ def run(audio: pathlib.Path, out_dir: pathlib.Path, model: str) -> dict:
     (out_dir / "run.json").write_text(json.dumps(result, ensure_ascii=False, indent=2))
     (out_dir / "reading_copy.md").write_text(render_reading_copy(hearing, excluded, verdict), encoding="utf-8")
     print(f"      wrote {out_dir}/run.json and reading_copy.md")
+    if traced:
+        telemetry.flush(5.0)
     return result
 
 

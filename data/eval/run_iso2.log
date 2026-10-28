@@ -1,0 +1,18 @@
+[1/4] ASR accuracy: 18 clips × 2 arms
+      whisper     mean WER 0.221  RTF 0.52x
+      phowhisper  mean WER 0.140  RTF 0.21x
+[2/4] invention over silence: 12 probes × 2 arms
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/480 [00:00<?, ?it/s]Loading weights:  30%|███       | 145/480 [00:00<00:00, 1447.96it/s]Loading weights:  61%|██████▏   | 295/480 [00:00<00:00, 1474.00it/s]Loading weights:  92%|█████████▏| 443/480 [00:00<00:00, 1452.28it/s]Loading weights: 100%|██████████| 480/480 [00:00<00:00, 1450.60it/s]
+[transformers] Using custom `forced_decoder_ids` from the (generation) config. This is deprecated in favor of the `task` and `language` flags/config options.
+[transformers] Transcription using a multilingual Whisper will default to language detection followed by transcription instead of translation to English. This might be a breaking change for your use case. If you want to instead always translate your audio to English, make sure to pass `language='en'`. See https://github.com/huggingface/transformers/pull/28687 for more details.
+[transformers] Passing `generation_config` together with generation-related arguments=({'suppress_tokens', 'begin_suppress_tokens'}) is deprecated and will be removed in future versions. Please pass either a `generation_config` object OR all generation parameters explicitly, but not both.
+[transformers] Both `max_new_tokens` (=225) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer WhisperTokenizer. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+[transformers] Both `max_new_tokens` (=225) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+      whisper     31 syllables over 64.25s (28.9 wpm); timestamps usable: False
+      phowhisper  42 syllables over 64.25s (39.2 wpm); timestamps usable: False
+[3/4] does the two-model diff catch it?
+      pairs with invention 5/24, flagged 1; FP on 0/18 clean clips; spans fired anywhere: 1
+      asr stages took 275s wall
+[4/4] extraction arms

@@ -18,6 +18,8 @@ from pathlib import Path
 
 from temporalio import activity
 
+from core import telemetry
+
 from workflows.gio import Delivery, Reminder
 
 
@@ -54,6 +56,18 @@ def _read_jsonl(path: Path) -> list[dict]:
 
 @activity.defn
 async def send_reminder(rem: Reminder) -> dict:
+    """Deliver one reminder. Traced per attempt so a retry that finally succeeded is visible as three attempts,
+    and so the trace proves which OS process actually sent it after the first worker was killed."""
+    telemetry.init("temporal-worker")
+    try:
+        attempt = activity.info().attempt
+    except RuntimeError:          # called outside an activity context (unit test / direct call)
+        attempt = None
+    with telemetry.span("reminder.send", cycle=getattr(rem, "cycle", None), attempt=attempt):
+        return await _send_reminder_inner(rem)
+
+
+async def _send_reminder_inner(rem: Reminder) -> dict:
     """Deliver one giỗ reminder, or fail so the workflow's retry policy retries it.
 
     Idempotency: if this (workflow_id, cycle) already left the building, return the existing

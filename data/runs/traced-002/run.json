@@ -1,0 +1,86 @@
+{
+  "audio": "corpus/audio/silence/silence_01.wav",
+  "audio_seconds": 17.26,
+  "generated_at": "2026-10-28T02:12:04+00:00",
+  "model": "gemma3:1b-it-qat",
+  "usage": {
+    "model": "gemma3:1b-it-qat",
+    "latency_s": 56.49,
+    "prompt_tokens": 316,
+    "completion_tokens": 42,
+    "raw": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"báo cáo mở đầu bằng\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+  },
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "latency_s": 22.73,
+      "realtime_factor": 0.76,
+      "chars": 124
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "latency_s": 98.83,
+      "realtime_factor": 0.17,
+      "chars": 128
+    }
+  ],
+  "agreement_rate": 0.8519,
+  "silences": [
+    {
+      "start": 4.45,
+      "end": 9.68
+    }
+  ],
+  "invented": [],
+  "quotable_spans": [
+    {
+      "start": 0.0,
+      "end": 5.0,
+      "text": "báo cáo mở đầu bằng"
+    },
+    {
+      "start": 0.0,
+      "end": 5.0,
+      "text": "biện hộ"
+    },
+    {
+      "start": 9.0,
+      "end": 17.0,
+      "text": "mở và tạo lập sự đồng"
+    },
+    {
+      "start": 9.0,
+      "end": 17.0,
+      "text": "của hoa kỳ về chính sách đối với trung đông"
+    }
+  ],
+  "excluded_spans": [],
+  "claims_kept": [
+    {
+      "kind": "person",
+      "quote": "báo cáo mở đầu bằng",
+      "t_start": 0.0,
+      "t_end": 5.0,
+      "lunar_day": null,
+      "lunar_month": null,
+      "leap": false,
+      "solar_next": null,
+      "status": "kept",
+      "reason": "",
+      "model": "gemma3:1b-it-qat"
+    }
+  ],
+  "claims_refused": [],
+  "calendar": [],
+  "summary": {
+    "kept": 1,
+    "refused": 0,
+    "uncited_kept": 0,
+    "kinds": {
+      "person": 1
+    },
+    "refused_reasons": []
+  }
+}

@@ -105,7 +105,9 @@ def render(report: dict) -> str:
         rows = []
         for key in ("whisper", "phowhisper"):
             s = inv["per_arm"][key]
-            for kind, label in (("splice", "spliced pause"), ("tail", "appended tail")):
+            for kind, label in (("isolated", "isolated window, fed alone"),
+                                ("splice", "spliced pause"),
+                                ("tail", "appended tail")):
                 b = s.get("by_probe", {}).get(kind)
                 if not b:
                     continue
@@ -117,18 +119,22 @@ def render(report: dict) -> str:
             ["Arm", "Probe", "Probes (n)", "Silence (s)", "Invented syllables",
              "Invented words/min of silence", "Probes with invention", "Timestamps usable (probes)"], rows))
         parts.append(
-            f"\n*Syllables each arm produced **only because silence was added**, across "
-            f"{inv['probe_count']['splice']} clipped-pause probes and {inv['probe_count']['tail']} "
-            f"appended-tail probes ({_f(inv['silence_seconds_total'], 1)} s of dead air in total, where the "
+            f"\n*Syllables each arm produced **only because silence was added or isolated**, across three "
+            f"conditions: {inv['probe_count']['isolated']} verified non-vocal windows fed to the model alone, "
+            f"{inv['probe_count']['splice']} spliced mid-utterance pauses and {inv['probe_count']['tail']} "
+            f"appended tails ({_f(inv['silence_seconds_total'], 1)} s of dead air in total, where the "
             f"reference transcript says nothing at all). Invention is measured as a content delta: the "
-            f"syllables in the arm's transcript of the probed file that have no counterpart in the same arm's "
+            f"syllables in the arm's transcript of the probed audio that have no counterpart in the same arm's "
             f"transcript of the unmodified source — a definition that needs no timestamps and also catches a "
-            f"model that repeats real words into the silence. Vietnamese is written in syllables, so "
-            f"syllables ≈ words. The last column says on how many probes the arm's own timestamps are fine "
-            f"enough to place a syllable; counting by timestamp instead would credit PhoWhisper with "
+            f"model that repeats real words into the silence. The isolated condition is the one that "
+            f"reproduces the published Whisper-over-silence failure; the splice and tail conditions are what a "
+            f"carelessly recorded family tape looks like, and they are reported separately because the stock "
+            f"pipelines do not fail there. Vietnamese is written in syllables, so syllables ≈ words. The last "
+            f"column says on how many probes the arm's own timestamps are fine enough to place a syllable; "
+            f"counting by timestamp instead would credit PhoWhisper with "
             f"{inv['per_arm']['phowhisper']['syllables_in_window_by_timestamp']} syllables on the "
-            f"spliced-pause probes alone, and every one of them is the clip's real speech carried by a single "
-            f"segment spanning the whole 25 s window — the reason the content delta is the published number.*\n")
+            f"clips-with-silence-bolted-in probes alone, and every one of them is the clip's real speech "
+            f"carried by a single segment spanning the whole 25 s window.*\n")
         if not inv["per_arm"]["whisper"]["worst_examples"] and not inv["per_arm"]["phowhisper"]["worst_examples"]:
             tail_ev = [e for e in inv["events"] if e["probe"] == "tail" and e["arm"] == "whisper"]
             closed = [e for e in tail_ev if e["prev_segment_end"] is not None]
