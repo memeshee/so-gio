@@ -1,0 +1,75 @@
+{
+  "audio": "corpus/audio/fleurs_vi_007.wav",
+  "audio_seconds": 9.06,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Argentina nổi tiếng có mọt trong những đòi bóng Polo và cầu thủ giỏi nhất thế giới.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 9.0,
+          "text": "Argentina nổi tiếng có mọt trong những đòi bóng Polo và cầu thủ giỏi nhất thế giới."
+        }
+      ],
+      "latency_s": 28.94472336769104,
+      "audio_seconds": 9.06
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "agentina nổi tiếng có một trong những đội bóng boulogue và cầu thủ giỏi nhất thế giới.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 9.06,
+          "text": "agentina nổi tiếng có một trong những đội bóng boulogue và cầu thủ giỏi nhất thế giới."
+        }
+      ],
+      "latency_s": 55.268458127975464,
+      "audio_seconds": 9.06
+    }
+  ],
+  "silences": [],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "argentina",
+      "text_b": "agentina",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "mọt",
+      "text_b": "một",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "đòi",
+      "text_b": "đội",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "polo",
+      "text_b": "boulogue",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.7647058823529411,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "74f772048c8836b109d417cd9395e1aff0a264c41964dc86278e48174102b507",
+  "measured_at_utc": "2026-10-28T00:53:52+00:00",
+  "wall_s": 86.33,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

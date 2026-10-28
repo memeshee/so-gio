@@ -1,0 +1,75 @@
+{
+  "audio": "corpus/audio/fleurs_vi_010.wav",
+  "audio_seconds": 8.46,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Nghiên cứu trí tệ nhân tạo bao gồm tạo ra những cô mái từ động hoá, các tác dụ, đòi hỏi hình vi thông minh.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 8.0,
+          "text": "Nghiên cứu trí tệ nhân tạo bao gồm tạo ra những cô mái từ động hoá, các tác dụ, đòi hỏi hình vi thông minh."
+        }
+      ],
+      "latency_s": 17.63628649711609,
+      "audio_seconds": 8.46
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "nghiên cứu trí tuệ nhân tạo bao gồm tạo ra những cỗ máy từ động hóa các tác dụ đòi hỏi hành vi thông minh.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 8.46,
+          "text": "nghiên cứu trí tuệ nhân tạo bao gồm tạo ra những cỗ máy từ động hóa các tác dụ đòi hỏi hành vi thông minh."
+        }
+      ],
+      "latency_s": 50.524237632751465,
+      "audio_seconds": 8.46
+    }
+  ],
+  "silences": [],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "tệ",
+      "text_b": "tuệ",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "cô mái",
+      "text_b": "cỗ máy",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "hoá",
+      "text_b": "hóa",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "hình",
+      "text_b": "hành",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.8333333333333334,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "b7660cdc3bc9827cbcd4ec13866386090081120b96d67614e8c48be376bf1157",
+  "measured_at_utc": "2026-10-28T00:57:26+00:00",
+  "wall_s": 68.85,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

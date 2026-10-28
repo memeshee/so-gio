@@ -1,0 +1,87 @@
+{
+  "audio": "corpus/audio/fleurs_vi_003.wav",
+  "audio_seconds": 8.88,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Các sản phẩm tủ công có thể được coi ra đồ cổ, mặc dù tụi đời cố chúng, trẻ hơn rất nhiều các sản phẩm tương tự được sản xuất hàng lạc.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 5.36,
+          "text": "Các sản phẩm tủ công có thể được coi ra đồ cổ, mặc dù tụi đời cố chúng,"
+        },
+        {
+          "start": 5.36,
+          "end": 8.6,
+          "text": "trẻ hơn rất nhiều các sản phẩm tương tự được sản xuất hàng lạc."
+        }
+      ],
+      "latency_s": 18.53852391242981,
+      "audio_seconds": 8.88
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "các sản phẩm thủ công có thể được coi là độ cổ mặc dù tuổi đời của chúng trẻ hơn rất nhiều các sản phẩm tương tự được sản xuất hàng loạt.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 8.88,
+          "text": "các sản phẩm thủ công có thể được coi là độ cổ mặc dù tuổi đời của chúng trẻ hơn rất nhiều các sản phẩm tương tự được sản xuất hàng loạt."
+        }
+      ],
+      "latency_s": 53.593321323394775,
+      "audio_seconds": 8.88
+    }
+  ],
+  "silences": [],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "tủ",
+      "text_b": "thủ",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "ra đồ",
+      "text_b": "là độ",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "tụi",
+      "text_b": "tuổi",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "cố",
+      "text_b": "của",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "lạc",
+      "text_b": "loạt",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.8387096774193549,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "112a04bbdf43a5516a8b2aea243b41f9e52b614bbd1244c55354d2250a71ac45",
+  "measured_at_utc": "2026-10-28T00:49:09+00:00",
+  "wall_s": 72.59,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

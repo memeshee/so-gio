@@ -1,0 +1,87 @@
+{
+  "audio": "corpus/audio/fleurs_vi_008.wav",
+  "audio_seconds": 10.8,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Tỷ số Trung Cục là chiến thắng với cách biệt chỉ một điểm 21-20 chấm giấc chuối 15 trận toàn thẳng của ONTAK",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.0,
+          "text": "Tỷ số Trung Cục là chiến thắng với cách biệt chỉ một điểm 21-20 chấm giấc chuối 15 trận toàn thẳng của ONTAK"
+        }
+      ],
+      "latency_s": 18.507863998413086,
+      "audio_seconds": 10.8
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm hai mươi mốt hai mươi chấm dứt chuỗi mười lăm trận toàn thắng của oan tắc.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.8,
+          "text": "tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm hai mươi mốt hai mươi chấm dứt chuỗi mười lăm trận toàn thắng của oan tắc."
+        }
+      ],
+      "latency_s": 53.63022255897522,
+      "audio_seconds": 10.8
+    }
+  ],
+  "silences": [
+    {
+      "start": 0.0,
+      "end": 10.8
+    }
+  ],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "trung cục",
+      "text_b": "chung cuộc",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "21 20",
+      "text_b": "hai mươi mốt hai mươi",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "giấc chuối 15",
+      "text_b": "dứt chuỗi mười lăm",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "thẳng",
+      "text_b": "thắng",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "ontak",
+      "text_b": "oan tắc",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.75,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "1a2e88e32985c77730c8efdf2368acaf5c63b02c55ce0ac9d39dcd13ef3d8ccc",
+  "measured_at_utc": "2026-10-28T00:55:07+00:00",
+  "wall_s": 74.28,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

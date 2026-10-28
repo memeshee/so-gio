@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sổ Giỗ — sổ ghi ngày giỗ của gia đình</title>
+<meta name="description" content="Một cuốn sổ giỗ chỉ ghi những chữ mà hai mô hình nghe cùng nghe thấy, và để trống chỗ nó không nghe thấy.">
+<meta name="theme-color" content="#f7f2e8">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<link rel="stylesheet" href="assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<a class="skip" href="#main">Bỏ qua đến nội dung · Skip to content</a>
+<main id="main" class="sheet">
+
+<header class="masthead">
+  <p class="runhead"><span>Bản chạy <b>smoke-001</b></span><span>tr. 1</span></p>
+  <h1>Sổ Giỗ</h1>
+  <p class="deck">Ngày giỗ không được quên. Nhưng ký ức thì có thể sai, và máy thì có thể bịa.
+    Cuốn sổ này chỉ ghi những chữ mà cả hai tai cùng nghe thấy — và chỉ rõ chỗ nó không nghe thấy gì.</p>
+  <dl class="imprint">
+    <dt>Băng</dt><dd>fleurs_vi_001.wav · 14,94 giây</dd>
+    <dt>Hai tai nghe</dt><dd>faster-whisper/small + vinai/PhoWhisper-small</dd>
+    <dt>Máy trích xuất</dt><dd>gemma3:1b-it-qat · chạy trên máy, không gửi lên mạng</dd>
+  </dl>
+  <nav class="contents" aria-label="Mục lục">
+    <a href="#recording">I · Cuộn băng</a>
+    <a href="#reading">II · Bản đọc lại</a>
+    <a href="#kept">III · Lời được giữ</a>
+    <a href="#refused">IV · Lời bị từ chối</a>
+    <a href="#years">V · Mười năm giỗ</a>
+    <a href="#calendar-check">VI · Lịch đã kiểm</a>
+    <a href="#purpose">VII · Để làm gì</a>
+  </nav>
+</header>
+
+
+<section class="chapter" id="recording">
+  <h2><span class="ch-no" aria-hidden="true">I</span>Cuộn băng</h2>
+  <p class="ch-en" lang="en">The recording</p>
+  
+<p class="lede">Một tệp âm thanh 14,94 giây, đưa qua hai mô hình nhận dạng
+  tiếng Việt độc lập. Không mô hình nào thấy kết quả của mô hình kia; chỗ nào cả hai nghe ra giống nhau thì mới có
+  thể trở thành lời trong sổ.</p>
+<div class="figures"><div class="figure"><span class="n">14,94<span class="u">giây</span></span><span class="l">độ dài băng</span></div><div class="figure"><span class="n">83,9<span class="u">%</span></span><span class="l">âm tiết hai bản trùng nhau</span></div><div class="figure"><span class="n">5</span><span class="l">chỗ hai bên nghe lệch</span></div><div class="figure"><span class="n">0</span><span class="l">chỗ bịa trên khoảng lặng</span></div></div>
+<div class="arms">
+<div class="arm">
+  <div class="arm-top">
+    <span class="arm-name">whisper</span>
+    <span class="arm-rtf">0,65× <span class="x">thời gian thực</span></span>
+  </div>
+  <p class="arm-model">faster-whisper/small</p>
+  <p class="arm-sub">23,1 giây cho 14,94 giây băng
+    · 146 ký tự
+    · 1,5 giây máy cho mỗi giây băng</p>
+</div>
+<div class="arm">
+  <div class="arm-top">
+    <span class="arm-name">phowhisper</span>
+    <span class="arm-rtf">0,32× <span class="x">thời gian thực</span></span>
+  </div>
+  <p class="arm-model">vinai/PhoWhisper-small</p>
+  <p class="arm-sub">46,9 giây cho 14,94 giây băng
+    · 142 ký tự
+    · 3,1 giây máy cho mỗi giây băng</p>
+</div></div>
+<p class="small-note"><span class="chip">[run.json]</span>
+  0,65× nghĩa là mỗi giây băng mất khoảng 1,5 giây máy; 0,32× là khoảng 3,1 giây máy.
+  Hai mô hình đều chạy cục bộ, int8, trên cùng một máy.</p>
+<p class="licence"><strong>Bản ghi trong bản demo này là một câu trong bộ ngữ liệu mở FLEURS
+  (Google, CC BY 4.0) — không phải băng riêng của một gia đình.</strong> Nó không nhắc đến giỗ;
+  vì thế phần mười năm giỗ ở dưới nói thẳng là chưa có ngày nào, chứ không điền vào chỗ trống.</p>
+
+</section>
+
+
+<section class="chapter" id="reading">
+  <h2><span class="ch-no" aria-hidden="true">II</span>Bản đọc lại</h2>
+  <p class="ch-en" lang="en">Reading copy</p>
+  
+<p class="lede">Nguyên văn bản whisper nghe được. Chỗ in nhạt, có chấm dưới là chỗ phowhisper nghe khác;
+  cả hai cách nghe đều được giữ, không bên nào được chọn làm sự thật.</p>
+
+<label class="toggle no-print" for="marks">
+  <input type="checkbox" id="marks" checked>
+  <span>Hiện chỗ hai mô hình nghe lệch</span>
+</label>
+<div class="copy"><div class="line"><span class="t chip">[00:00]</span><p class="copy-text">Một số loài <span class="disputed" title="phowhisper: động">đậm<sup class="fn"><a href="#d1" id="r1" aria-label="chú thích 1">1</a></sup></span> vật như vôi và <span class="disputed" title="phowhisper: hũ cao">hỗ cầu<sup class="fn"><a href="#d2" id="r2" aria-label="chú thích 2">2</a></sup></span> cổ, thường hay lại <span class="disputed" title="phowhisper: gần xa">gặn xe<sup class="fn"><a href="#d3" id="r3" aria-label="chú thích 3">3</a></sup></span> và chỉ <span class="disputed" title="phowhisper: với">phải<sup class="fn"><a href="#d4" id="r4" aria-label="chú thích 4">4</a></sup></span> các <span class="disputed" title="phowhisper: dụng cụ">nhung cầu<sup class="fn"><a href="#d5" id="r5" aria-label="chú thích 5">5</a></sup></span> bình thường. Chúng ta cũng sẽ quan sát một cách dễ dàng.</p></div></div>
+<ol class="notes"><li id="d1"><span><span class="w">whisper</span> “đậm” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “động”</span><a class="back" href="#r1" aria-label="Về chỗ đánh dấu 1">↩</a></li><li id="d2"><span><span class="w">whisper</span> “hỗ cầu” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “hũ cao”</span><a class="back" href="#r2" aria-label="Về chỗ đánh dấu 2">↩</a></li><li id="d3"><span><span class="w">whisper</span> “gặn xe” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “gần xa”</span><a class="back" href="#r3" aria-label="Về chỗ đánh dấu 3">↩</a></li><li id="d4"><span><span class="w">whisper</span> “phải” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “với”</span><a class="back" href="#r4" aria-label="Về chỗ đánh dấu 4">↩</a></li><li id="d5"><span><span class="w">whisper</span> “nhung cầu” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “dụng cụ”</span><a class="back" href="#r5" aria-label="Về chỗ đánh dấu 5">↩</a></li></ol>
+
+<div class="zero"><span class="lbl">Bịa trên khoảng lặng</span><b>0 chỗ.</b> Không mô hình nào viết ra chữ ở chỗ mô hình kia nghe thấy im lặng. Đây là điều cuốn sổ muốn thấy, không phải điều nó muốn che.</div>
+<p class="more"><a href="reading-copy.html">Đọc toàn bản, kể cả những chỗ bị loại <span class="chip">[sổ giỗ · tr. 2]</span></a></p>
+
+</section>
+
+
+<section class="chapter" id="kept">
+  <h2><span class="ch-no" aria-hidden="true">III</span>Lời được giữ</h2>
+  <p class="ch-en" lang="en">Claims kept</p>
+  
+<p class="lede">Một lời chỉ vào sổ khi nó có nguyên văn trong băng và có mốc thời gian để gia đình mở lại mà nghe.
+  Dưới đây là tất cả những lời đã qua được cửa đó — không phải những lời nghe hợp lý.</p>
+
+<article class="claim">
+  <p class="kind">người <span class="en">· person</span></p>
+  <blockquote><p>“một số loài”</p></blockquote>
+  <p class="claim-cite"><span class="chip">[00:00–00:15]</span><span>nghe thấy trong băng</span></p>
+  
+</article>
+<p class="small-note"><span class="chip">[guard.py]</span> Nhãn loại (người, ngày giỗ, đồ cúng) do mô hình trích xuất gán.
+  Cuốn sổ chỉ kiểm tra hai điều: chữ có trong băng, và ngày có tính được. Nhãn sai thì gia đình sửa trên giấy.</p>
+
+</section>
+
+
+<section class="chapter" id="refused">
+  <h2><span class="ch-no" aria-hidden="true">IV</span>Lời bị từ chối</h2>
+  <p class="ch-en" lang="en">Refused</p>
+  
+<p class="lede">Mỗi lời bị từ chối đều có lý do, và lý do được ghi lại nguyên văn. Không lời nào được sửa cho đúng;
+  không ngày nào được làm tròn cho đẹp.</p>
+<div class="zero"><span class="lbl">Không có lời nào bị từ chối</span><b>1</b> lời được giữ, và lời nào cũng có nguyên văn trong băng cùng mốc thời gian. Lần chạy này không có gì để từ chối — không phải vì cuốn sổ dễ dãi, mà vì mô hình chỉ đề xuất 1 lời.</div>
+
+</section>
+
+
+<section class="chapter" id="years">
+  <h2><span class="ch-no" aria-hidden="true">V</span>Mười năm giỗ</h2>
+  <p class="ch-en" lang="en">Ten years</p>
+  
+<p class="lede">Từ ngày âm trong lời kể, lịch tính ra ngày dương cho mười năm tới. Mô hình không được sinh ra
+  ngày nào; nó chỉ được nhắc lại lời.</p>
+<p class="empty">Lần chạy này không có ngày giỗ nào sống sót, nên không có bảng mười năm. Bản ghi là một câu trong bộ ngữ liệu FLEURS — nó không nhắc đến giỗ, và chúng tôi không điền ngày vào chỗ trống. <b>Một cuốn sổ trung thực phải có quyền để trống.</b></p>
+
+<div class="example">
+  <p class="example-label">Ví dụ lịch · không phải lời trong băng</p>
+  <h3>Giỗ Tổ Hùng Vương · 10 tháng 3 âm lịch</h3>
+  <p class="why">Bản ghi này không nhắc đến giỗ, nên cuốn sổ không có ngày nào để giữ. Đây là mười năm của một ngày
+    giỗ đã được công bố, để thấy bộ tính lịch chạy từ đầu đến cuối — và để thấy nó không cần mô hình ngôn ngữ.</p>
+  <ol class="years"><li class="checked"><span class="y">2026</span><span class="d"><time datetime="2026-04-26">26 tháng 4</time></span><span class="w"><span class="ok">khớp nguồn</span></span></li><li><span class="y">2027</span><span class="d"><time datetime="2027-04-16">16 tháng 4</time></span><span class="w"><span class="muted">Thứ Sáu</span></span></li><li><span class="y">2028</span><span class="d"><time datetime="2028-04-04">4 tháng 4</time></span><span class="w"><span class="muted">Thứ Ba</span></span></li><li><span class="y">2029</span><span class="d"><time datetime="2029-04-23">23 tháng 4</time></span><span class="w"><span class="muted">Thứ Hai</span></span></li><li><span class="y">2030</span><span class="d"><time datetime="2030-04-12">12 tháng 4</time></span><span class="w"><span class="muted">Thứ Sáu</span></span></li><li><span class="y">2031</span><span class="d"><time datetime="2031-04-01">1 tháng 4</time></span><span class="w"><span class="muted">Thứ Ba</span></span></li><li><span class="y">2032</span><span class="d"><time datetime="2032-04-19">19 tháng 4</time></span><span class="w"><span class="muted">Thứ Hai</span></span></li><li><span class="y">2033</span><span class="d"><time datetime="2033-04-09">9 tháng 4</time></span><span class="w"><span class="muted">Thứ Bảy</span></span></li><li><span class="y">2034</span><span class="d"><time datetime="2034-04-28">28 tháng 4</time></span><span class="w"><span class="muted">Thứ Sáu</span></span></li><li><span class="y">2035</span><span class="d"><time datetime="2035-04-17">17 tháng 4</time></span><span class="w"><span class="muted">Thứ Ba</span></span></li></ol>
+  <p class="why">Dòng 2026 khớp với ngày đã công bố trong báo chí Việt Nam: 26 tháng 4 năm 2026. Ngày giỗ quốc gia không phải ngày giỗ của gia đình; nó chỉ là phép thử của lịch.</p>
+</div>
+
+</section>
+
+
+<section class="chapter" id="calendar-check">
+  <h2><span class="ch-no" aria-hidden="true">VI</span>Lịch đã kiểm</h2>
+  <p class="ch-en" lang="en">Calendar checked</p>
+  
+<p class="lede">Bộ tính lịch là phần duy nhất của cuốn sổ được đối chiếu với bên ngoài. Ba phép thử, tất cả đều
+  công khai ở đây — kể cả chỗ sai lớn nhất.</p>
+
+<div class="table-wrap">
+<table class="data">
+  <caption>Ba phép thử · <span class="chip">report.json</span></caption>
+  <thead><tr><th>Phép thử</th><th class="num">Kết quả</th><th>Ghi chú</th></tr></thead>
+  <tbody>
+<tr><td>Kỳ trăng mới so với USNO</td><td class="num">37/37</td><td class="muted">lệch lớn nhất 84,2 giây</td></tr>
+<tr><td>Ngày lễ Việt Nam đã công bố</td><td class="num">17/17</td><td class="muted">Tết, Giỗ Tổ, Vu Lan, Trung Thu…</td></tr>
+<tr><td>Cấu trúc lịch</td><td class="num">41 năm</td><td class="muted">0 vi phạm</td></tr></tbody>
+</table>
+</div>
+<div class="table-wrap spaced">
+<table class="data">
+  <caption>Bốn ngày lễ 2026 · đã công bố và tính được</caption>
+  <thead><tr><th>Ngày</th><th class="num">Đã công bố</th><th class="num">Tính được</th><th class="num">Kết quả</th></tr></thead>
+  <tbody><tr><td>Tết Nguyên Đán</td><td class="nowrap">17/02/2026</td><td class="nowrap">17/02/2026</td><td class="ok">khớp</td></tr><tr><td>Giỗ Tổ Hùng Vương</td><td class="nowrap">26/04/2026</td><td class="nowrap">26/04/2026</td><td class="ok">khớp</td></tr><tr><td>Rằm tháng Bảy / Lễ Vu Lan</td><td class="nowrap">27/08/2026</td><td class="nowrap">27/08/2026</td><td class="ok">khớp</td></tr><tr><td>Tết Trung Thu</td><td class="nowrap">25/09/2026</td><td class="nowrap">25/09/2026</td><td class="ok">khớp</td></tr></tbody>
+</table>
+</div>
+<p class="small-note"><span class="chip">[report.json]</span> USNO là Đài thiên văn Hải quân Hoa Kỳ.
+  Ngày lễ đối chiếu với Wikipedia, VietnamNet và cổng thông tin chính phủ. Bảng đầy đủ ở
+  <a href="calendar.html">tr. 3</a>.</p>
+
+</section>
+
+
+<section class="chapter" id="purpose">
+  <h2><span class="ch-no" aria-hidden="true">VII</span>Để làm gì</h2>
+  <p class="ch-en" lang="en">What it is for</p>
+  
+<div class="prose">
+  <p>Trong một gia đình, thường chỉ có một người còn nhớ ngày giỗ của từng cụ: mười hai tháng bảy, hay tháng bảy
+    nhuận, năm nào cũng vậy. Khi người ấy mất, những ngày ấy mất theo — không phải vì không ai thương, mà vì không
+    ai kịp ghi lại.</p>
+  <p>Cuốn sổ này làm đúng một việc: ghi lời người ấy nói, và chỉ ghi những gì cả hai tai cùng nghe thấy. Hai mô hình
+    nghe lại cuộn băng một cách độc lập. Chỗ hai bên nghe giống nhau thì lời ấy được vào sổ, kèm mốc thời gian để mở
+    lại mà nghe. Chỗ hai bên nghe khác nhau thì để nguyên cả hai, đánh dấu, không chọn bên nào. Chỗ một bên viết ra
+    trong khi bên kia nghe thấy im lặng thì gạch bỏ, và ghi rõ là đã gạch.</p>
+  <p>Ngày giỗ thì không do máy đoán. Từ ngày âm trong lời kể, lịch tính ra ngày dương cho mười năm tới. Nếu lời kể
+    không có ngày, cuốn sổ để trống và nói thẳng là chưa biết — đó cũng là một câu trả lời trung thực.</p>
+  <p class="en" lang="en">This is a family memorial book, not a calendar app. In most families one person holds the
+    death-anniversary dates; when that person dies, the dates die with them. Sổ Giỗ records that person’s voice,
+    transcribes it twice with two independent speech models, and lets only the words both heard become claims.
+    Disagreements stay on the page, struck-out inventions stay visible, and the lunar calendar — not the language
+    model — computes the next ten years. Where the recording says nothing, the book says it does not know.</p>
+  <p class="small-note" style="margin-top:1.4rem"><span class="chip">[Careless Whisper · FAccT 2024]</span>
+    Whisper bịa khoảng 1% số đoạn, và bịa nhiều hơn khi gặp khoảng lặng. Đây là lý do có tai thứ hai và có chỗ
+    để gạch.</p>
+</div>
+
+</section>
+
+<nav class="pager no-print" aria-label="Trang khác"><a href="reading-copy.html">Bản đọc lại <span class="no">tr. 2</span></a><a href="calendar.html">Mười năm &amp; lịch <span class="no">tr. 3</span></a></nav>
+
+<footer class="colophon">
+  <p class="mark"><svg width="18" height="18" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+    <rect x="2" y="2" width="60" height="60" rx="6" fill="#1b1a17"/>
+    <rect x="9" y="9" width="46" height="46" rx="2.6" fill="none" stroke="#f7f2e8" stroke-width="2.3"/>
+    <circle cx="32" cy="35.5" r="5.2" fill="#f7f2e8"/>
+  </svg> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
+  <p>Dựng lúc 07:59 · 28 tháng 10, 2026 (+07) từ
+    <span class="chip">data/runs/smoke-001/run.json</span>
+    và <span class="chip">data/oracle/report.json</span>.
+    Không có yêu cầu mạng nào khi mở trang: chữ, dấu và mã đều nằm trong thư mục này.</p>
+  <p>Chữ: Liberation Serif (SIL OFL 1.1), tự lưu ở <b>assets/fonts</b>. Dấu: SVG, kèm PNG dựng bằng Python, không dùng thư viện ngoài.</p>
+  <p>Băng: Google FLEURS, config vi_vn, CC BY 4.0 — bản ghi mở, không phải băng riêng của gia đình.
+    Mã: memeshee/so-gio. In trang này trên A4.</p>
+</footer>
+</main>
+<script src="assets/site.js" defer></script>
+</body>
+</html>

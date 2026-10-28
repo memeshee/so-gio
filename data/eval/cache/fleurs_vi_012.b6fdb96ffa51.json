@@ -1,0 +1,102 @@
+{
+  "audio": "corpus/audio/fleurs_vi_012.wav",
+  "audio_seconds": 9.42,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Điều lại cần có sự nhất chí từ tất cả các ban trước khi sửa đổi và các ban xem nhạc chính nguyên Trung ương đến mức đại diện ban thường xuyên phán mạng.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 9.0,
+          "text": "Điều lại cần có sự nhất chí từ tất cả các ban trước khi sửa đổi và các ban xem nhạc chính nguyên Trung ương đến mức đại diện ban thường xuyên phán mạng."
+        }
+      ],
+      "latency_s": 22.690577745437622,
+      "audio_seconds": 9.42
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "điều lệ cần có sự nhất trí từ tất cả các ban trước khi sửa đổi và các ban xem giả chính quyền trung ương đến mức để diện ban thường xuyên vắng mặt.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 9.42,
+          "text": "điều lệ cần có sự nhất trí từ tất cả các ban trước khi sửa đổi và các ban xem giả chính quyền trung ương đến mức để diện ban thường xuyên vắng mặt."
+        }
+      ],
+      "latency_s": 52.5850830078125,
+      "audio_seconds": 9.42
+    }
+  ],
+  "silences": [
+    {
+      "start": 1.44969,
+      "end": 2.69894
+    },
+    {
+      "start": 5.18344,
+      "end": 6.75988
+    },
+    {
+      "start": 7.53713,
+      "end": 9.42
+    }
+  ],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "lại",
+      "text_b": "lệ",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "chí",
+      "text_b": "trí",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "nhạc",
+      "text_b": "giả",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "nguyên",
+      "text_b": "quyền",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "đại",
+      "text_b": "để",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "phán mạng",
+      "text_b": "vắng mặt",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.8181818181818182,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "b6fdb96ffa51815d37ecac0dc9a12557ecd929e227adf76603b1fdf028aa46b8",
+  "measured_at_utc": "2026-10-28T00:59:50+00:00",
+  "wall_s": 75.73,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "audio": "corpus/audio/fleurs_vi_004.wav",
+  "audio_seconds": 8.52,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Sau đó là kha sinh giữ vào giờ chín khi hát các bài hát hay gian",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 8.0,
+          "text": "Sau đó là kha sinh giữ vào giờ chín khi hát các bài hát hay gian"
+        }
+      ],
+      "latency_s": 18.64172339439392,
+      "audio_seconds": 8.52
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "sau đó la kha xinh giữ vai trò chính khi hát các bài hát hazard.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 8.52,
+          "text": "sau đó la kha xinh giữ vai trò chính khi hát các bài hát hazard."
+        }
+      ],
+      "latency_s": 45.579981327056885,
+      "audio_seconds": 8.52
+    }
+  ],
+  "silences": [],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "là",
+      "text_b": "la",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "sinh",
+      "text_b": "xinh",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "vào giờ chín",
+      "text_b": "vai trò chính",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "hay gian",
+      "text_b": "hazard",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.6923076923076923,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "0780bdf05a8c114e4f6d978d39d3a0b63fe2c4d84bb159bb86b2108c157c380a",
+  "measured_at_utc": "2026-10-28T00:50:15+00:00",
+  "wall_s": 65.83,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

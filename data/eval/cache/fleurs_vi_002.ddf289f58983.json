@@ -1,0 +1,80 @@
+{
+  "audio": "corpus/audio/fleurs_vi_002.wav",
+  "audio_seconds": 10.2,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Điện thoại VTIN nói chung không phải là sự thế thế cho điện thoại di động, vì bạn phải ở ngoài trời và có tàm nhìn thông thoáng thẳng đến VTIN thì mới sử dụng được.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.0,
+          "text": "Điện thoại VTIN nói chung không phải là sự thế thế cho điện thoại di động, vì bạn phải ở ngoài trời và có tàm nhìn thông thoáng thẳng đến VTIN thì mới sử dụng được."
+        }
+      ],
+      "latency_s": 18.155869483947754,
+      "audio_seconds": 10.2
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "điện thoại vệ tinh nói chung không phải là sự thay thế cho điện thoại di động vì bạn phải ở ngoài trời và có tầm nhìn thông thoáng thẳng đến vệ tinh thì mới sử dụng được.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.2,
+          "text": "điện thoại vệ tinh nói chung không phải là sự thay thế cho điện thoại di động vì bạn phải ở ngoài trời và có tầm nhìn thông thoáng thẳng đến vệ tinh thì mới sử dụng được."
+        }
+      ],
+      "latency_s": 51.83374857902527,
+      "audio_seconds": 10.2
+    }
+  ],
+  "silences": [
+    {
+      "start": 0.0,
+      "end": 1.86575
+    }
+  ],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "vtin",
+      "text_b": "vệ tinh",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "thế",
+      "text_b": "thay",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "tàm",
+      "text_b": "tầm",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "vtin",
+      "text_b": "vệ tinh",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.8888888888888888,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "ddf289f589837b3028db676d62221d57054a2889a909778ea14496c3382bc182",
+  "measured_at_utc": "2026-10-28T00:47:57+00:00",
+  "wall_s": 70.45,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

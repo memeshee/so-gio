@@ -1,0 +1,82 @@
+{
+  "audio": "corpus/audio/fleurs_vi_001.wav",
+  "audio_seconds": 14.94,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Một số loài đậm vật như vôi và hỗ cầu cổ, thường hay lại gặn xe và chỉ phải các nhung cầu bình thường. Chúng ta cũng sẽ quan sát một cách dễ dàng.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 15.0,
+          "text": "Một số loài đậm vật như vôi và hỗ cầu cổ, thường hay lại gặn xe và chỉ phải các nhung cầu bình thường. Chúng ta cũng sẽ quan sát một cách dễ dàng."
+        }
+      ],
+      "latency_s": 19.188658237457275,
+      "audio_seconds": 14.94
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "một số loài động vật như vôi và hũ cao cổ thường hay lại gần xa và chỉ với các dụng cụ bình thường chúng ta cũng sẽ quan sát một cách dễ dàng.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 14.94,
+          "text": "một số loài động vật như vôi và hũ cao cổ thường hay lại gần xa và chỉ với các dụng cụ bình thường chúng ta cũng sẽ quan sát một cách dễ dàng."
+        }
+      ],
+      "latency_s": 53.7014057636261,
+      "audio_seconds": 14.94
+    }
+  ],
+  "silences": [],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "đậm",
+      "text_b": "động",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "hỗ cầu",
+      "text_b": "hũ cao",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "gặn xe",
+      "text_b": "gần xa",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "phải",
+      "text_b": "với",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "nhung cầu",
+      "text_b": "dụng cụ",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.8387096774193549,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "d1496c3a5a78d8aa5e79725771606b76e07ea39b6a42b454e911f13058e14d91",
+  "measured_at_utc": "2026-10-28T00:46:46+00:00",
+  "wall_s": 104.01,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "audio": "corpus/audio/fleurs_vi_011.wav",
+  "audio_seconds": 6.9,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Lúc đầu trang phục chịu ảnh hưởng nặng nề của nạn văn hóa, bí xanh tin ở phía đông.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 6.0,
+          "text": "Lúc đầu trang phục chịu ảnh hưởng nặng nề của nạn văn hóa, bí xanh tin ở phía đông."
+        }
+      ],
+      "latency_s": 22.5571608543396,
+      "audio_seconds": 6.9
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "lúc đầu trang phục chịu ảnh hưởng nặng nề của nền văn hoá pi xanh tiên ở phía đông.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 6.9,
+          "text": "lúc đầu trang phục chịu ảnh hưởng nặng nề của nền văn hoá pi xanh tiên ở phía đông."
+        }
+      ],
+      "latency_s": 44.502727031707764,
+      "audio_seconds": 6.9
+    }
+  ],
+  "silences": [
+    {
+      "start": 0.0,
+      "end": 6.9
+    }
+  ],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "nạn",
+      "text_b": "nền",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "hóa bí",
+      "text_b": "hoá pi",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "tin",
+      "text_b": "tiên",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.8333333333333334,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "b5e753e0cb2977f526d804e475438b6cb47571a66e03648db5bd7a45ccd00d17",
+  "measured_at_utc": "2026-10-28T00:58:34+00:00",
+  "wall_s": 68.42,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "audio": "corpus/audio/fleurs_vi_009.wav",
+  "audio_seconds": 10.98,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Nếu đến thăm vùng bắt cực hoặc nam cực vào mùa Đông, bạn sẽ được trải nghiệm điêm vùng cực nghĩ là mặt trời không nhú lên khỏi chân trời.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.0,
+          "text": "Nếu đến thăm vùng bắt cực hoặc nam cực vào mùa Đông, bạn sẽ được trải nghiệm điêm vùng cực nghĩ là mặt trời không nhú lên khỏi chân trời."
+        }
+      ],
+      "latency_s": 18.15242624282837,
+      "audio_seconds": 10.98
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "nếu đến thăm vùng bắc cực hoặc nam cực vào mùa đông bạn sẽ được trải nghiệm đêm vùng cực nghĩa là mặt trời không nhú lên khỏi chân trời.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.98,
+          "text": "nếu đến thăm vùng bắc cực hoặc nam cực vào mùa đông bạn sẽ được trải nghiệm đêm vùng cực nghĩa là mặt trời không nhú lên khỏi chân trời."
+        }
+      ],
+      "latency_s": 50.97641158103943,
+      "audio_seconds": 10.98
+    }
+  ],
+  "silences": [
+    {
+      "start": 9.49606,
+      "end": 10.8486
+    }
+  ],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "bắt",
+      "text_b": "bắc",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "điêm",
+      "text_b": "đêm",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "nghĩ",
+      "text_b": "nghĩa",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.9,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "769fb9ed69cd546549fd4f987fca3185502b58cbbba35203606e47207438b91d",
+  "measured_at_utc": "2026-10-28T00:56:17+00:00",
+  "wall_s": 69.89,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

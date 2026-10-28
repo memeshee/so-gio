@@ -1,0 +1,81 @@
+{
+  "audio": "corpus/audio/fleurs_vi_006.wav",
+  "audio_seconds": 10.56,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Tôi không biết bạn có nhận ra hay không, nhưng hầu hết hàng há từ Trung Mỹ nhập khẩu vào nước này điều được miệng thế.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.0,
+          "text": "Tôi không biết bạn có nhận ra hay không, nhưng hầu hết hàng há từ Trung Mỹ nhập khẩu vào nước này điều được miệng thế."
+        }
+      ],
+      "latency_s": 18.906622648239136,
+      "audio_seconds": 10.56
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "tôi không biết bạn có nhận ra hay không nhưng hầu hết hàng hóa từ trung mỹ nhập khẩu vào nước này đều được miễn thuế.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.56,
+          "text": "tôi không biết bạn có nhận ra hay không nhưng hầu hết hàng hóa từ trung mỹ nhập khẩu vào nước này đều được miễn thuế."
+        }
+      ],
+      "latency_s": 39.22017979621887,
+      "audio_seconds": 10.56
+    }
+  ],
+  "silences": [
+    {
+      "start": 4.10244,
+      "end": 6.11206
+    },
+    {
+      "start": 6.59619,
+      "end": 7.88912
+    },
+    {
+      "start": 8.55713,
+      "end": 10.56
+    }
+  ],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "há",
+      "text_b": "hóa",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "điều",
+      "text_b": "đều",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "miệng thế",
+      "text_b": "miễn thuế",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.88,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "a6d9adbf86b823958abe56a10f7721a7b748c2d37ed25a58245e5f053889c09a",
+  "measured_at_utc": "2026-10-28T00:52:26+00:00",
+  "wall_s": 58.62,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}

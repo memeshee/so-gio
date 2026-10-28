@@ -64,3 +64,352 @@ worker log tail (its last words before dying):
     2026-10-28 07:38:00,802 INFO    temporalio.workflow: giỗ workflow for Cụ Nguyễn Thị Đào (10/03 âm lịch) starting on queue gio-reminders ({'attempt': 1, 'namespace': 'default', 'run_id': '01a17ff1-453d-7970-bcb7-6b09ac15af69', 'task_queue': 'gio-reminders', 'workflow_id': 'gio-proof-20261028-073758', 'workflow_type': 'GioWorkflow'})
     2026-10-28 07:38:00,814 INFO    temporalio.workflow: cycle 1: 10/03 âm lịch → fire 2026-10-28T07:38:20+07:00 (real giỗ 2027-04-16T07:00:00+07:00, 20s away, calendar=core.lunar.next_occurrence) [demo override] ({'attempt': 1, 'namespace': 'default', 'run_id': '01a17ff1-453d-7970-bcb7-6b09ac15af69', 'task_queue': 'gio-reminders', 'workflow_id': 'gio-proof-20261028-073758', 'workflow_type': 'GioWorkflow'})
 [07:38:08] no worker is polling; the deadline is only in the server's history now
+    Status          WorkflowId             Type        StartTime  
+    Running  gio-proof-20261028-073758  GioWorkflow  7 seconds ago
+WorkflowId            gio-proof-20261028-073758
+Type                  GioWorkflow
+TaskQueue             gio-reminders
+HistoryLength         5
+RootWorkflowId        gio-proof-20261028-073758
+no ActivityTaskScheduled yet — the workflow is asleep on a timer, nothing is queued to a worker
+[07:38:12] 3s with zero workers. History still ends at TimerStarted:
+    3  2026-10-28T00:38:00Z  WorkflowTaskStarted       
+    4  2026-10-28T00:38:00Z  WorkflowTaskCompleted     
+    5  2026-10-28T00:38:00Z  TimerStarted              
+
+
+=== 5. restart the worker under a new pid ===
+worker[2] pid=2554888 — worker ready: pid=2554888 task_queue='gio-reminders' address=localhost:7233 workflows=[GioWorkflow] activities=[send_reminder, record_delivery]
+worker[2] cmd   /home/kiter/.pyenv/versions/3.12.6/bin/python -m workflows.worker
+        BuildID    TaskQueueType           Identity            LastAccessTime  RatePerSecond
+      UNVERSIONED  workflow       2554888@kiter-550XTA-550XTZ  now                    100000
+      UNVERSIONED  activity       2554888@kiter-550XTA-550XTZ  now                    100000
+[07:38:13] worker restarted: 2554542 -> 2554888
+
+=== 6. wait for the durable timer to fire and the flaky activity to succeed ===
+[07:38:14] phase='sleeping until cycle 1 reminder' delivered=0 awaiting_ack=False
+[07:38:21] phase='sending cycle 1 reminder' delivered=0 awaiting_ack=False
+[07:38:24] phase='awaiting acknowledgement of cycle 1' delivered=1 awaiting_ack=True
+{
+  "acks": [],
+  "awaiting_ack": true,
+  "calendar_source": "core.lunar.next_occurrence",
+  "cycle": 1,
+  "delivered_cycles": 1,
+  "deliveries": [
+    {
+      "attempts_used": 3,
+      "cycle": 1,
+      "ledger": {
+        "duplicate": false,
+        "key": "gio-proof-20261028-073758#1",
+        "recorded": true
+      },
+      "lunar": "10/03 âm lịch",
+      "message_id": "<gio-proof-20261028-073758-c1@so-gio.local>",
+      "production_gio_local": "2027-04-16T07:00:00+07:00",
+      "scheduled_for_local": "2026-10-28T07:38:20+07:00",
+      "sent_at_utc": "2026-10-28T00:38:23+00:00",
+      "solar_date": "2027-04-16",
+      "worker_pid": 2554888
+    }
+  ],
+  "demo_override": true,
+  "lunar": "10/03 âm lịch",
+  "next_fire_local": "2026-10-28T07:38:20+07:00",
+  "next_fire_utc": "2026-10-28T00:38:20+00:00",
+  "person": "Cụ Nguyễn Thị Đào",
+  "phase": "awaiting acknowledgement of cycle 1",
+  "production_gio_local": "2027-04-16T07:00:00+07:00"
+}
+
+=== 7. acknowledge the reminder (signal) — the workflow then re-arms for next year ===
+[07:38:30] sent signal acknowledge note='Con cháu đã chuẩn bị mâm cúng'
+[07:38:32] phase='sleeping until cycle 2 reminder' delivered=1 awaiting_ack=False
+[07:38:50] phase='sending cycle 2 reminder' delivered=1 awaiting_ack=False
+[07:38:54] phase='awaiting acknowledgement of cycle 2' delivered=2 awaiting_ack=True
+{
+  "acks": [
+    {
+      "acked_at_utc": "2026-10-28T00:38:30+00:00",
+      "cycle": 1,
+      "note": "Con cháu đã chuẩn bị mâm cúng"
+    }
+  ],
+  "awaiting_ack": true,
+  "calendar_source": "core.lunar.next_occurrence",
+  "cycle": 2,
+  "delivered_cycles": 2,
+  "deliveries": [
+    {
+      "attempts_used": 3,
+      "cycle": 1,
+      "ledger": {
+        "duplicate": false,
+        "key": "gio-proof-20261028-073758#1",
+        "recorded": true
+      },
+      "lunar": "10/03 âm lịch",
+      "message_id": "<gio-proof-20261028-073758-c1@so-gio.local>",
+      "production_gio_local": "2027-04-16T07:00:00+07:00",
+      "scheduled_for_local": "2026-10-28T07:38:20+07:00",
+      "sent_at_utc": "2026-10-28T00:38:23+00:00",
+      "solar_date": "2027-04-16",
+      "worker_pid": 2554888
+    },
+    {
+      "attempts_used": 3,
+      "cycle": 2,
+      "ledger": {
+        "duplicate": false,
+        "key": "gio-proof-20261028-073758#2",
+        "recorded": true
+      },
+      "lunar": "10/03 âm lịch",
+      "message_id": "<gio-proof-20261028-073758-c2@so-gio.local>",
+      "production_gio_local": "2027-04-16T07:00:00+07:00",
+      "scheduled_for_local": "2026-10-28T07:38:50+07:00",
+      "sent_at_utc": "2026-10-28T00:38:53+00:00",
+      "solar_date": "2027-04-16",
+      "worker_pid": 2554888
+    }
+  ],
+  "demo_override": true,
+  "lunar": "10/03 âm lịch",
+  "next_fire_local": "2026-10-28T07:38:50+07:00",
+  "next_fire_utc": "2026-10-28T00:38:50+00:00",
+  "person": "Cụ Nguyễn Thị Đào",
+  "phase": "awaiting acknowledgement of cycle 2",
+  "production_gio_local": "2027-04-16T07:00:00+07:00"
+}
+[07:38:54] sent signal acknowledge note='Xong, hẹn năm sau'
+
+=== 8. workflow result ===
+[07:38:55] workflow returned:
+{
+  "acks": [
+    {
+      "acked_at_utc": "2026-10-28T00:38:30+00:00",
+      "cycle": 1,
+      "note": "Con cháu đã chuẩn bị mâm cúng"
+    },
+    {
+      "acked_at_utc": "2026-10-28T00:38:54+00:00",
+      "cycle": 2,
+      "note": "Xong, hẹn năm sau"
+    }
+  ],
+  "cycles_delivered": 2,
+  "deliveries": [
+    {
+      "attempts_used": 3,
+      "cycle": 1,
+      "ledger": {
+        "duplicate": false,
+        "key": "gio-proof-20261028-073758#1",
+        "recorded": true
+      },
+      "lunar": "10/03 âm lịch",
+      "message_id": "<gio-proof-20261028-073758-c1@so-gio.local>",
+      "production_gio_local": "2027-04-16T07:00:00+07:00",
+      "scheduled_for_local": "2026-10-28T07:38:20+07:00",
+      "sent_at_utc": "2026-10-28T00:38:23+00:00",
+      "solar_date": "2027-04-16",
+      "worker_pid": 2554888
+    },
+    {
+      "attempts_used": 3,
+      "cycle": 2,
+      "ledger": {
+        "duplicate": false,
+        "key": "gio-proof-20261028-073758#2",
+        "recorded": true
+      },
+      "lunar": "10/03 âm lịch",
+      "message_id": "<gio-proof-20261028-073758-c2@so-gio.local>",
+      "production_gio_local": "2027-04-16T07:00:00+07:00",
+      "scheduled_for_local": "2026-10-28T07:38:50+07:00",
+      "sent_at_utc": "2026-10-28T00:38:53+00:00",
+      "solar_date": "2027-04-16",
+      "worker_pid": 2554888
+    }
+  ],
+  "lunar": "10/03 âm lịch",
+  "person": "Cụ Nguyễn Thị Đào"
+}
+
+=== 9. final status ===
+     Status           WorkflowId             Type        StartTime   
+    Completed  gio-proof-20261028-073758  GioWorkflow  54 seconds ago
+WorkflowId            gio-proof-20261028-073758
+Type                  GioWorkflow
+TaskQueue             gio-reminders
+HistoryLength         51
+RootWorkflowId        gio-proof-20261028-073758
+RunTime         54s
+Status          COMPLETED
+
+=== 10. full event history (Progress view) ===
+Progress:
+  ID           Time                     Type           
+    1  2026-10-28T00:38:00Z  WorkflowExecutionStarted  
+    2  2026-10-28T00:38:00Z  WorkflowTaskScheduled     
+    3  2026-10-28T00:38:00Z  WorkflowTaskStarted       
+    4  2026-10-28T00:38:00Z  WorkflowTaskCompleted     
+    5  2026-10-28T00:38:00Z  TimerStarted              
+    6  2026-10-28T00:38:20Z  TimerFired                
+    7  2026-10-28T00:38:20Z  WorkflowTaskScheduled     
+    8  2026-10-28T00:38:20Z  WorkflowTaskStarted       
+    9  2026-10-28T00:38:20Z  WorkflowTaskCompleted     
+   10  2026-10-28T00:38:20Z  ActivityTaskScheduled     
+   11  2026-10-28T00:38:23Z  ActivityTaskStarted       
+   12  2026-10-28T00:38:23Z  ActivityTaskCompleted     
+   13  2026-10-28T00:38:23Z  WorkflowTaskScheduled     
+   14  2026-10-28T00:38:24Z  WorkflowTaskStarted       
+   15  2026-10-28T00:38:24Z  WorkflowTaskCompleted     
+   16  2026-10-28T00:38:24Z  ActivityTaskScheduled     
+   17  2026-10-28T00:38:24Z  ActivityTaskStarted       
+   18  2026-10-28T00:38:24Z  ActivityTaskCompleted     
+   19  2026-10-28T00:38:24Z  WorkflowTaskScheduled     
+   20  2026-10-28T00:38:24Z  WorkflowTaskStarted       
+   21  2026-10-28T00:38:24Z  WorkflowTaskCompleted     
+   22  2026-10-28T00:38:24Z  TimerStarted              
+   23  2026-10-28T00:38:30Z  WorkflowExecutionSignaled 
+   24  2026-10-28T00:38:30Z  WorkflowTaskScheduled     
+   25  2026-10-28T00:38:30Z  WorkflowTaskStarted       
+   26  2026-10-28T00:38:30Z  WorkflowTaskCompleted     
+   27  2026-10-28T00:38:30Z  TimerCanceled             
+   28  2026-10-28T00:38:30Z  TimerStarted              
+   29  2026-10-28T00:38:50Z  TimerFired                
+   30  2026-10-28T00:38:50Z  WorkflowTaskScheduled     
+   31  2026-10-28T00:38:50Z  WorkflowTaskStarted       
+   32  2026-10-28T00:38:50Z  WorkflowTaskCompleted     
+   33  2026-10-28T00:38:50Z  ActivityTaskScheduled     
+   34  2026-10-28T00:38:53Z  ActivityTaskStarted       
+   35  2026-10-28T00:38:53Z  ActivityTaskCompleted     
+   36  2026-10-28T00:38:53Z  WorkflowTaskScheduled     
+   37  2026-10-28T00:38:53Z  WorkflowTaskStarted       
+   38  2026-10-28T00:38:53Z  WorkflowTaskCompleted     
+   39  2026-10-28T00:38:53Z  ActivityTaskScheduled     
+   40  2026-10-28T00:38:53Z  ActivityTaskStarted       
+   41  2026-10-28T00:38:53Z  ActivityTaskCompleted     
+   42  2026-10-28T00:38:53Z  WorkflowTaskScheduled     
+   43  2026-10-28T00:38:53Z  WorkflowTaskStarted       
+   44  2026-10-28T00:38:53Z  WorkflowTaskCompleted     
+   45  2026-10-28T00:38:53Z  TimerStarted              
+   46  2026-10-28T00:38:54Z  WorkflowExecutionSignaled 
+   47  2026-10-28T00:38:54Z  WorkflowTaskScheduled     
+   48  2026-10-28T00:38:54Z  WorkflowTaskStarted       
+   49  2026-10-28T00:38:54Z  WorkflowTaskCompleted     
+   50  2026-10-28T00:38:54Z  TimerCanceled             
+   51  2026-10-28T00:38:54Z  WorkflowExecutionCompleted
+
+Results:
+  Status          COMPLETED
+  Result          {"acks":[{"acked_at_utc":"2026-10-28T00:38:30+00:00","cycle":1,"note":"Con cháu đã chuẩn bị mâm cúng"},{"acked_at_utc":"2026-10-28T00:38:54+00:00","cycle":2,"note":"Xong, hẹn năm sau"}],"cycles_delivered":2,"deliveries":[{"attempts_used":3,"cycle":1,"ledger":{"duplicate":false,"key":"gio-proof-20261028-073758#1","recorded":true},"lunar":"10/03 âm lịch","message_id":"\u003cgio-proof-20261028-073758-c1@so-gio.local\u003e","production_gio_local":"2027-04-16T07:00:00+07:00","scheduled_for_local":"2026-10-28T07:38:20+07:00","sent_at_utc":"2026-10-28T00:38:23+00:00","solar_date":"2027-04-16","worker_pid":2554888},{"attempts_used":3,"cycle":2,"ledger":{"duplicate":false,"key":"gio-proof-20261028-073758#2","recorded":true},"lunar":"10/03 âm lịch","message_id":"\u003cgio-proof-20261028-073758-c2@so-gio.local\u003e","production_gio_local":"2027-04-16T07:00:00+07:00","scheduled_for_local":"2026-10-28T07:38:50+07:00","sent_at_utc":"2026-10-28T00:38:53+00:00","solar_date":"2027-04-16","worker_pid":2554888}],"lunar":"10/03 âm lịch","person":"Cụ Nguyễn Thị Đào"}
+  ResultEncoding  json/plain
+
+=== 11. the timer, across the kill ===
+ 5 2026-10-28T00:38:00Z TimerStarted 
+ 6 2026-10-28T00:38:20Z TimerFired 
+ 10 2026-10-28T00:38:20Z ActivityTaskScheduled 
+ 12 2026-10-28T00:38:23Z ActivityTaskCompleted 
+ 16 2026-10-28T00:38:24Z ActivityTaskScheduled 
+ 18 2026-10-28T00:38:24Z ActivityTaskCompleted 
+ 22 2026-10-28T00:38:24Z TimerStarted 
+ 23 2026-10-28T00:38:30Z WorkflowExecutionSignaled 
+ 28 2026-10-28T00:38:30Z TimerStarted 
+ 29 2026-10-28T00:38:50Z TimerFired 
+ 33 2026-10-28T00:38:50Z ActivityTaskScheduled 
+ 35 2026-10-28T00:38:53Z ActivityTaskCompleted 
+ 39 2026-10-28T00:38:53Z ActivityTaskScheduled 
+ 41 2026-10-28T00:38:53Z ActivityTaskCompleted 
+ 45 2026-10-28T00:38:53Z TimerStarted 
+ 46 2026-10-28T00:38:54Z WorkflowExecutionSignaled 
+ 51 2026-10-28T00:38:54Z WorkflowExecutionCompleted
+
+=== 12. the flaky activity: attempts, backoff and which worker ran them ===
+  id  time(UTC)  event                  activity        attempt  identity
+  10  00:38:20   ActivityTaskScheduled  send_reminder         -  
+  11  00:38:23   ActivityTaskStarted    send_reminder         3  2554888@kiter-550XTA-550XTZ
+      └─ attempt 3 started +3.1s after scheduling (retry backoff) — ConnectionError: simulated gateway failure 2/2 for Cụ Nguyễn Thị Đào (10/03 âm lịch): SMTP 421, try again later
+  12  00:38:23   ActivityTaskCompleted  send_reminder         -  2554888@kiter-550XTA-550XTZ
+  33  00:38:50   ActivityTaskScheduled  send_reminder         -  
+  34  00:38:53   ActivityTaskStarted    send_reminder         3  2554888@kiter-550XTA-550XTZ
+      └─ attempt 3 started +3.0s after scheduling (retry backoff) — ConnectionError: simulated gateway failure 2/2 for Cụ Nguyễn Thị Đào (10/03 âm lịch): SMTP 421, try again later
+  35  00:38:53   ActivityTaskCompleted  send_reminder         -  2554888@kiter-550XTA-550XTZ
+
+=== 13. artifacts written to disk (the 'sent' reminder and the delivered ledger) ===
+--- /home/kiter/hackathon/so-gio/scripts/state/reminders.jsonl ---
+{
+  "activity_id": "1",
+  "attempt": 3,
+  "body_vi": "Hôm nay là 10/03 âm lịch — ngày giỗ của Cụ Nguyễn Thị Đào (2027-04-16). Con cháu chuẩn bị hương, hoa và mâm cơm cúng.",
+  "channel": "file-outbox (demo); production: Zalo ZNS / SMS",
+  "cycle": 1,
+  "key": "gio-proof-20261028-073758#1",
+  "kind": "gio-reminder",
+  "lunar": "10/03 âm lịch",
+  "message_id": "<gio-proof-20261028-073758-c1@so-gio.local>",
+  "person": "Cụ Nguyễn Thị Đào",
+  "scheduled_for_local": "2026-10-28T07:38:20+07:00",
+  "sent_at_utc": "2026-10-28T00:38:23+00:00",
+  "solar_date": "2027-04-16",
+  "worker_host": "kiter-550XTA-550XTZ",
+  "worker_pid": 2554888,
+  "workflow_id": "gio-proof-20261028-073758"
+}
+{
+  "activity_id": "3",
+  "attempt": 3,
+  "body_vi": "Hôm nay là 10/03 âm lịch — ngày giỗ của Cụ Nguyễn Thị Đào (2027-04-16). Con cháu chuẩn bị hương, hoa và mâm cơm cúng.",
+  "channel": "file-outbox (demo); production: Zalo ZNS / SMS",
+  "cycle": 2,
+  "key": "gio-proof-20261028-073758#2",
+  "kind": "gio-reminder",
+  "lunar": "10/03 âm lịch",
+  "message_id": "<gio-proof-20261028-073758-c2@so-gio.local>",
+  "person": "Cụ Nguyễn Thị Đào",
+  "scheduled_for_local": "2026-10-28T07:38:50+07:00",
+  "sent_at_utc": "2026-10-28T00:38:53+00:00",
+  "solar_date": "2027-04-16",
+  "worker_host": "kiter-550XTA-550XTZ",
+  "worker_pid": 2554888,
+  "workflow_id": "gio-proof-20261028-073758"
+}
+--- /home/kiter/hackathon/so-gio/scripts/state/delivered.jsonl ---
+{
+  "attempts_used": 3,
+  "cycle": 1,
+  "key": "gio-proof-20261028-073758#1",
+  "lunar": "10/03 âm lịch",
+  "message_id": "<gio-proof-20261028-073758-c1@so-gio.local>",
+  "person": "Cụ Nguyễn Thị Đào",
+  "recorded_at_utc": "2026-10-28T00:38:24+00:00",
+  "recorded_by_pid": 2554888,
+  "sent_at_utc": "2026-10-28T00:38:23+00:00",
+  "solar_date": "2027-04-16",
+  "workflow_id": "gio-proof-20261028-073758"
+}
+{
+  "attempts_used": 3,
+  "cycle": 2,
+  "key": "gio-proof-20261028-073758#2",
+  "lunar": "10/03 âm lịch",
+  "message_id": "<gio-proof-20261028-073758-c2@so-gio.local>",
+  "person": "Cụ Nguyễn Thị Đào",
+  "recorded_at_utc": "2026-10-28T00:38:53+00:00",
+  "recorded_by_pid": 2554888,
+  "sent_at_utc": "2026-10-28T00:38:53+00:00",
+  "solar_date": "2027-04-16",
+  "workflow_id": "gio-proof-20261028-073758"
+}
+
+=== 14. verdict ===
+killed worker pid 2554542 with SIGKILL while the timer was pending;
+a different process (pid 2554888) woke up and delivered the reminder:
+    {"activity_id": "1", "attempt": 3, "body_vi": "Hôm nay là 10/03 âm lịch — ngày giỗ của Cụ Nguyễn Thị Đào (2027-04-16). Con cháu chuẩn bị hương, hoa và mâm cơm cúng.", "channel": "file-outbox (demo); production: Zalo ZNS / SMS", "cycle": 1, "key": "gio-proof-20261028-073758#1", "kind": "gio-reminder", "lunar": "10/03 âm lịch", "message_id": "<gio-proof-20261028-073758-c1@so-gio.local>", "person": "Cụ Nguyễn Thị Đào", "scheduled_for_local": "2026-10-28T07:38:20+07:00", "sent_at_utc": "2026-10-28T00:38:23+00:00", "solar_date": "2027-04-16", "worker_host": "kiter-550XTA-550XTZ", "worker_pid": 2554888, "workflow_id": "gio-proof-20261028-073758"}
+    {"activity_id": "3", "attempt": 3, "body_vi": "Hôm nay là 10/03 âm lịch — ngày giỗ của Cụ Nguyễn Thị Đào (2027-04-16). Con cháu chuẩn bị hương, hoa và mâm cơm cúng.", "channel": "file-outbox (demo); production: Zalo ZNS / SMS", "cycle": 2, "key": "gio-proof-20261028-073758#2", "kind": "gio-reminder", "lunar": "10/03 âm lịch", "message_id": "<gio-proof-20261028-073758-c2@so-gio.local>", "person": "Cụ Nguyễn Thị Đào", "scheduled_for_local": "2026-10-28T07:38:50+07:00", "sent_at_utc": "2026-10-28T00:38:53+00:00", "solar_date": "2027-04-16", "worker_host": "kiter-550XTA-550XTZ", "worker_pid": 2554888, "workflow_id": "gio-proof-20261028-073758"}
+PASS — the timer lived in the server, not in the killed process.
+[07:38:55] cleanup: killed worker pid 2554888
+[07:38:57] cleanup: stopped the dev server this script started (pid 2554507)

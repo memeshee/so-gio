@@ -1,0 +1,75 @@
+{
+  "audio": "corpus/audio/fleurs_vi_005.wav",
+  "audio_seconds": 10.08,
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "text": "Bác Simon nghĩ rằng một số bảnh nhân có thể đã bị lây gẹp ở bệnh viện và ít nhất 2 người là nhân viên y tế trong bệnh viện.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.0,
+          "text": "Bác Simon nghĩ rằng một số bảnh nhân có thể đã bị lây gẹp ở bệnh viện và ít nhất 2 người là nhân viên y tế trong bệnh viện."
+        }
+      ],
+      "latency_s": 17.834126949310303,
+      "audio_seconds": 10.08
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "text": "bác sĩ mon nghĩ rằng một số bệnh nhân có thể đã bị lây nghẹt ở bệnh viện và ít nhất hai người là nhân viên y tế trong bệnh viện.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 10.08,
+          "text": "bác sĩ mon nghĩ rằng một số bệnh nhân có thể đã bị lây nghẹt ở bệnh viện và ít nhất hai người là nhân viên y tế trong bệnh viện."
+        }
+      ],
+      "latency_s": 53.33770275115967,
+      "audio_seconds": 10.08
+    }
+  ],
+  "silences": [],
+  "spans": [
+    {
+      "kind": "disputed",
+      "text_a": "simon",
+      "text_b": "sĩ mon",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "bảnh",
+      "text_b": "bệnh",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "gẹp",
+      "text_b": "nghẹt",
+      "start": null,
+      "end": null
+    },
+    {
+      "kind": "disputed",
+      "text_a": "2",
+      "text_b": "hai",
+      "start": null,
+      "end": null
+    }
+  ],
+  "agreement_rate": 0.8666666666666667,
+  "invented_spans": [],
+  "cache_version": "asr-cache-v1",
+  "audio_sha256": "a1a2d753d959847878b50ce1bf9a777bc16cd84931ada3cae38a91cfd80932a9",
+  "measured_at_utc": "2026-10-28T00:51:28+00:00",
+  "wall_s": 72.35,
+  "models": {
+    "whisper": "small",
+    "phowhisper": "vinai/PhoWhisper-small"
+  }
+}
