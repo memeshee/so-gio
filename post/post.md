@@ -170,12 +170,22 @@ ever reached the quotable set in either version — which is why the guard, not 
 |---|---|---|---|---|---|---|
 | `tinker_tuned` | `Qwen3.5-4B` + rank-16 LoRA, Tinker | **0.958** | **0.875** | **0.915** | **0** | 7.8 |
 | `tinker_base` | same model, no adapter | 0.802 | 0.667 | 0.728 | 0 | 2.6 |
-| local + regex arms | `gemma3:1b-it-qat`, `qwen2.5:3b-instruct`, regex, always-a-date | see `data/eval/tables.md` | | | 0 | |
+| `qwen2.5:3b-instruct` | local, Ollama, 3B | 0.625 | 0.476 | 0.540 | 0 | 92.3 |
+| `regex` | hand-written lunar-date pattern | 0.857 | 0.286 | 0.429 | 0 | 0.001 |
+| `regex_all_dates` | the degenerate "every date is a giỗ" arm | 0.194 | 0.286 | 0.231 | 0 | 0.001 |
+| `gemma3:1b-it-qat` | local, Ollama, 1B | **0.000** | **0.000** | **0.000** | 0 | 36.3 |
 
-Two things about that table that I would rather not print and am printing anyway: the fine-tune costs **3× the
-latency** (7.8 s vs 2.6 s per passage — it writes more, so it pays more), and the training set is **16 authored
-passages**, at which size a loss that collapses to ~0.00002 by step 40 is memorisation as much as learning. The
-held-out F1 is the number I trust; the training curve is the number that should make you suspicious.
+The `gemma3:1b-it-qat` row is the one I want to be honest about: **a 1B model scores zero**. It does not produce
+bad claims; it produces well-formed claims that are not the ones in the text, and the guard refuses or the
+matcher misses every one of them. "Just run a small model locally" is the assumption this table kills. The
+regex arm shows the mirror image — 0.857 precision and 0.286 recall, because a pattern is never wrong about a
+date it can see and blind to every date phrased differently. What wins is neither: it is a model trained for
+this one narrow job, which is what the two top rows are.
+
+Two more things I would rather not print and am printing anyway: the fine-tune costs **3× the latency** (7.8 s
+vs 2.6 s per passage — it writes more, so it pays more), and the training set is **16 authored passages**, at
+which size a loss that collapses to ~0.00002 by step 40 is memorisation as much as learning. The held-out F1 is
+the number I trust; the training curve is the number that should make you suspicious.
 
 ## What Went Wrong
 

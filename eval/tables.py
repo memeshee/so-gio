@@ -111,11 +111,11 @@ def render(report: dict) -> str:
                     continue
                 rows.append([f"`{key}`", label, b["probes"], _f(b["silence_seconds"], 1),
                              b["invented_syllables"], _f(b["wpm_of_silence"], 1),
-                             f"{b['probes_with_invention']}/{b['probes']}"])
+                             f"{b['probes_with_invention']}/{b['probes']}", s["timestamp_usable_probes"]])
         parts.append("## 2. Invention over silence\n")
         parts.append(_table(
             ["Arm", "Probe", "Probes (n)", "Silence (s)", "Invented syllables",
-             "Invented words/min of silence", "Probes with invention"], rows))
+             "Invented words/min of silence", "Probes with invention", "Timestamps usable (probes)"], rows))
         parts.append(
             f"\n*Syllables each arm produced **only because silence was added**, across "
             f"{inv['probe_count']['splice']} clipped-pause probes and {inv['probe_count']['tail']} "
@@ -124,14 +124,26 @@ def render(report: dict) -> str:
             f"syllables in the arm's transcript of the probed file that have no counterpart in the same arm's "
             f"transcript of the unmodified source — a definition that needs no timestamps and also catches a "
             f"model that repeats real words into the silence. Vietnamese is written in syllables, so "
-            f"syllables ≈ words.*\n")
+            f"syllables ≈ words. The last column says on how many probes the arm's own timestamps are fine "
+            f"enough to place a syllable; counting by timestamp instead would credit PhoWhisper with "
+            f"{inv['per_arm']['phowhisper']['syllables_in_window_by_timestamp']} syllables on the "
+            f"spliced-pause probes alone, and every one of them is the clip's real speech carried by a single "
+            f"segment spanning the whole 25 s window — the reason the content delta is the published number.*\n")
         if not inv["per_arm"]["whisper"]["worst_examples"] and not inv["per_arm"]["phowhisper"]["worst_examples"]:
+            tail_ev = [e for e in inv["events"] if e["probe"] == "tail" and e["arm"] == "whisper"]
+            closed = [e for e in tail_ev if e["prev_segment_end"] is not None]
+            gaps = sorted(e["window_start"] - e["prev_segment_end"] for e in closed)
+            gap_text = ""
+            if gaps:
+                gap_text = (f" On the {len(tail_ev)} appended-tail probes the model's last segment ends "
+                            f"{gaps[0]:.2f}–{gaps[-1]:.2f} s before the appended silence on {len(closed)} of "
+                            f"them, and it puts nothing after that segment.")
             parts.append(
                 "**No arm produced a single syllable inside a silent window, on any of the "
                 f"{inv['probe_count']['splice'] + inv['probe_count']['tail']} probes.** There is therefore no "
                 "fabricated sentence to quote. What can be shown instead is where each model chose to stop "
                 "and start: on the three spliced-pause probes, Whisper's own segment boundaries bracket the "
-                "digital silence — it heard the hole.\n")
+                f"digital silence — it heard the hole.{gap_text}\n")
             rows = []
             for e in inv["events"]:
                 if e["probe"] != "splice" or e["arm"] != "whisper":

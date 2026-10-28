@@ -11,7 +11,7 @@
     "torch": "2.14.1+cu130",
     "whisper_model": "Systran/faster-whisper-small (CTranslate2 int8, cpu)",
     "phowhisper_model": "vinai/PhoWhisper-small",
-    "run_at": "2026-10-28T08:26:11+07:00"
+    "run_at": "2026-10-28T08:39:55+07:00"
   },
   "corpus": {
     "name": "so-gio-vn-fleurs-dev",
@@ -851,6 +851,7 @@
         "silence_seconds": 45.0,
         "wpm_of_silence": 0.0,
         "timestamp_usable": false,
+        "timestamp_usable_probes": "5/9",
         "median_segment_seconds": 8.0,
         "worst_examples": [],
         "by_probe": {
@@ -878,6 +879,7 @@
         "silence_seconds": 45.0,
         "wpm_of_silence": 0.0,
         "timestamp_usable": false,
+        "timestamp_usable_probes": "0/9",
         "median_segment_seconds": 17.26,
         "worst_examples": [],
         "by_probe": {
@@ -1290,6 +1292,391 @@
           "spans": []
         }
       ]
+    }
+  },
+  "extraction": {
+    "status": "run",
+    "path": "data/extract/heldout.jsonl",
+    "n_items": 8,
+    "arms": {
+      "gemma3:1b-it-qat": {
+        "model": "ollama/gemma3:1b-it-qat",
+        "n_items": 8,
+        "guard_bug": false,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "predicted": 8,
+        "gold": 21,
+        "refusals": 0,
+        "uncited_kept": 0,
+        "mean_latency_s": 36.257,
+        "total_latency_s": 290.05,
+        "errors": [],
+        "per_item": [
+          {
+            "id": "ex17",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 35.823,
+            "response_excerpt": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"Ông\", \"lunar_day\": \"thirteen\", \"lunar_month\": \"August\", \"leap\": false}]}"
+          },
+          {
+            "id": "ex18",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 61.542,
+            "response_excerpt": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"bà cố\", \"lunar_day\": \"lunar_day\", \"lunar_month\": \"tháng mười\", \"leap\": false}]}"
+          },
+          {
+            "id": "ex19",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 51.921,
+            "response_excerpt": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"Chú Sáu\", \"lunar_day\": \"lunar_day\", \"lunar_month\": \"lunar_month\", \"leap\": false}]}"
+          },
+          {
+            "id": "ex20",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 43.011,
+            "response_excerpt": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"Ông Hai\", \"lunar_day\": \"17\", \"lunar_month\": \"4\", \"leap\": false}]}"
+          },
+          {
+            "id": "ex21",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 22.558,
+            "response_excerpt": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"Em út\", \"lunar_day\": \"lunar_day\", \"lunar_month\": \"lunar_month\", \"leap\": false}]}"
+          },
+          {
+            "id": "ex22",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 26.243,
+            "response_excerpt": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"Bà nội\", \"lunar_day\": \"thirteen\", \"lunar_month\": \"nine\", \"leap\": false}]}"
+          },
+          {
+            "id": "ex23",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 27.843,
+            "response_excerpt": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"cụ nội\", \"lunar_day\": \"20\", \"lunar_month\": \"7\", \"leap\": false}]}"
+          },
+          {
+            "id": "ex24",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 21.113,
+            "response_excerpt": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"Dì Bảy\", \"lunar_day\": \"lunar_day\", \"lunar_month\": \"mười hai\", \"leap\": false}]}"
+          }
+        ]
+      },
+      "qwen2.5:3b-instruct": {
+        "model": "ollama/qwen2.5:3b-instruct",
+        "n_items": 8,
+        "guard_bug": false,
+        "precision": 0.625,
+        "recall": 0.4762,
+        "f1": 0.5405,
+        "tp": 10,
+        "predicted": 16,
+        "gold": 21,
+        "refusals": 6,
+        "uncited_kept": 0,
+        "mean_latency_s": 92.316,
+        "total_latency_s": 738.53,
+        "errors": [],
+        "per_item": [
+          {
+            "id": "ex17",
+            "suggested": 3,
+            "kept": 2,
+            "refused": 1,
+            "tp": 2,
+            "latency_s": 131.855,
+            "response_excerpt": "{\n  \"claims\": [\n    {\n      \"kind\": \"gio_date\",\n      \"quote\": \"Giỗ ông ngoại là ngày mười ba tháng tám\",\n      \"lunar_day\": null,\n      \"lunar_month\": \"mười tám\"\n    },\n    {\n      \"kind\": \"offering\",\n      \"quote\": \"ông thích cua rang muối, nên mâm nào cũng có một đĩa\",\n      \"lunar_day\": null,\n      \"lunar_month\": null\n    },\n    {\n      \"kind\": \"instruction\",\n      \"quote\": \"Con nhớ hạ mâm trư"
+          },
+          {
+            "id": "ex18",
+            "suggested": 3,
+            "kept": 2,
+            "refused": 1,
+            "tp": 1,
+            "latency_s": 111.715,
+            "response_excerpt": "{\n  \"claims\": [\n    {\n      \"kind\": \"gio_date\",\n      \"quote\": \"Giỗ bà cố thì tính ngày mười lăm tháng mười hai\",\n      \"lunar_day\": null,\n      \"lunar_month\": \"mười hai\"\n    },\n    {\n      \"kind\": \"offering\",\n      \"quote\": \"Bà cố thì cúng đơn giản, một mâm chè với một nải chuối.\",\n      \"lunar_day\": null,\n      \"lunar_month\": null\n    },\n    {\n      \"kind\": \"instruction\",\n      \"quote\": \"nếu bận"
+          },
+          {
+            "id": "ex19",
+            "suggested": 3,
+            "kept": 3,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 136.6,
+            "response_excerpt": "{\n  \"claims\": [\n    {\n      \"kind\": \"instruction\",\n      \"quote\": \"Chú Sáu mất ngày mười sáu tháng năm, tới đó cả nhà về Bến Tre.\",\n      \"lunar_day\": null,\n      \"lunar_month\": null,\n      \"leap\": false\n    },\n    {\n      \"kind\": \"instruction\",\n      \"quote\": \"Mâm cúng phải có bánh xèo và cá lóc nướng trui, đúng kiểu miền Nam.\",\n      \"lunar_day\": null,\n      \"lunar_month\": null,\n      \"leap\": fa"
+          },
+          {
+            "id": "ex20",
+            "suggested": 3,
+            "kept": 2,
+            "refused": 1,
+            "tp": 1,
+            "latency_s": 86.538,
+            "response_excerpt": "{\n  \"claims\": [\n    {\n      \"kind\": \"gio_date\",\n      \"quote\": \"Giỗ ông Hai là ngày mười bảy tháng tư, nhớ đúng tháng tư âm lịch.\",\n      \"lunar_day\": null,\n      \"lunar_month\": null\n    },\n    {\n      \"kind\": \"instruction\",\n      \"quote\": \"Nhà mình kiêng cúng mực, nên đừng mua mực dù ông thích.\",\n      \"lunar_day\": null,\n      \"lunar_month\": null\n    },\n    {\n      \"kind\": \"instruction\",\n      \"q"
+          },
+          {
+            "id": "ex21",
+            "suggested": 3,
+            "kept": 2,
+            "refused": 1,
+            "tp": 2,
+            "latency_s": 81.22,
+            "response_excerpt": "{\n  \"claims\": [\n    {\n      \"kind\": \"gio_date\",\n      \"quote\": \"giỗ ngày mười tháng hai\",\n      \"lunar_day\": null,\n      \"lunar_month\": null,\n      \"leap\": false\n    },\n    {\n      \"kind\": \"offering\",\n      \"quote\": \"Mẹ nấu cháo gà với mua một ít bánh kẹo\",\n      \"lunar_day\": null,\n      \"lunar_month\": null,\n      \"leap\": false\n    },\n    {\n      \"kind\": \"instruction\",\n      \"quote\": \"Không đốt và"
+          },
+          {
+            "id": "ex22",
+            "suggested": 2,
+            "kept": 2,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 62.046,
+            "response_excerpt": "{\n  \"claims\": [\n    {\n      \"kind\": \"person\",\n      \"quote\": \"Bà nội mất ngày mồng năm tháng chín, năm đó trời mưa rất lớn.\",\n      \"lunar_day\": null,\n      \"lunar_month\": null,\n      \"leap\": false\n    },\n    {\n      \"kind\": \"offering\",\n      \"quote\": \"cúng xôi đậu xanh, thêm nồi gà kho gừng.\",\n      \"lunar_day\": null,\n      \"lunar_month\": null,\n      \"leap\": false\n    }\n  ]\n}"
+          },
+          {
+            "id": "ex23",
+            "suggested": 2,
+            "kept": 1,
+            "refused": 1,
+            "tp": 1,
+            "latency_s": 58.633,
+            "response_excerpt": "{\n  \"claims\": [\n    {\n      \"kind\": \"gio_date\",\n      \"quote\": \"Giỗ cụ nội là ngày hai mươi tháng bảy\",\n      \"lunar_day\": null,\n      \"lunar_month\": \"tháng bảy\"\n    },\n    {\n      \"kind\": \"offering\",\n      \"quote\": \"Mâm cỗ phải có một mâm ngũ quả và một con gà luộc nguyên con.\",\n      \"lunar_day\": null,\n      \"lunar_month\": null\n    }\n  ]\n}"
+          },
+          {
+            "id": "ex24",
+            "suggested": 3,
+            "kept": 2,
+            "refused": 1,
+            "tp": 2,
+            "latency_s": 69.923,
+            "response_excerpt": "{\n  \"claims\": [\n    {\n      \"kind\": \"gio_date\",\n      \"quote\": \"Dì Bảy mất ngày mười hai tháng mười\",\n      \"lunar_day\": null,\n      \"lunar_month\": \"mười hai tháng mười\"\n    },\n    {\n      \"kind\": \"offering\",\n      \"quote\": \"cúng bánh bèo và chè bắp\",\n      \"lunar_day\": null,\n      \"lunar_month\": null\n    },\n    {\n      \"kind\": \"instruction\",\n      \"quote\": \"Đừng quên đốt đèn trên bàn thờ suốt đêm"
+          }
+        ]
+      },
+      "regex": {
+        "model": "core.baselines.regex_baseline",
+        "n_items": 8,
+        "guard_bug": false,
+        "precision": 0.8571,
+        "recall": 0.2857,
+        "f1": 0.4286,
+        "tp": 6,
+        "predicted": 7,
+        "gold": 21,
+        "refusals": 0,
+        "uncited_kept": 0,
+        "mean_latency_s": 0.001,
+        "total_latency_s": 0.01,
+        "errors": [],
+        "per_item": [
+          {
+            "id": "ex17",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.006
+          },
+          {
+            "id": "ex18",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.0
+          },
+          {
+            "id": "ex19",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.0
+          },
+          {
+            "id": "ex20",
+            "suggested": 2,
+            "kept": 2,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.001
+          },
+          {
+            "id": "ex21",
+            "suggested": 0,
+            "kept": 0,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 0.0
+          },
+          {
+            "id": "ex22",
+            "suggested": 0,
+            "kept": 0,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 0.0
+          },
+          {
+            "id": "ex23",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.0
+          },
+          {
+            "id": "ex24",
+            "suggested": 1,
+            "kept": 1,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.0
+          }
+        ]
+      },
+      "regex_all_dates": {
+        "model": "core.baselines.regex_baseline(all_dates=True)",
+        "n_items": 8,
+        "guard_bug": false,
+        "precision": 0.1935,
+        "recall": 0.2857,
+        "f1": 0.2308,
+        "tp": 6,
+        "predicted": 31,
+        "gold": 21,
+        "refusals": 3,
+        "uncited_kept": 0,
+        "mean_latency_s": 0.001,
+        "total_latency_s": 0.01,
+        "errors": [],
+        "per_item": [
+          {
+            "id": "ex17",
+            "suggested": 4,
+            "kept": 4,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.001
+          },
+          {
+            "id": "ex18",
+            "suggested": 6,
+            "kept": 5,
+            "refused": 1,
+            "tp": 1,
+            "latency_s": 0.001
+          },
+          {
+            "id": "ex19",
+            "suggested": 4,
+            "kept": 4,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.0
+          },
+          {
+            "id": "ex20",
+            "suggested": 6,
+            "kept": 5,
+            "refused": 1,
+            "tp": 1,
+            "latency_s": 0.002
+          },
+          {
+            "id": "ex21",
+            "suggested": 4,
+            "kept": 4,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 0.0
+          },
+          {
+            "id": "ex22",
+            "suggested": 2,
+            "kept": 2,
+            "refused": 0,
+            "tp": 0,
+            "latency_s": 0.0
+          },
+          {
+            "id": "ex23",
+            "suggested": 5,
+            "kept": 4,
+            "refused": 1,
+            "tp": 1,
+            "latency_s": 0.001
+          },
+          {
+            "id": "ex24",
+            "suggested": 3,
+            "kept": 3,
+            "refused": 0,
+            "tp": 1,
+            "latency_s": 0.001
+          }
+        ]
+      }
+    },
+    "guard_failures": [],
+    "gold_total": 21
+  },
+  "tinker": {
+    "tinker_base": {
+      "scored_separately": true,
+      "remote": true,
+      "source": "data/eval/tinker_base.json",
+      "summary": {
+        "n": 8,
+        "precision": 0.8021,
+        "recall": 0.6667,
+        "f1": 0.7281,
+        "uncited": 0,
+        "refused": 3,
+        "mean_latency_s": 2.6
+      },
+      "n_items": 8
+    },
+    "tinker_tuned": {
+      "scored_separately": true,
+      "remote": true,
+      "source": "data/eval/tinker_tuned.json",
+      "summary": {
+        "n": 8,
+        "precision": 0.9583,
+        "recall": 0.875,
+        "f1": 0.9148,
+        "uncited": 0,
+        "refused": 0,
+        "mean_latency_s": 7.79
+      },
+      "n_items": 8
     }
   }
 }

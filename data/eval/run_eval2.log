@@ -1,0 +1,17 @@
+[1/4] ASR accuracy: 18 clips × 2 arms
+      whisper     mean WER 0.221  RTF 0.52x
+      phowhisper  mean WER 0.140  RTF 0.21x
+[2/4] invention over silence: 9 probes × 2 arms
+      whisper     0 syllables over 45.0s (0.0 wpm); timestamps usable: False
+      phowhisper  0 syllables over 45.0s (0.0 wpm); timestamps usable: False
+[3/4] does the two-model diff catch it?
+      pairs with invention 0/18, flagged 0; FP on 0/18 clean clips; spans fired anywhere: 0
+      asr stages took 0s wall
+[4/4] extraction arms
+      gemma3:1b-it-qat     P 0.000 R 0.000 F1 0.000 refusals 0
+      qwen2.5:3b-instruct  P 0.625 R 0.476 F1 0.540 refusals 6
+      regex                P 0.857 R 0.286 F1 0.429 refusals 0
+      regex_all_dates      P 0.194 R 0.286 F1 0.231 refusals 3
+      tinker_base          scored separately (data/eval/tinker_base.json)
+      tinker_tuned         scored separately (data/eval/tinker_tuned.json)
+wrote data/eval/report.json and data/eval/tables.md

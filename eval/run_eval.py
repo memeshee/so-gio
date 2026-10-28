@@ -354,6 +354,7 @@ def measure_invention(runner: Runner, probes: list[dict]) -> dict:
             "silence_seconds": round(total_sec, 2),
             "wpm_of_silence": round(total_syl / (total_sec / 60.0), 1) if total_sec else 0.0,
             "timestamp_usable": usable,
+            "timestamp_usable_probes": f"{sum(1 for e in evs if e['timestamp_usable'])}/{len(evs)}",
             "median_segment_seconds": round(sorted(e["median_segment_seconds"] for e in evs)[len(evs) // 2], 2) if evs else None,
             "worst_examples": worst_examples[:2],
         }

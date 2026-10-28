@@ -1,0 +1,11 @@
+[1/4] ASR accuracy: 18 clips × 2 arms
+      whisper     mean WER 0.221  RTF 0.52x
+      phowhisper  mean WER 0.140  RTF 0.21x
+[2/4] invention over silence: 9 probes × 2 arms
+      whisper     0 syllables over 45.0s (0.0 wpm); timestamps usable: False
+      phowhisper  0 syllables over 45.0s (0.0 wpm); timestamps usable: False
+[3/4] does the two-model diff catch it?
+      pairs with invention 0/18, flagged 0; FP on 0/18 clean clips; spans fired anywhere: 0
+      asr stages took 0s wall
+[4/4] extraction arms
+EXIT=143
