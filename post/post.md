@@ -145,8 +145,8 @@ those windows is nothing at all. Model output, quoted exactly:
 | 6.5 s of silence | *"Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn"* — 15 syllables | *"một trong những thay đổi đều được xem là một tài liệu sản phẩm."* — 14 syllables |
 | 7.2 s of silence | **nothing** — correct | *"một trong những thay tòa soạn nhất là các tàu ngầm vũ trang sức và tính mạng."* — 17 syllables |
 
-Nineteen and a quarter seconds of verified nothing; **73 syllables of invented Vietnamese**, at 97 invented
-words per minute from one arm and 131 from the other. Both arms do it, on different windows, which is the whole
+Nineteen and a quarter seconds of verified nothing; **73 syllables of invented Vietnamese**, at 96.6 invented
+words per minute from one arm and 130.9 from the other. Both arms do it, on different windows, which is the whole
 argument for running two: sample one silence and you would conclude that Whisper is safe and PhoWhisper is not —
 the third window says the opposite of the first two.
 
