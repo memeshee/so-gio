@@ -1,16 +1,16 @@
 @font-face {
   font-family: "So Gio Serif";
-  src: url("fonts/LiberationSerif-Regular.woff2") format("woff2");
+  src: url("fonts/SoGioSerif-Regular.woff2") format("woff2");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "So Gio Serif";
-  src: url("fonts/LiberationSerif-Italic.woff2") format("woff2");
+  src: url("fonts/SoGioSerif-Italic.woff2") format("woff2");
   font-weight: 400; font-style: italic; font-display: swap;
 }
 @font-face {
   font-family: "So Gio Serif";
-  src: url("fonts/LiberationSerif-Bold.woff2") format("woff2");
+  src: url("fonts/SoGioSerif-Bold.woff2") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
 }
 
@@ -347,6 +347,11 @@ a.chip:hover { border-bottom-color: var(--ink-2); }
 .refusal blockquote { margin: 0 0 0.7rem; font-size: 1.0625rem; line-height: 1.62; color: var(--ink-2); }
 .refusal blockquote p { text-indent: -0.38em; }
 .refusal s { text-decoration-color: rgba(27, 26, 23, 0.45); }
+.answer {
+  margin: 1.6rem 0 0; padding-top: 1rem; border-top: 1px solid var(--rule);
+  font-size: 1.125rem; line-height: 1.55; color: var(--ink-2); max-width: 30em;
+}
+.answer b { font-weight: 700; color: var(--ink); }
 .reason {
   font-family: var(--sans); font-size: 0.75rem; line-height: 1.5; color: var(--ink-2);
   display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: baseline;
@@ -443,6 +448,34 @@ table.data caption { font-size: 0.625rem; letter-spacing: 0.08em; }
 
 .moons td { font-size: 0.78rem; }
 
+/* ------------------------------------------------------------------ evaluation appendix */
+
+.eval-page .sheet { max-width: calc(44rem + var(--pad) * 2); }
+.eval-page .masthead, .eval-page .chapter > h2, .eval-page .ch-en,
+.eval-page .lede, .eval-page .figures, .eval-page .imprint, .eval-page .prose {
+  max-width: 34em;
+}
+.eval-tables > p, .eval-tables > h3, .eval-tables > h4, .eval-tables > ul { max-width: 36em; }
+.eval-tables .tnote {
+  font-family: var(--sans); font-size: 0.78rem; line-height: 1.55; color: var(--ink-3);
+  max-width: 62ch;
+}
+.eval-tables .tnote em { font-style: normal; }
+
+@media (max-width: 700px) {
+  table.data.eval thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  table.data.eval, table.data.eval tbody, table.data.eval tr, table.data.eval td { display: block; width: auto; }
+  table.data.eval tr { padding: 0.7rem 0; border-bottom: 1px solid var(--rule-soft); }
+  table.data.eval td {
+    border: 0; padding: 0.14rem 0;
+    display: grid; grid-template-columns: 6.6rem minmax(0, 1fr); gap: 0.55rem;
+  }
+  table.data.eval td::before {
+    content: attr(data-label); font-family: var(--sans); font-size: 0.625rem; line-height: 1.4;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-3); padding-top: 0.2em;
+  }
+}
+
 /* ------------------------------------------------------------------ misc */
 
 .more { margin: 1.4rem 0 0; font-family: var(--sans); font-size: 0.8125rem; }
@@ -509,7 +542,8 @@ table.data caption { color: #000; }
   .chip { color: #000; border: 0; font-size: 9pt; }
   .disputed { color: #000; text-decoration-color: #000; }
   .alarm { border-left: 2pt solid #000; }
-  .alarm-label, .claim-date time, .years li.next .d, .years li.next .w, .years li.checked .d { color: #000; }
+  .alarm-label, .claim-date time, .years li.next .d, .years li.next .w, .years li.checked .d,
+  .answer, .answer b { color: #000; }
   .alarm-label { font-weight: 700; }
   .claim, .refusal, .alarm, .cal, .example, .figure, table.data tr { break-inside: avoid; }
   h1, h2, h3, .cal-head { break-after: avoid; }
@@ -519,6 +553,12 @@ table.data caption { color: #000; }
   .colophon { border-top: 1px solid #000; }
   table.data { font-size: 8.5pt; }
   .moons td { font-size: 8.5pt; }
+  .eval-page .sheet { max-width: none; }
+  .eval-page .masthead, .eval-page .chapter > h2, .eval-page .ch-en,
+  .eval-page .lede, .eval-page .figures, .eval-page .imprint, .eval-page .prose,
+  .eval-tables > p, .eval-tables > h3, .eval-tables > h4, .eval-tables > ul { max-width: 124mm; }
+  .eval-tables .table-wrap { overflow: visible; }
+  table.data.eval { font-size: 7.5pt; }
   .years li { border-color: #999; }
   .years .d { font-size: 10.5pt; }
 }

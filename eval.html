@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đánh giá — Sổ Giỗ</title>
+<meta name="description" content="Năm phép thử trên 18 clip sạch và 3 khoảng lặng ghép: WER, chỗ bịa, và chỗ bộ dò hai tai bỏ sót.">
+<meta name="theme-color" content="#f7f2e8">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Đánh giá — Sổ Giỗ">
+<meta property="og:description" content="Năm phép thử trên 18 clip sạch và 3 khoảng lặng ghép: WER, chỗ bịa, và chỗ bộ dò hai tai bỏ sót.">
+<meta property="og:locale" content="vi_VN">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<link rel="stylesheet" href="assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="eval-page">
+<a class="skip" href="#main">Bỏ qua đến nội dung · Skip to content</a>
+<main id="main" class="sheet">
+
+<header class="masthead">
+  <p class="runhead"><span><a href="index.html">Sổ Giỗ</a> · bản chạy <b>smoke-001</b></span><span>tr. 4</span></p>
+  <h1>Đánh giá</h1>
+  <p class="deck">18 clip sạch, 3 khoảng lặng ghép, hai mô hình. Những con số dưới
+    đây không phải điểm số của sản phẩm — chúng là chỗ sản phẩm còn hở.</p>
+  <dl class="imprint">
+    <dt>Dữ liệu</dt><dd>18 clip · 204,42 giây FLEURS
+      · 3 khoảng lặng ghép · 15,0 giây</dd>
+    <dt>Chạy lúc</dt><dd>07:45, 28 tháng 10, 2026 (+07) · 8 vCPU, không GPU</dd>
+    <dt>Máy</dt><dd>AMD Ryzen 5 2500U with Radeon Vega Mobile Gfx · Python 3.12.6</dd>
+    <dt>Nguồn</dt><dd><span class="chip">data/eval/report.json</span> và <span class="chip">tables.md</span></dd>
+  </dl>
+</header>
+
+<div class="chapter">
+  <h2>Bốn con số</h2>
+  <p class="ch-en" lang="en">Four numbers</p>
+  <div class="figures"><div class="figure"><span class="n">96</span><span class="l">âm tiết phowhisper viết trong 15 giây lặng</span></div><div class="figure"><span class="n">0/3</span><span class="l">chỗ bộ dò hai tai đánh dấu được</span></div><div class="figure"><span class="n">0</span><span class="l">âm tiết bịa lọt vào phần hai bên cùng nghe</span></div><div class="figure"><span class="n">0/18</span><span class="l">clip sạch bị gắn cờ nhầm</span></div></div>
+  <p class="lede">Whisper: 0 âm tiết bịa trong cùng 15 giây lặng. Toàn bộ chỗ bịa
+    đến từ phowhisper, và nó bịa dày: 384 âm tiết mỗi phút lặng.</p>
+</div>
+
+
+<section class="chapter" id="invented">
+  <h2>Chỗ bịa, nguyên văn</h2>
+  <p class="ch-en" lang="en">The inventions, verbatim</p>
+  
+<p class="lede">Hai câu dưới đây được phowhisper viết ra trong khoảng lặng đã ghép vào bản ghi. Chúng không có
+  trong băng, không có trong bản tham chiếu — và cũng không bị cuốn sổ đánh dấu.</p>
+
+<aside class="alarm">
+  <p class="alarm-label">phowhisper · silence_02.wav · lặng 00:08–00:13</p>
+  <p class="alarm-text"><del>“tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường.có hai người khuyết tật ngồi xe lăn mọi người cứ trầm lên và xô đẩy họ a khman vơ say nói.”</del></p>
+  <p class="alarm-note">Đoạn mô hình tự gán 00:00–00:23 · 37 âm tiết.
+    Câu này không có trong bản ghi; khoảng lặng được ghép vào 00:08–00:13.
+    Bộ dò của cuốn sổ không đánh dấu câu này.</p>
+</aside>
+<aside class="alarm">
+  <p class="alarm-label">phowhisper · silence_01.wav · lặng 00:05–00:09</p>
+  <p class="alarm-text"><del>“bản báo cáo mở đầu bằng lời biện hộ cho cuộc tranh luận mở và tạo lập sự đồng thuận của hoa kỳ về chính sách đối với trung đông.”</del></p>
+  <p class="alarm-note">Đoạn mô hình tự gán 00:00–00:17 · 30 âm tiết.
+    Câu này không có trong bản ghi; khoảng lặng được ghép vào 00:05–00:09.
+    Bộ dò của cuốn sổ không đánh dấu câu này.</p>
+</aside>
+
+</section>
+
+
+<section class="chapter" id="missed">
+  <h2>Vì sao bộ dò bỏ sót</h2>
+  <p class="ch-en" lang="en">Why the flag missed it</p>
+  
+<div class="prose">
+  <p>Phowhisper trả về một đoạn duy nhất gần như trùm cả clip — 00:00–00:23 cho một khoảng lặng 5 giây. Phép dò
+    của cuốn sổ hỏi một câu hẹp hơn: <em>đoạn này có nằm phần lớn trong khoảng lặng mà bộ dò năng lượng đánh dấu
+    không?</em> Nó còn đòi bên kia không có đoạn nào chồng lên đoạn ấy. Đoạn 23 giây không thể nằm phần lớn trong
+    một khoảng lặng 5 giây, và nó chồng lên mọi đoạn của whisper — cả hai điều kiện đều trượt. Nên câu bịa dài
+    37 âm tiết vẫn không bị gắn cờ, dù 37 âm tiết ấy nằm đúng trong khoảng lặng.</p>
+  <p>Đây là lỗi ở mức thiết kế phép dò, không phải lỗi của mô hình. Mô hình bịa; bộ dò hỏi sai câu hỏi.</p>
+</div>
+
+</section>
+
+
+<section class="chapter" id="safe">
+  <h2>Vì sao không vào sổ</h2>
+  <p class="ch-en" lang="en">Why it did not reach the book</p>
+  
+<div class="prose">
+  <p><b>0 trong 96 âm tiết bịa lọt vào phần hai bên cùng nghe.</b> Muốn vào sổ, một lời phải
+    có nguyên văn trong chuỗi âm tiết mà cả whisper và phowhisper cùng đọc. Âm tiết chỉ một bên đọc thì không có
+    mặt trong chuỗi đó, nên không thể được trích xuất, không thể có mốc thời gian, không thể thành ngày giỗ.</p>
+  <p>Ở đây, cửa thứ hai — sự đồng ý của hai tai — đã chặn. Nhưng nếu cả hai mô hình cùng bịa giống nhau, cửa ấy
+    không còn tác dụng; lúc đó chỉ còn bộ dò khoảng lặng, và bộ dò ấy vừa bỏ sót 0/3. Đó là lý do
+    phải sửa nó trước khi dùng với băng thật, chứ không phải vì bản demo này đang sai.</p>
+  <p><b>Việc phải làm:</b> kiểm ở mức âm tiết. Một âm tiết có mốc thời gian rơi trong khoảng lặng, mà bên kia
+    không đọc âm tiết tương ứng, thì phải bị gạch — kể cả khi đoạn chứa nó dài hơn khoảng lặng. Bản này chưa sửa;
+    nó đang ghi lại đúng chỗ mình yếu.</p>
+</div>
+
+</section>
+
+
+<section class="chapter" id="tables">
+  <h2>Bảng đầy đủ</h2>
+  <p class="ch-en" lang="en">The full tables</p>
+  
+<p class="lede">Năm bảng, lấy nguyên văn từ <span class="chip">data/eval/tables.md</span>. Không bảng nào được
+  chọn lọc; cả phần ghi chú cũng giữ nguyên.</p>
+<div class="eval-tables"><p>Every number below was produced by <code>python eval/run_eval.py</code> on 2026-10-28T07:45:02+07:00. Machine: 8 vCPU (AMD Ryzen 5 2500U with Radeon Vega Mobile Gfx), Linux-6.8.0-137-generic-x86_64-with-glibc2.39, Python 3.12.6. ASR: <code>Systran/faster-whisper-small (CTranslate2 int8, cpu)</code> and <code>vinai/PhoWhisper-small</code>, CPU only, models warm-loaded once before timing. Audio: so-gio-vn-fleurs-dev (CC-BY-4.0).</p>
+<h3>1. ASR accuracy per arm</h3>
+<div class="table-wrap"><table class="data eval"><thead><tr>
+<th>Arm</th>
+<th>Model</th>
+<th>Clips (n)</th>
+<th>Audio (s)</th>
+<th>Mean WER</th>
+<th>Micro WER</th>
+<th>Realtime factor</th>
+<th>Median RTF</th>
+</tr></thead><tbody>
+<tr><td data-label="Arm"><code>whisper</code></td><td data-label="Model"><code>small</code></td><td data-label="Clips (n)">18</td><td data-label="Audio (s)">204.4</td><td data-label="Mean WER">0.221</td><td data-label="Micro WER">0.197</td><td data-label="Realtime factor">0.52×</td><td data-label="Median RTF">0.56×</td></tr>
+<tr><td data-label="Arm"><code>phowhisper</code></td><td data-label="Model"><code>vinai/PhoWhisper-small</code></td><td data-label="Clips (n)">18</td><td data-label="Audio (s)">204.4</td><td data-label="Mean WER">0.140</td><td data-label="Micro WER">0.119</td><td data-label="Realtime factor">0.21×</td><td data-label="Median RTF">0.20×</td></tr>
+</tbody></table></div>
+<p class="tnote"><em>Syllable-level word error rate against all 18 published FLEURS vi_vn reference transcripts (204.4 s of audio). Mean WER is the unweighted mean of per-clip WER; micro WER pools all edits over all reference syllables. Realtime factor is total audio seconds ÷ total inference seconds on this CPU, higher is faster; median RTF is the per-clip median.</em></p>
+<h3>2. Invention over inserted silence</h3>
+<div class="table-wrap"><table class="data eval"><thead><tr>
+<th>Arm</th>
+<th>Silences with invention</th>
+<th>Invented syllables</th>
+<th>Inserted silence (s)</th>
+<th>Invented words/min of silence</th>
+<th>Syllables in full silent window</th>
+</tr></thead><tbody>
+<tr><td data-label="Arm"><code>whisper</code></td><td data-label="Silences with invention">0</td><td data-label="Invented syllables">0</td><td data-label="Inserted silence (s)">15.0</td><td data-label="Invented words/min of silence">0.0</td><td data-label="Syllables in full silent window">0</td></tr>
+<tr><td data-label="Arm"><code>phowhisper</code></td><td data-label="Silences with invention">3</td><td data-label="Invented syllables">96</td><td data-label="Inserted silence (s)">15.0</td><td data-label="Invented words/min of silence">384.0</td><td data-label="Syllables in full silent window">96</td></tr>
+</tbody></table></div>
+<p class="tnote"><em>Syllables each arm emitted with timestamps inside all 3 digitally spliced silences (15.0 s total), where the reference transcript says nothing at all. A segment counts when its timestamp midpoint falls inside the splice. The last column counts inside the wider acoustically silent window (the splice plus the natural pause it was inserted into), so it is the loosest reading. Vietnamese is written in syllables, so syllables ≈ words.</em></p>
+<h4>2b. Verbatim worst cases</h4>
+<div class="table-wrap"><table class="data eval"><thead><tr>
+<th>Arm</th>
+<th>File</th>
+<th>Detected at</th>
+<th>Inserted silence</th>
+<th>Syllables</th>
+<th>Model output (verbatim)</th>
+</tr></thead><tbody>
+<tr><td data-label="Arm"><code>phowhisper</code></td><td data-label="File"><code>silence_02.wav</code></td><td data-label="Detected at">00:00–00:23</td><td data-label="Inserted silence">00:08–00:13</td><td data-label="Syllables">37</td><td data-label="Model output (verbatim)">“tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường.có hai người khuyết tật ngồi xe lăn mọi người cứ trầm lên và xô đẩy họ a khman vơ say nói.”</td></tr>
+<tr><td data-label="Arm"><code>phowhisper</code></td><td data-label="File"><code>silence_01.wav</code></td><td data-label="Detected at">00:00–00:17</td><td data-label="Inserted silence">00:05–00:09</td><td data-label="Syllables">30</td><td data-label="Model output (verbatim)">“bản báo cáo mở đầu bằng lời biện hộ cho cuộc tranh luận mở và tạo lập sự đồng thuận của hoa kỳ về chính sách đối với trung đông.”</td></tr>
+</tbody></table></div>
+<p class="tnote"><em>The two longest stretches each arm produced inside a silent splice, quoted exactly as the model returned them, with the segment timestamps the model itself assigned. Each row is a sentence that exists nowhere in the recording and nowhere in the reference transcript.</em></p>
+<h3>3. Does the two-model diff catch it?</h3>
+<div class="table-wrap"><table class="data eval"><thead><tr>
+<th>Arm</th>
+<th>Silences with invention</th>
+<th>Flagged as invented</th>
+<th>Catch rate</th>
+</tr></thead><tbody>
+<tr><td data-label="Arm">All arms</td><td data-label="Silences with invention">3</td><td data-label="Flagged as invented">0</td><td data-label="Catch rate">0%</td></tr>
+<tr><td data-label="Arm"><code>whisper</code></td><td data-label="Silences with invention">0</td><td data-label="Flagged as invented">0</td><td data-label="Catch rate">—</td></tr>
+<tr><td data-label="Arm"><code>phowhisper</code></td><td data-label="Silences with invention">3</td><td data-label="Flagged as invented">0</td><td data-label="Catch rate">0%</td></tr>
+</tbody></table></div>
+<p class="tnote"><em>A “silence with invention” is an (arm, spliced silence) pair where that arm emitted at least one syllable inside the splice; it is “flagged” when <code>core.asr</code> produced an <code>invented</code> span for that arm overlapping the splice (both conditions: the segment is ≥50% inside detected non-speech and the other arm has no segment there). Catch rate is the share of such pairs the pipeline actually marks. No invented syllable leaked into <code>agreed_spans</code>, so nothing fabricated became quotable on these clips.</em></p>
+<h3>3b. False positives on clean audio</h3>
+<div class="table-wrap"><table class="data eval"><thead><tr>
+<th>Clips (n)</th>
+<th>Clips with an invented flag</th>
+<th>False-positive rate (clips)</th>
+<th>Invented spans</th>
+<th>Invented syllables</th>
+<th>Spans quoting text that is in the reference</th>
+</tr></thead><tbody>
+<tr><td data-label="Clips (n)">18</td><td data-label="Clips with an invented flag">0</td><td data-label="False-positive rate (clips)">0%</td><td data-label="Invented spans">0</td><td data-label="Invented syllables">0</td><td data-label="Spans quoting text that is in the reference">0</td></tr>
+</tbody></table></div>
+<p class="tnote"><em>The same invented-span logic run over all 18 clean clips (204.4 s), which contain no spliced silence — only the pauses the speakers actually left. These clips do have natural silence, so a flag here is not automatically wrong; the last column is the honest error count: spans whose text is literally present in the published reference transcript, i.e. words that were really spoken and were labelled invented. 0 of 0 flagged syllables are in the reference.</em></p></div>
+<p class="small-note"><span class="chip">[eval/run_eval.py]</span> Sinh lúc 07:45, 28 tháng 10, 2026 (+07).
+  Mô hình: Systran/faster-whisper-small (CTranslate2 int8, cpu) và vinai/PhoWhisper-small.
+  WER âm tiết (micro): whisper 0,197,
+  phowhisper 0,119.</p>
+
+</section>
+
+<nav class="pager no-print" aria-label="Trang khác"><a href="index.html">Bìa <span class="no">tr. 1</span></a><a href="reading-copy.html">Bản đọc lại <span class="no">tr. 2</span></a><a href="calendar.html">Mười năm &amp; lịch <span class="no">tr. 3</span></a></nav>
+
+<footer class="colophon">
+  <p class="mark"><span class="seal-mark"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <rect x="2" y="2" width="60" height="60" rx="6" fill="#1b1a17"/>
+  <rect x="8.5" y="8.5" width="47" height="47" rx="2.8" fill="none" stroke="#f7f2e8" stroke-width="2.9"/>
+  <circle cx="32" cy="31.5" r="5.3" fill="#f7f2e8"/>
+  <path d="M23 43h18" stroke="#f7f2e8" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+</svg></span> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
+  <p>Dựng lúc 08:31 · 28 tháng 10, 2026 (+07) từ
+    <span class="chip">data/runs/smoke-001/run.json</span>
+    và <span class="chip">data/oracle/report.json</span>.
+    Không có yêu cầu mạng nào khi mở trang: chữ, dấu và mã đều nằm trong thư mục này.</p>
+  <p>Chữ: So Gio Serif — bản rút gọn của Liberation Serif (SIL OFL 1.1) — tự lưu ở <b>assets/fonts</b>. Dấu: SVG, kèm PNG dựng bằng Python, không dùng thư viện ngoài.</p>
+  <p>Băng: Google FLEURS, config vi_vn, CC BY 4.0 — bản ghi mở, không phải băng riêng của gia đình.
+    Mã: memeshee/so-gio. In trang này trên A4.</p>
+</footer>
+</main>
+<script src="assets/site.js" defer></script>
+</body>
+</html>
