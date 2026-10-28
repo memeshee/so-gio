@@ -1,0 +1,66 @@
+
+=== 0. environment ===
+repo              /home/kiter/hackathon/so-gio
+python            Python 3.12.6  (/home/kiter/.pyenv/versions/3.12.6/bin/python)
+temporal cli      temporal version 1.9.1 (Server 1.32.0, UI 2.54.1)
+wall clock        2026-10-28T07:37:58+07:00
+workflow id       gio-proof-20261028-073758
+task queue        gio-reminders
+demo pacing       wait_seconds=20s, fail_first=2 (real failures), max_cycles=2
+person / giỗ      Cụ Nguyễn Thị Đào — 10/3 âm lịch
+
+=== 1. dev server on :7233 ===
+not listening — starting: temporal server start-dev --headless --port 7233
+dev server pid 2554507 (stopped again on exit)
+SERVING
+
+=== 2. start the worker ===
+worker[1] pid=2554542 — worker ready: pid=2554542 task_queue='gio-reminders' address=localhost:7233 workflows=[GioWorkflow] activities=[send_reminder, record_delivery]
+worker[1] cmd   /home/kiter/.pyenv/versions/3.12.6/bin/python -m workflows.worker
+        BuildID    TaskQueueType           Identity            LastAccessTime  RatePerSecond
+      UNVERSIONED  workflow       2554542@kiter-550XTA-550XTZ  now                    100000
+      UNVERSIONED  activity       2554542@kiter-550XTA-550XTZ  now                    100000
+
+=== 3. start GioWorkflow (durable timer pending, nothing sent yet) ===
+started workflow_id=gio-proof-20261028-073758 run_id=01a17ff1-453d-7970-bcb7-6b09ac15af69
+{
+  "acks": [],
+  "awaiting_ack": false,
+  "calendar_source": "core.lunar.next_occurrence",
+  "cycle": 1,
+  "delivered_cycles": 0,
+  "deliveries": [],
+  "demo_override": true,
+  "lunar": "10/03 âm lịch",
+  "next_fire_local": "2026-10-28T07:38:20+07:00",
+  "next_fire_utc": "2026-10-28T00:38:20+00:00",
+  "person": "Cụ Nguyễn Thị Đào",
+  "phase": "sleeping until cycle 1 reminder",
+  "production_gio_local": "2027-04-16T07:00:00+07:00"
+}
+[07:38:05] 5s in: the workflow is asleep on a server-side timer
+    Status          WorkflowId             Type        StartTime  
+    Running  gio-proof-20261028-073758  GioWorkflow  5 seconds ago
+WorkflowId            gio-proof-20261028-073758
+Type                  GioWorkflow
+TaskQueue             gio-reminders
+HistoryLength         5
+RootWorkflowId        gio-proof-20261028-073758
+--- history so far (TimerStarted must exist, TimerFired must not) ---
+Progress:
+  ID           Time                     Type           
+    1  2026-10-28T00:38:00Z  WorkflowExecutionStarted  
+    2  2026-10-28T00:38:00Z  WorkflowTaskScheduled     
+    3  2026-10-28T00:38:00Z  WorkflowTaskStarted       
+    4  2026-10-28T00:38:00Z  WorkflowTaskCompleted     
+    5  2026-10-28T00:38:00Z  TimerStarted              
+
+
+=== 4. kill -9 the worker (pid 2554542) mid-sleep ===
+[07:38:07] kill -9 2554542
+ps -p 2554542 -> no such process (gone)
+worker log tail (its last words before dying):
+    worker ready: pid=2554542 task_queue='gio-reminders' address=localhost:7233 workflows=[GioWorkflow] activities=[send_reminder, record_delivery]
+    2026-10-28 07:38:00,802 INFO    temporalio.workflow: giỗ workflow for Cụ Nguyễn Thị Đào (10/03 âm lịch) starting on queue gio-reminders ({'attempt': 1, 'namespace': 'default', 'run_id': '01a17ff1-453d-7970-bcb7-6b09ac15af69', 'task_queue': 'gio-reminders', 'workflow_id': 'gio-proof-20261028-073758', 'workflow_type': 'GioWorkflow'})
+    2026-10-28 07:38:00,814 INFO    temporalio.workflow: cycle 1: 10/03 âm lịch → fire 2026-10-28T07:38:20+07:00 (real giỗ 2027-04-16T07:00:00+07:00, 20s away, calendar=core.lunar.next_occurrence) [demo override] ({'attempt': 1, 'namespace': 'default', 'run_id': '01a17ff1-453d-7970-bcb7-6b09ac15af69', 'task_queue': 'gio-reminders', 'workflow_id': 'gio-proof-20261028-073758', 'workflow_type': 'GioWorkflow'})
+[07:38:08] no worker is polling; the deadline is only in the server's history now

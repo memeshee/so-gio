@@ -273,14 +273,14 @@ def next_occurrence(month: int, day: int, after: tuple[int, int, int], years_ahe
     """
     ay, am, ad = after
     start_jd = jd_from_date(ad, am, ay)
-    out = []
+    out: list[tuple[int, int, int]] = []
     for year in range(ay - 1, ay + years_ahead + 2):
         try:
-            solar = lunar_to_solar(day, month, year, leap, tz)
+            d, m, y = lunar_to_solar(day, month, year, leap, tz)
         except ValueError:
             continue  # this lunar year has no such month, which a leap-month year can cause
-        if jd_from_date(solar[2], solar[1], solar[0]) > start_jd:
-            out.append(solar)
+        if jd_from_date(d, m, y) > start_jd:
+            out.append((y, m, d))   # returned as (year, month, day): ISO order, like every other surface
         if len(out) >= years_ahead:
             break
     return out

@@ -96,6 +96,8 @@ class ReminderTarget:
     solar_date: str
     lunar_label: str
     demo_override: bool
+    # Which calendar path produced the date: "core.lunar.next_occurrence" or the verified fallback.
+    calendar_source: str = "core.lunar.next_occurrence"
 
 
 @dataclass
@@ -133,7 +135,74 @@ def lunar_label(req: GioRequest) -> str:
     return f"{req.lunar_day:02d}/{req.lunar_month:02d}{' nhuận' if req.leap else ''} âm lịch"
 
 
-def _next_gio_local(req: GioRequest, now_local: datetime) -> datetime:
+def _verified_gio_date(candidate: Any, req: GioRequest) -> tuple[int, int, int] | None:
+    """Accept a solar date only if `solar_to_lunar` round-trips it to this exact lunar date.
+
+    `core.lunar` is a sibling module under active development, and `lunar_to_solar` returns
+    `(day, month, year)` while `next_occurrence` documents `(year, month, day)`. A revision of
+    `next_occurrence` seen during this build returned nothing at all for normal dates. A giỗ
+    reminder must not silently never fire, so every candidate is checked against the calendar and
+    unusable ones are dropped; `_solar_occurrences` then falls back to asking the calendar directly.
+    """
+    if not candidate or len(candidate) != 3:
+        return None
+    a, b, c = (int(x) for x in candidate)  # type: ignore[arg-type]
+    for year, month, day in ((a, b, c), (c, b, a)):
+        if not (1900 <= year <= 2200 and 1 <= month <= 12 and 1 <= day <= 31):
+            continue
+        try:
+            back = lunar.solar_to_lunar(day, month, year)
+        except Exception:
+            continue
+        if (back.day, back.month, back.leap) == (req.lunar_day, req.lunar_month, req.leap):
+            return (year, month, day)
+    return None
+
+
+def _solar_occurrences(
+    req: GioRequest, after: tuple[int, int, int], years_ahead: int = 5
+) -> tuple[list[tuple[int, int, int]], str]:
+    """Solar dates of this giỗ strictly after `after` (a solar y/m/d), plus which path found them."""
+    candidates: list[object] = []
+    try:
+        candidates = list(
+            lunar.next_occurrence(
+                req.lunar_month,
+                req.lunar_day,
+                after=after,
+                years_ahead=years_ahead,
+                leap=req.leap,
+            )
+        )
+    except Exception:  # a broken calendar helper must not take the ritual down
+        candidates = []
+
+    found: list[tuple[int, int, int]] = []
+    for item in candidates:
+        ymd = _verified_gio_date(item, req)
+        if ymd and ymd > after:
+            found.append(ymd)
+    if found:
+        return sorted(set(found)), "core.lunar.next_occurrence"
+
+    # Verified fallback: ask the calendar directly, one lunar year at a time. Same source of truth
+    # (`lunar_to_solar`), just without the tuple-order bug in `next_occurrence`.
+    for year in range(after[0], after[0] + years_ahead + 3):
+        try:
+            raw = lunar.lunar_to_solar(req.lunar_day, req.lunar_month, year, req.leap)
+        except ValueError:
+            continue  # that lunar year has no such month (leap-month years can skip one)
+        ymd = _verified_gio_date(raw, req)
+        if ymd is None:
+            ymd = (int(raw[2]), int(raw[1]), int(raw[0]))
+        if ymd > after:
+            found.append(ymd)
+        if len(found) >= years_ahead:
+            break
+    return found, "core.lunar.lunar_to_solar (next_occurrence unusable)"
+
+
+def _next_gio_local(req: GioRequest, now_local: datetime) -> tuple[datetime, str]:
     """07:00 Vietnam time on the next occurrence of this lunar date, strictly after `now_local`.
 
     `after` is yesterday, not today, so a giỗ that falls *today* but whose 07:00 reminder has not
@@ -141,12 +210,8 @@ def _next_gio_local(req: GioRequest, now_local: datetime) -> datetime:
     """
     yesterday = now_local.date() - timedelta(days=1)
     try:
-        occurrences = lunar.next_occurrence(
-            req.lunar_month,
-            req.lunar_day,
-            after=(yesterday.year, yesterday.month, yesterday.day),
-            years_ahead=5,
-            leap=req.leap,
+        occurrences, source = _solar_occurrences(
+            req, (yesterday.year, yesterday.month, yesterday.day)
         )
     except Exception as exc:  # a calendar we cannot resolve must fail loudly, never silently skip
         raise ApplicationError(
@@ -156,7 +221,7 @@ def _next_gio_local(req: GioRequest, now_local: datetime) -> datetime:
     for year, month, day in occurrences:
         fire_local = datetime(year, month, day, REMINDER_HOUR, 0, tzinfo=VN_TZ)
         if fire_local > now_local:
-            return fire_local
+            return fire_local, source
     raise ApplicationError(
         f"no occurrence of {lunar_label(req)} in the next 5 years after {now_local.date()}",
         non_retryable=True,
@@ -170,7 +235,7 @@ def next_fire(req: GioRequest, now_utc: datetime) -> ReminderTarget:
     Only the timestamp differs — the durable timer, activity, retries and re-arm below are identical.
     """
     now_local = now_utc.astimezone(VN_TZ)
-    production = _next_gio_local(req, now_local)
+    production, source = _next_gio_local(req, now_local)
 
     if req.wait_seconds is not None:
         fire_utc = now_utc + timedelta(seconds=req.wait_seconds)
@@ -181,6 +246,7 @@ def next_fire(req: GioRequest, now_utc: datetime) -> ReminderTarget:
             solar_date=production.date().isoformat(),
             lunar_label=lunar_label(req),
             demo_override=True,
+            calendar_source=source,
         )
 
     return ReminderTarget(
@@ -190,6 +256,7 @@ def next_fire(req: GioRequest, now_utc: datetime) -> ReminderTarget:
         solar_date=production.date().isoformat(),
         lunar_label=lunar_label(req),
         demo_override=False,
+        calendar_source=source,
     )
 
 
@@ -246,12 +313,13 @@ class GioWorkflow:
             delay = (target.fire_at_utc - now).total_seconds()
             self._phase = f"sleeping until cycle {self._cycle} reminder"
             workflow.logger.info(
-                "cycle %d: %s → fire %s (real giỗ %s, %.0fs away)%s",
+                "cycle %d: %s → fire %s (real giỗ %s, %.0fs away, calendar=%s)%s",
                 self._cycle,
                 self._label,
                 target.fire_at_local.isoformat(timespec="seconds"),
                 target.production_fire_at_local.isoformat(timespec="seconds"),
                 delay,
+                target.calendar_source,
                 " [demo override]" if target.demo_override else "",
             )
 
@@ -382,6 +450,7 @@ class GioWorkflow:
             "next_fire_local": self._target.fire_at_local.isoformat(timespec="seconds") if self._target else None,
             "production_gio_local": self._target.production_fire_at_local.isoformat(timespec="seconds") if self._target else None,
             "demo_override": self._target.demo_override if self._target else None,
+            "calendar_source": self._target.calendar_source if self._target else None,
             "deliveries": self._deliveries,
             "acks": self._acks,
         }

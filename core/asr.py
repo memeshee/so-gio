@@ -108,25 +108,39 @@ def audio_duration(path: str) -> float:
 
 # --------------------------------------------------------------------------- the two arms
 
-def run_whisper(path: str, model=None) -> ArmResult:
+def run_whisper(audio, path: str = "", model=None) -> ArmResult:
     from faster_whisper import WhisperModel
 
     if model is None:
         model = WhisperModel(WHISPER_SIZE, device="cpu", compute_type="int8",
                              download_root="data/models/fw")
     t0 = time.time()
-    segments, _info = model.transcribe(path, language="vi", beam_size=5,
+    segments, _info = model.transcribe(audio, language="vi", beam_size=5,
                                        vad_filter=False, condition_on_previous_text=True)
     segs = [Segment(s.start, s.end, s.text.strip()) for s in segments if s.text.strip()]
     dt = time.time() - t0
     return ArmResult("whisper", f"faster-whisper/{WHISPER_SIZE}", " ".join(s.text for s in segs),
-                     segs, dt, audio_duration(path))
+                     segs, dt, audio_duration(path) or len(audio) / 16000)
+
+
+def load_pcm(path: str, sr: int = 16000) -> "np.ndarray":
+    """Decode any audio file to 16 kHz mono float32 with ffmpeg.
+
+    Both arms receive the exact same samples, which is the only way the disagreement between them can be
+    attributed to the models rather than to two different decoders.
+    """
+    import numpy as np
+
+    cmd = ["ffmpeg", "-v", "error", "-i", path, "-ac", "1", "-ar", str(sr),
+           "-f", "f32le", "-acodec", "pcm_f32le", "-"]
+    raw = subprocess.run(cmd, capture_output=True, check=True).stdout
+    return np.frombuffer(raw, dtype=np.float32).copy()
 
 
 _PHO = {}
 
 
-def run_phowhisper(path: str) -> ArmResult:
+def run_phowhisper(audio, path: str = "") -> ArmResult:
     import torch
     from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq
 
@@ -136,10 +150,8 @@ def run_phowhisper(path: str) -> ArmResult:
         _PHO["model"].eval()
     proc, model = _PHO["proc"], _PHO["model"]
 
-    import librosa
-
     t0 = time.time()
-    wav, _sr = librosa.load(path, sr=16000)
+    wav = audio
     # Long audio in one pass exhausts RAM on a 6 GB box; 25 s windows with 2 s overlap is plenty for a
     # transcript that only needs to agree or disagree with the other arm.
     win, hop = 25 * 16000, 23 * 16000
@@ -157,7 +169,8 @@ def run_phowhisper(path: str) -> ArmResult:
         if start + win >= len(wav):
             break
     dt = time.time() - t0
-    return ArmResult("phowhisper", PHO_MODEL, " ".join(s.text for s in segs), segs, dt, audio_duration(path))
+    return ArmResult("phowhisper", PHO_MODEL, " ".join(s.text for s in segs), segs, dt,
+                     audio_duration(path) or len(audio) / 16000)
 
 
 # --------------------------------------------------------------------------- fusion
@@ -179,8 +192,9 @@ def _in_silence(seg: Segment, silences: list[Silence], min_overlap: float = 0.5)
 
 def hear(path: str, whisper_model=None) -> Hearing:
     """Run both arms, detect silence, and classify the result into quotable and unquotable spans."""
-    h = Hearing(audio=path, audio_seconds=audio_duration(path))
-    h.arms = [run_whisper(path, whisper_model), run_phowhisper(path)]
+    pcm = load_pcm(path)
+    h = Hearing(audio=path, audio_seconds=audio_duration(path) or len(pcm) / 16000)
+    h.arms = [run_whisper(pcm, path, whisper_model), run_phowhisper(pcm, path)]
     h.silences = detect_silence(path)
 
     a, b = h.arms[0], h.arms[1]
@@ -207,3 +221,46 @@ def hear(path: str, whisper_model=None) -> Hearing:
             h.spans.append(span)
             h.invented_spans.append(span)
     return h
+
+# --------------------------------------------------------------------------- word-level grounding
+
+def agreed_spans(h: Hearing, min_words: int = 2) -> list[tuple[float, float, str]]:
+    """The words both models produced, with the timestamps of the segment they came from.
+
+    Segment-level containment is the wrong test: two models transcribing the same 15 seconds agree on 84% of
+    the syllables and disagree somewhere in almost every sentence, so requiring a whole segment to be
+    contained throws away everything. This aligns the two transcripts syllable by syllable and keeps only
+    the runs they agree on, which is exactly what a family may quote.
+    """
+    import difflib
+
+    from core import textnorm
+
+    a, b = h.arms[0], h.arms[1]
+    seq_a: list[str] = []
+    owner: list[int] = []
+    for i, seg in enumerate(a.segments):
+        for syl in textnorm.syllables(seg.text):
+            seq_a.append(syl)
+            owner.append(i)
+    seq_b: list[str] = []
+    for seg in b.segments:
+        seq_b.extend(textnorm.syllables(seg.text))
+    if not seq_a or not seq_b:
+        return []
+
+    sm = difflib.SequenceMatcher(a=seq_a, b=seq_b, autojunk=False)
+    runs: list[list[int]] = []
+    for tag, i1, i2, _j1, _j2 in sm.get_opcodes():
+        if tag == "equal" and i2 > i1:
+            runs.append([i1, i2])
+    out: list[tuple[float, float, str]] = []
+    for i1, i2 in runs:
+        words = seq_a[i1:i2]
+        if len(words) < min_words:
+            continue
+        seg_from, seg_to = owner[i1], owner[i2 - 1]
+        start = a.segments[seg_from].start
+        end = a.segments[seg_to].end
+        out.append((start, end, " ".join(words)))
+    return out

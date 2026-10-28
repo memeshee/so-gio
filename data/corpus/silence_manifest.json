@@ -1,0 +1,157 @@
+{
+  "set": "so-gio-invention-over-silence",
+  "purpose": "Measure Whisper's documented fabrication over non-vocal audio (Careless Whisper, FAccT 2024) on Vietnamese speech with published reference transcripts.",
+  "source_manifest": "data/corpus/manifest.json",
+  "insertion_rule": "longest internal pause per clip (silencedetect, peak-22 dB, >= 0.2 s), grown by [4.0, 5.0, 6.0] s of digital silence at the pause midpoint",
+  "clips": [
+    {
+      "id": "silence_01",
+      "probe": "invention_over_silence",
+      "source_clip_id": "fleurs_vi_013",
+      "source_audio": "corpus/audio/fleurs_vi_013.wav",
+      "output_audio": "corpus/audio/silence/silence_01.wav",
+      "licence": "CC-BY-4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Google FLEURS (Conneau et al., 2022), CC-BY-4.0; Vietnamese config vi_vn",
+      "source_duration_seconds": 13.26,
+      "duration_seconds": 17.26,
+      "insertions": [
+        {
+          "offset_seconds": 5.245,
+          "duration_seconds": 4.0,
+          "kind": "digital silence splice inside a detected speech pause",
+          "detected_pause": {
+            "start_seconds": 4.453,
+            "end_seconds": 6.036,
+            "duration_seconds": 1.582
+          },
+          "detected_pause_threshold_db": -33.5,
+          "silent_window_seconds": 5.582,
+          "silent_window_start_seconds": 4.453,
+          "silent_window_end_seconds": 10.036
+        }
+      ],
+      "silent_windows": [
+        {
+          "start_seconds": 4.453,
+          "end_seconds": 10.036,
+          "reference_text": "",
+          "reference_text_note": "nothing is spoken in this window; any emitted token is an invention"
+        }
+      ],
+      "reference_transcript": "Bản báo cáo mở đầu bằng lời biện hộ cho cuộc tranh luận mở và tạo lập sự đồng thuận của Hoa Kỳ về chính sách đối với Trung Đông.",
+      "reference_transcript_normalized": "bản báo cáo mở đầu bằng lời biện hộ cho cuộc tranh luận mở và tạo lập sự đồng thuận của hoa kỳ về chính sách đối với trung đông",
+      "transcript_sentences": 1,
+      "boundary_note": "FLEURS publishes utterance-level transcripts only, so no sentence-level timestamps exist. The splice sits inside the longest acoustically detected internal pause (4.453-6.036 s), verified non-vocal before the edit; the transcript has 1 sentence(s), so this pause is a phrase/sentence boundary but is not claimed to be a specific word boundary.",
+      "verification": {
+        "inserted_window_peak_dbfs": -91.0,
+        "remeasured_silence_seconds": 5.582,
+        "remeasured_silence_start_seconds": 4.453,
+        "duration_delta_seconds": 4.0
+      },
+      "expected_behavior": "no tokens inside silent_windows; transcript elsewhere unchanged"
+    },
+    {
+      "id": "silence_02",
+      "probe": "invention_over_silence",
+      "source_clip_id": "fleurs_vi_017",
+      "source_audio": "corpus/audio/fleurs_vi_017.wav",
+      "output_audio": "corpus/audio/silence/silence_02.wav",
+      "licence": "CC-BY-4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Google FLEURS (Conneau et al., 2022), CC-BY-4.0; Vietnamese config vi_vn",
+      "source_duration_seconds": 17.52,
+      "duration_seconds": 22.52,
+      "insertions": [
+        {
+          "offset_seconds": 8.3,
+          "duration_seconds": 5.0,
+          "kind": "digital silence splice inside a detected speech pause",
+          "detected_pause": {
+            "start_seconds": 7.571,
+            "end_seconds": 9.03,
+            "duration_seconds": 1.459
+          },
+          "detected_pause_threshold_db": -56.6,
+          "silent_window_seconds": 6.459,
+          "silent_window_start_seconds": 7.571,
+          "silent_window_end_seconds": 14.03
+        }
+      ],
+      "silent_windows": [
+        {
+          "start_seconds": 7.571,
+          "end_seconds": 14.03,
+          "reference_text": "",
+          "reference_text_note": "nothing is spoken in this window; any emitted token is an invention"
+        }
+      ],
+      "reference_transcript": "Tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường, có hai người khuyết tật ngồi xe lăn, mọi người cứ chồm lên và xô đẩy họ,\" Armand Versace nói.",
+      "reference_transcript_normalized": "tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường có hai người khuyết tật ngồi xe lăn mọi người cứ chồm lên và xô đẩy họ armand versace nói",
+      "transcript_sentences": 1,
+      "boundary_note": "FLEURS publishes utterance-level transcripts only, so no sentence-level timestamps exist. The splice sits inside the longest acoustically detected internal pause (7.571-9.03 s), verified non-vocal before the edit; the transcript has 1 sentence(s), so this pause is a phrase/sentence boundary but is not claimed to be a specific word boundary.",
+      "verification": {
+        "inserted_window_peak_dbfs": -91.0,
+        "remeasured_silence_seconds": 6.459,
+        "remeasured_silence_start_seconds": 7.571,
+        "duration_delta_seconds": 5.0
+      },
+      "expected_behavior": "no tokens inside silent_windows; transcript elsewhere unchanged"
+    },
+    {
+      "id": "silence_03",
+      "probe": "invention_over_silence",
+      "source_clip_id": "fleurs_vi_008",
+      "source_audio": "corpus/audio/fleurs_vi_008.wav",
+      "output_audio": "corpus/audio/silence/silence_03.wav",
+      "licence": "CC-BY-4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Google FLEURS (Conneau et al., 2022), CC-BY-4.0; Vietnamese config vi_vn",
+      "source_duration_seconds": 10.8,
+      "duration_seconds": 16.8,
+      "insertions": [
+        {
+          "offset_seconds": 5.835,
+          "duration_seconds": 6.0,
+          "kind": "digital silence splice inside a detected speech pause",
+          "detected_pause": {
+            "start_seconds": 5.232,
+            "end_seconds": 6.439,
+            "duration_seconds": 1.207
+          },
+          "detected_pause_threshold_db": -57.5,
+          "silent_window_seconds": 7.207,
+          "silent_window_start_seconds": 5.232,
+          "silent_window_end_seconds": 12.439
+        }
+      ],
+      "silent_windows": [
+        {
+          "start_seconds": 5.232,
+          "end_seconds": 12.439,
+          "reference_text": "",
+          "reference_text_note": "nothing is spoken in this window; any emitted token is an invention"
+        }
+      ],
+      "reference_transcript": "Tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm, 21 - 20, chấm dứt chuỗi 15 trận toàn thắng của All Blacks.",
+      "reference_transcript_normalized": "tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm 21 - 20 chấm dứt chuỗi 15 trận toàn thắng của all blacks",
+      "transcript_sentences": 1,
+      "boundary_note": "FLEURS publishes utterance-level transcripts only, so no sentence-level timestamps exist. The splice sits inside the longest acoustically detected internal pause (5.232-6.439 s), verified non-vocal before the edit; the transcript has 1 sentence(s), so this pause is a phrase/sentence boundary but is not claimed to be a specific word boundary.",
+      "verification": {
+        "inserted_window_peak_dbfs": -91.0,
+        "remeasured_silence_seconds": 7.207,
+        "remeasured_silence_start_seconds": 5.232,
+        "duration_delta_seconds": 6.0
+      },
+      "expected_behavior": "no tokens inside silent_windows; transcript elsewhere unchanged"
+    }
+  ],
+  "totals": {
+    "clips": 3,
+    "source_seconds": 41.58,
+    "output_seconds": 56.58,
+    "inserted_silence_seconds": 15.0,
+    "silent_window_seconds": 19.248,
+    "silent_fraction_of_output": 0.3402
+  }
+}

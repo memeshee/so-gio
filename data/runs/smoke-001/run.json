@@ -1,0 +1,86 @@
+{
+  "audio": "corpus/audio/fleurs_vi_001.wav",
+  "audio_seconds": 14.94,
+  "generated_at": "2026-10-28T00:37:59+00:00",
+  "model": "gemma3:1b-it-qat",
+  "usage": {
+    "model": "gemma3:1b-it-qat",
+    "latency_s": 29.29,
+    "prompt_tokens": 327,
+    "completion_tokens": 39,
+    "raw": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"một số loài\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+  },
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "latency_s": 23.12,
+      "realtime_factor": 0.65,
+      "chars": 146
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "latency_s": 46.89,
+      "realtime_factor": 0.32,
+      "chars": 142
+    }
+  ],
+  "agreement_rate": 0.8387,
+  "silences": [],
+  "invented": [],
+  "quotable_spans": [
+    {
+      "start": 0.0,
+      "end": 15.0,
+      "text": "một số loài"
+    },
+    {
+      "start": 0.0,
+      "end": 15.0,
+      "text": "vật như vôi và"
+    },
+    {
+      "start": 0.0,
+      "end": 15.0,
+      "text": "cổ thường hay lại"
+    },
+    {
+      "start": 0.0,
+      "end": 15.0,
+      "text": "và chỉ"
+    },
+    {
+      "start": 0.0,
+      "end": 15.0,
+      "text": "bình thường chúng ta cũng sẽ quan sát một cách dễ dàng"
+    }
+  ],
+  "excluded_spans": [],
+  "claims_kept": [
+    {
+      "kind": "person",
+      "quote": "một số loài",
+      "t_start": 0.0,
+      "t_end": 15.0,
+      "lunar_day": null,
+      "lunar_month": null,
+      "leap": false,
+      "solar_next": null,
+      "status": "kept",
+      "reason": "",
+      "model": "gemma3:1b-it-qat"
+    }
+  ],
+  "claims_refused": [],
+  "calendar": [],
+  "summary": {
+    "kept": 1,
+    "refused": 0,
+    "uncited_kept": 0,
+    "kinds": {
+      "person": 1
+    },
+    "refused_reasons": []
+  }
+}
