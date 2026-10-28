@@ -1080,8 +1080,8 @@ def colophon(model: dict) -> str:
 <footer class="colophon">
   <p class="mark"><span class="seal-mark">{seal_svg(18)}</span> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
   <p>Dựng lúc {esc(build.strftime("%H:%M · %d tháng %m, %Y"))} (+07) từ
-    <span class="chip">data/runs/{esc(model["run_id"])}/run.json</span>
-    và <span class="chip">data/oracle/report.json</span>.
+    <span class="chip">data/runs/{esc(model["run_id"])}/run.json</span>,
+    <span class="chip">data/oracle/report.json</span>{"" if not model.get("eval") else " và <span class=\"chip\">data/eval/report.json</span>"}.
     Không có yêu cầu mạng nào khi mở trang: chữ, dấu và mã đều nằm trong thư mục này.</p>
   <p>Chữ: So Gio Serif — bản rút gọn của Liberation Serif (SIL OFL 1.1) — tự lưu ở <b>assets/fonts</b>. Dấu: SVG, kèm PNG dựng bằng Python, không dùng thư viện ngoài.</p>
   <p>Băng: Google FLEURS, config vi_vn, CC BY 4.0 — bản ghi mở, không phải băng riêng của gia đình.
@@ -1521,7 +1521,7 @@ def render_eval_page(model: dict) -> str:
 
     return f"""
 <header class="masthead">
-  <p class="runhead"><span><a href="index.html">Sổ Giỗ</a> · bản chạy <b>{esc(model["run_id"])}</b></span><span>tr. 4</span></p>
+  <p class="runhead"><span><a href="index.html">Sổ Giỗ</a> · đánh giá chung</span><span>tr. 4</span></p>
   <h1>Đánh giá</h1>
   <p class="deck">{vn_int(n_clean)} clip sạch, {vn_int(n_silence)} khoảng lặng ghép, hai mô hình. Những con số dưới
     đây không phải điểm số của sản phẩm — chúng là chỗ sản phẩm còn hở.</p>
