@@ -35,6 +35,15 @@ def _lat(seconds) -> str:
     return f"{seconds:.2f} s"
 
 
+def _num(summary: dict, *names):
+    """First numeric field present under any of `names` — external arms name their keys differently."""
+    for n in names:
+        v = summary.get(n)
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            return v
+    return None
+
+
 def _table(headers: list[str], rows: list[list[str]]) -> str:
     out = ["| " + " | ".join(headers) + " |",
            "|" + "|".join("---" for _ in headers) + "|"]
@@ -158,25 +167,49 @@ def render(report: dict) -> str:
     ext = report.get("extraction")
     if ext and ext.get("status") == "run":
         rows = []
-        strict = []
         for name, a in ext["arms"].items():
+            if a.get("guard_bug"):
+                rows.append([f"`{name}`", "—", "—", "—", f"0/{a['predicted']}", a["gold"],
+                             a["refusals"], f"**{a['uncited_kept']}**", _lat(a["mean_latency_s"])])
+                continue
             rows.append([f"`{name}`", _f(a["precision"], 3), _f(a["recall"], 3), _f(a["f1"], 3),
                          f"{a['tp']}/{a['predicted']}", a["gold"], a["refusals"],
                          a["uncited_kept"], _lat(a["mean_latency_s"])])
-            strict.append(f"`{name}` {a.get('strict_tp', a['tp'])}/{a['gold']}")
+        remote = []
+        for name, t in (report.get("tinker") or {}).items():
+            s = t.get("summary") or {}
+            rows.append([f"`{name}` †", _f(_num(s, "precision"), 3), _f(_num(s, "recall"), 3),
+                         _f(_num(s, "f1"), 3),
+                         f"{_num(s, 'tp') if _num(s, 'tp') is not None else '?'}/"
+                         f"{_num(s, 'predicted', 'kept', 'n_predicted') if _num(s, 'predicted', 'kept', 'n_predicted') is not None else '?'}",
+                         _num(s, "gold", "n_gold", "gold_total") if _num(s, "gold", "n_gold", "gold_total") is not None else ext["gold_total"],
+                         _num(s, "refusals") if _num(s, "refusals") is not None else "—",
+                         _num(s, "uncited_kept") if _num(s, "uncited_kept") is not None else "—",
+                         "remote"])
+            remote.append(name)
         parts.append("## 4. Extraction arms\n")
         parts.append(_table(["Arm", "Precision", "Recall", "F1", "TP / kept", "Gold claims",
                              "Refusals", "Uncited kept", "Mean latency"], rows))
+        tail = ""
+        if remote:
+            tail = (" † Scored separately, on the same gold set and with the same "
+                    "`eval/metrics.claims_match` rule, by the Tinker training process; a remote model on a "
+                    "different latency tier, so its latency is not comparable to the local arms and is not "
+                    "quoted.")
         parts.append(
             f"\n*{ext['n_items']} held-out recordings, {ext['gold_total']} gold claims. A claim counts only "
             f"after `core.guard.review` keeps it — the quote must be verbatim in the transcript, carry a "
             f"timestamp, and (for a date) resolve in the lunar calendar. A true positive requires the same "
-            f"kind, the same lunar day/month, and one quote containing the other after normalisation "
-            f"(a regex window and an LLM phrase can quote the same giỗ at different lengths); under exact "
-            f"normalised-quote equality the recalls would be "
-            f"{', '.join(strict)}. Precision and recall are pooled over all recordings, so they equal the "
-            f"micro averages. Uncited kept claims must be 0 for every arm and are asserted to be 0 in "
-            f"`eval/run_eval.py`.*\n")
+            f"kind, and then either the same lunar day/month (for a date, where the quote is only the "
+            f"citation) or a quote that contains the gold quote, or is contained by it, or shares ≥60% of "
+            f"its syllables (for a text claim, where the quote is the answer). Matching is greedy one-to-one, "
+            f"so each gold claim can be found once. Precision and recall are pooled over all recordings. "
+            f"Uncited kept claims must be 0 for every arm; if any arm broke that rule the row shows the count "
+            f"in bold and the arm is left unscored, because that is a bug in the guard, not a metric.{tail}*\n")
+        if ext.get("guard_failures"):
+            parts.append("\n> **Guard failure:** " + "; ".join(ext["guard_failures"]) +
+                         ". A kept claim without a citation is a `core/guard.py` bug — "
+                         "`eval/run_eval.py` exits 2 rather than publish a score over it.\n")
     elif ext:
         parts.append("## 4. Extraction arms — pending\n")
         parts.append(f"*Not run: {ext.get('reason', 'held-out set missing')}. "

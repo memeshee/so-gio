@@ -1,0 +1,767 @@
+{
+  "environment": {
+    "machine": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "cpu_model": "AMD Ryzen 5 2500U with Radeon Vega Mobile Gfx",
+    "cpu_count": 8,
+    "cpu_threads_physical": 8,
+    "torch_threads": 4,
+    "python": "3.12.6",
+    "faster_whisper": "1.2.1",
+    "transformers": "5.19.0",
+    "torch": "2.14.1+cu130",
+    "whisper_model": "Systran/faster-whisper-small (CTranslate2 int8, cpu)",
+    "phowhisper_model": "vinai/PhoWhisper-small",
+    "run_at": "2026-10-28T07:45:02+07:00"
+  },
+  "corpus": {
+    "name": "so-gio-vn-fleurs-dev",
+    "clips_with_reference": 18,
+    "audio_seconds": 204.42,
+    "licence": "CC-BY-4.0",
+    "silence_clips": 3,
+    "inserted_silence_seconds": 15.0,
+    "silence_licence": "CC-BY-4.0"
+  },
+  "asr": {
+    "per_arm": {
+      "whisper": {
+        "model": "small",
+        "n_clips": 18,
+        "audio_seconds": 204.42,
+        "mean_wer": 0.2213,
+        "median_wer": 0.2222,
+        "min_wer": 0.0208,
+        "max_wer": 0.5714,
+        "micro_wer": 0.1973,
+        "total_latency_s": 392.9,
+        "realtime_factor_aggregate": 0.52,
+        "realtime_factor_median": 0.556,
+        "realtime_factor_min": 0.306
+      },
+      "phowhisper": {
+        "model": "vinai/PhoWhisper-small",
+        "n_clips": 18,
+        "audio_seconds": 204.42,
+        "mean_wer": 0.1404,
+        "median_wer": 0.0882,
+        "min_wer": 0.0,
+        "max_wer": 0.5417,
+        "micro_wer": 0.1195,
+        "total_latency_s": 955.7,
+        "realtime_factor_aggregate": 0.214,
+        "realtime_factor_median": 0.197,
+        "realtime_factor_min": 0.155
+      }
+    },
+    "clips": [
+      {
+        "id": "fleurs_vi_001",
+        "audio_path": "corpus/audio/fleurs_vi_001.wav",
+        "audio_seconds": 14.94,
+        "reference_syllables": 34,
+        "whisper": {
+          "wer": 0.2353,
+          "hypothesis_syllables": 34,
+          "latency_s": 19.19,
+          "realtime_factor": 0.779,
+          "text": "Một số loài đậm vật như vôi và hỗ cầu cổ, thường hay lại gặn xe và chỉ phải các nhung cầu bình thường. Chúng ta cũng sẽ quan sát một cách dễ dàng."
+        },
+        "phowhisper": {
+          "wer": 0.0882,
+          "hypothesis_syllables": 34,
+          "latency_s": 53.7,
+          "realtime_factor": 0.278,
+          "text": "một số loài động vật như vôi và hũ cao cổ thường hay lại gần xa và chỉ với các dụng cụ bình thường chúng ta cũng sẽ quan sát một cách dễ dàng."
+        }
+      },
+      {
+        "id": "fleurs_vi_002",
+        "audio_path": "corpus/audio/fleurs_vi_002.wav",
+        "audio_seconds": 10.2,
+        "reference_syllables": 39,
+        "whisper": {
+          "wer": 0.1795,
+          "hypothesis_syllables": 36,
+          "latency_s": 18.16,
+          "realtime_factor": 0.562,
+          "text": "Điện thoại VTIN nói chung không phải là sự thế thế cho điện thoại di động, vì bạn phải ở ngoài trời và có tàm nhìn thông thoáng thẳng đến VTIN thì mới sử dụng được."
+        },
+        "phowhisper": {
+          "wer": 0.0256,
+          "hypothesis_syllables": 38,
+          "latency_s": 51.83,
+          "realtime_factor": 0.197,
+          "text": "điện thoại vệ tinh nói chung không phải là sự thay thế cho điện thoại di động vì bạn phải ở ngoài trời và có tầm nhìn thông thoáng thẳng đến vệ tinh thì mới sử dụng được."
+        }
+      },
+      {
+        "id": "fleurs_vi_003",
+        "audio_path": "corpus/audio/fleurs_vi_003.wav",
+        "audio_seconds": 8.88,
+        "reference_syllables": 32,
+        "whisper": {
+          "wer": 0.1562,
+          "hypothesis_syllables": 32,
+          "latency_s": 18.54,
+          "realtime_factor": 0.479,
+          "text": "Các sản phẩm tủ công có thể được coi ra đồ cổ, mặc dù tụi đời cố chúng, trẻ hơn rất nhiều các sản phẩm tương tự được sản xuất hàng lạc."
+        },
+        "phowhisper": {
+          "wer": 0.0312,
+          "hypothesis_syllables": 32,
+          "latency_s": 53.59,
+          "realtime_factor": 0.166,
+          "text": "các sản phẩm thủ công có thể được coi là độ cổ mặc dù tuổi đời của chúng trẻ hơn rất nhiều các sản phẩm tương tự được sản xuất hàng loạt."
+        }
+      },
+      {
+        "id": "fleurs_vi_004",
+        "audio_path": "corpus/audio/fleurs_vi_004.wav",
+        "audio_seconds": 8.52,
+        "reference_syllables": 14,
+        "whisper": {
+          "wer": 0.5714,
+          "hypothesis_syllables": 16,
+          "latency_s": 18.64,
+          "realtime_factor": 0.457,
+          "text": "Sau đó là kha sinh giữ vào giờ chín khi hát các bài hát hay gian"
+        },
+        "phowhisper": {
+          "wer": 0.2857,
+          "hypothesis_syllables": 15,
+          "latency_s": 45.58,
+          "realtime_factor": 0.187,
+          "text": "sau đó la kha xinh giữ vai trò chính khi hát các bài hát hazard."
+        }
+      },
+      {
+        "id": "fleurs_vi_005",
+        "audio_path": "corpus/audio/fleurs_vi_005.wav",
+        "audio_seconds": 10.08,
+        "reference_syllables": 31,
+        "whisper": {
+          "wer": 0.1613,
+          "hypothesis_syllables": 30,
+          "latency_s": 17.83,
+          "realtime_factor": 0.565,
+          "text": "Bác Simon nghĩ rằng một số bảnh nhân có thể đã bị lây gẹp ở bệnh viện và ít nhất 2 người là nhân viên y tế trong bệnh viện."
+        },
+        "phowhisper": {
+          "wer": 0.0645,
+          "hypothesis_syllables": 31,
+          "latency_s": 53.34,
+          "realtime_factor": 0.189,
+          "text": "bác sĩ mon nghĩ rằng một số bệnh nhân có thể đã bị lây nghẹt ở bệnh viện và ít nhất hai người là nhân viên y tế trong bệnh viện."
+        }
+      },
+      {
+        "id": "fleurs_vi_006",
+        "audio_path": "corpus/audio/fleurs_vi_006.wav",
+        "audio_seconds": 10.56,
+        "reference_syllables": 26,
+        "whisper": {
+          "wer": 0.1538,
+          "hypothesis_syllables": 26,
+          "latency_s": 18.91,
+          "realtime_factor": 0.559,
+          "text": "Tôi không biết bạn có nhận ra hay không, nhưng hầu hết hàng há từ Trung Mỹ nhập khẩu vào nước này điều được miệng thế."
+        },
+        "phowhisper": {
+          "wer": 0.0,
+          "hypothesis_syllables": 26,
+          "latency_s": 39.22,
+          "realtime_factor": 0.269,
+          "text": "tôi không biết bạn có nhận ra hay không nhưng hầu hết hàng hóa từ trung mỹ nhập khẩu vào nước này đều được miễn thuế."
+        }
+      },
+      {
+        "id": "fleurs_vi_007",
+        "audio_path": "corpus/audio/fleurs_vi_007.wav",
+        "audio_seconds": 9.06,
+        "reference_syllables": 18,
+        "whisper": {
+          "wer": 0.2222,
+          "hypothesis_syllables": 17,
+          "latency_s": 28.94,
+          "realtime_factor": 0.313,
+          "text": "Argentina nổi tiếng có mọt trong những đòi bóng Polo và cầu thủ giỏi nhất thế giới."
+        },
+        "phowhisper": {
+          "wer": 0.1667,
+          "hypothesis_syllables": 17,
+          "latency_s": 55.27,
+          "realtime_factor": 0.164,
+          "text": "agentina nổi tiếng có một trong những đội bóng boulogue và cầu thủ giỏi nhất thế giới."
+        }
+      },
+      {
+        "id": "fleurs_vi_008",
+        "audio_path": "corpus/audio/fleurs_vi_008.wav",
+        "audio_seconds": 10.8,
+        "reference_syllables": 25,
+        "whisper": {
+          "wer": 0.28,
+          "hypothesis_syllables": 24,
+          "latency_s": 18.51,
+          "realtime_factor": 0.584,
+          "text": "Tỷ số Trung Cục là chiến thắng với cách biệt chỉ một điểm 21-20 chấm giấc chuối 15 trận toàn thẳng của ONTAK"
+        },
+        "phowhisper": {
+          "wer": 0.36,
+          "hypothesis_syllables": 29,
+          "latency_s": 53.63,
+          "realtime_factor": 0.201,
+          "text": "tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm hai mươi mốt hai mươi chấm dứt chuỗi mười lăm trận toàn thắng của oan tắc."
+        }
+      },
+      {
+        "id": "fleurs_vi_009",
+        "audio_path": "corpus/audio/fleurs_vi_009.wav",
+        "audio_seconds": 10.98,
+        "reference_syllables": 30,
+        "whisper": {
+          "wer": 0.1,
+          "hypothesis_syllables": 30,
+          "latency_s": 18.15,
+          "realtime_factor": 0.605,
+          "text": "Nếu đến thăm vùng bắt cực hoặc nam cực vào mùa Đông, bạn sẽ được trải nghiệm điêm vùng cực nghĩ là mặt trời không nhú lên khỏi chân trời."
+        },
+        "phowhisper": {
+          "wer": 0.0,
+          "hypothesis_syllables": 30,
+          "latency_s": 50.98,
+          "realtime_factor": 0.215,
+          "text": "nếu đến thăm vùng bắc cực hoặc nam cực vào mùa đông bạn sẽ được trải nghiệm đêm vùng cực nghĩa là mặt trời không nhú lên khỏi chân trời."
+        }
+      },
+      {
+        "id": "fleurs_vi_010",
+        "audio_path": "corpus/audio/fleurs_vi_010.wav",
+        "audio_seconds": 8.46,
+        "reference_syllables": 25,
+        "whisper": {
+          "wer": 0.28,
+          "hypothesis_syllables": 25,
+          "latency_s": 17.64,
+          "realtime_factor": 0.48,
+          "text": "Nghiên cứu trí tệ nhân tạo bao gồm tạo ra những cô mái từ động hoá, các tác dụ, đòi hỏi hình vi thông minh."
+        },
+        "phowhisper": {
+          "wer": 0.08,
+          "hypothesis_syllables": 25,
+          "latency_s": 50.52,
+          "realtime_factor": 0.167,
+          "text": "nghiên cứu trí tuệ nhân tạo bao gồm tạo ra những cỗ máy từ động hóa các tác dụ đòi hỏi hành vi thông minh."
+        }
+      },
+      {
+        "id": "fleurs_vi_011",
+        "audio_path": "corpus/audio/fleurs_vi_011.wav",
+        "audio_seconds": 6.9,
+        "reference_syllables": 17,
+        "whisper": {
+          "wer": 0.2353,
+          "hypothesis_syllables": 19,
+          "latency_s": 22.56,
+          "realtime_factor": 0.306,
+          "text": "Lúc đầu trang phục chịu ảnh hưởng nặng nề của nạn văn hóa, bí xanh tin ở phía đông."
+        },
+        "phowhisper": {
+          "wer": 0.2353,
+          "hypothesis_syllables": 19,
+          "latency_s": 44.5,
+          "realtime_factor": 0.155,
+          "text": "lúc đầu trang phục chịu ảnh hưởng nặng nề của nền văn hoá pi xanh tiên ở phía đông."
+        }
+      },
+      {
+        "id": "fleurs_vi_012",
+        "audio_path": "corpus/audio/fleurs_vi_012.wav",
+        "audio_seconds": 9.42,
+        "reference_syllables": 34,
+        "whisper": {
+          "wer": 0.2647,
+          "hypothesis_syllables": 34,
+          "latency_s": 22.69,
+          "realtime_factor": 0.415,
+          "text": "Điều lại cần có sự nhất chí từ tất cả các ban trước khi sửa đổi và các ban xem nhạc chính nguyên Trung ương đến mức đại diện ban thường xuyên phán mạng."
+        },
+        "phowhisper": {
+          "wer": 0.1471,
+          "hypothesis_syllables": 34,
+          "latency_s": 52.59,
+          "realtime_factor": 0.179,
+          "text": "điều lệ cần có sự nhất trí từ tất cả các ban trước khi sửa đổi và các ban xem giả chính quyền trung ương đến mức để diện ban thường xuyên vắng mặt."
+        }
+      },
+      {
+        "id": "fleurs_vi_013",
+        "audio_path": "corpus/audio/fleurs_vi_013.wav",
+        "audio_seconds": 13.26,
+        "reference_syllables": 30,
+        "whisper": {
+          "wer": 0.1667,
+          "hypothesis_syllables": 29,
+          "latency_s": 30.33,
+          "realtime_factor": 0.437,
+          "text": "Bạn báo cáo mở đầu bằng biện hộ châu cục, tranh lượng mở và tạo lập sự đồng thuận của Hoa Kỳ về chính sách đối với Trung Đông."
+        },
+        "phowhisper": {
+          "wer": 0.0,
+          "hypothesis_syllables": 30,
+          "latency_s": 68.27,
+          "realtime_factor": 0.194,
+          "text": "bản báo cáo mở đầu bằng lời biện hộ cho cuộc tranh luận mở và tạo lập sự đồng thuận của hoa kỳ về chính sách đối với trung đông."
+        }
+      },
+      {
+        "id": "fleurs_vi_014",
+        "audio_path": "corpus/audio/fleurs_vi_014.wav",
+        "audio_seconds": 16.68,
+        "reference_syllables": 48,
+        "whisper": {
+          "wer": 0.0208,
+          "hypothesis_syllables": 48,
+          "latency_s": 33.08,
+          "realtime_factor": 0.504,
+          "text": "Nó sử dụng công nghệ vệ tinh cơ sở trái ngược với công nghệ ra đa mặt đất. Cơ sở cho phép kiểm soát viên không lưu định vị máy bay với độ chính xác cao hơn và cho phép kỳ công những thông tin chính xác hơn."
+        },
+        "phowhisper": {
+          "wer": 0.0833,
+          "hypothesis_syllables": 47,
+          "latency_s": 59.42,
+          "realtime_factor": 0.281,
+          "text": "nó sử dụng công nghệ vệ tinh cơ sở trái ngược với công nghệ radar mặt đất cơ sở cho phép kiểm sát viên không lưu định vị máy bay với độ chính xác cao hơn và cho phép thi công những thông tin chính xác hơn."
+        }
+      },
+      {
+        "id": "fleurs_vi_015",
+        "audio_path": "corpus/audio/fleurs_vi_015.wav",
+        "audio_seconds": 13.5,
+        "reference_syllables": 41,
+        "whisper": {
+          "wer": 0.1463,
+          "hypothesis_syllables": 40,
+          "latency_s": 28.69,
+          "realtime_factor": 0.471,
+          "text": "Này nắm thật của Majorca cũng giống như những khu vực tương tự trong vùng địa Trâm Hải, chủ yếu bao gồm bánh mì, rau củ và thịt, nhất là thịt heo và dầu olio được sử dụng rộng rãi."
+        },
+        "phowhisper": {
+          "wer": 0.0244,
+          "hypothesis_syllables": 41,
+          "latency_s": 52.52,
+          "realtime_factor": 0.257,
+          "text": "nền ẩm thực của marcos cũng giống như những khu vực tương tự trong vùng địa trung hải chủ yếu bao gồm bánh mì rau củ và thịt nhất là thịt heo và dầu ô liu được sử dụng rộng rãi."
+        }
+      },
+      {
+        "id": "fleurs_vi_016",
+        "audio_path": "corpus/audio/fleurs_vi_016.wav",
+        "audio_seconds": 13.86,
+        "reference_syllables": 24,
+        "whisper": {
+          "wer": 0.2917,
+          "hypothesis_syllables": 25,
+          "latency_s": 22.6,
+          "realtime_factor": 0.613,
+          "text": "Phần phía Bắc của dãi núi Centineu có những ngọn núi cao nhất Bắc Măng Dương, Vincent Massif có định cao Vincent cao 4892 m."
+        },
+        "phowhisper": {
+          "wer": 0.5417,
+          "hypothesis_syllables": 31,
+          "latency_s": 50.7,
+          "realtime_factor": 0.273,
+          "text": "phần phía bắc của dãy núi santos có những ngọn núi cao nhất bắc băng dương vincent moscow có đỉnh cao vincent cao bốn ngàn tám trăm chín mươi hai mét."
+        }
+      },
+      {
+        "id": "fleurs_vi_017",
+        "audio_path": "corpus/audio/fleurs_vi_017.wav",
+        "audio_seconds": 17.52,
+        "reference_syllables": 35,
+        "whisper": {
+          "wer": 0.1429,
+          "hypothesis_syllables": 35,
+          "latency_s": 19.01,
+          "realtime_factor": 0.922,
+          "text": "Tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường, có hai người khứt tặng ngồi xe lăn, mọi người cứ chạm lên và xô đẩy họ, Akman Versay nói."
+        },
+        "phowhisper": {
+          "wer": 0.1429,
+          "hypothesis_syllables": 37,
+          "latency_s": 63.21,
+          "realtime_factor": 0.277,
+          "text": "tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường có hai người khuyết tật ngồi xe lăn mọi người cứ trầm lên và xô đẩy họ a khman vơ say nói."
+        }
+      },
+      {
+        "id": "fleurs_vi_018",
+        "audio_path": "corpus/audio/fleurs_vi_018.wav",
+        "audio_seconds": 10.8,
+        "reference_syllables": 24,
+        "whisper": {
+          "wer": 0.375,
+          "hypothesis_syllables": 27,
+          "latency_s": 19.41,
+          "realtime_factor": 0.556,
+          "text": "Về miên tắc, bọc giáo Tây Tạng rất đơn giản. Nó bao gồm Quynh Đa Li Mi Yoga thiện pháp và con đường mau trầm tình yêu."
+        },
+        "phowhisper": {
+          "wer": 0.25,
+          "hypothesis_syllables": 27,
+          "latency_s": 56.82,
+          "realtime_factor": 0.19,
+          "text": "về nguyên tắc phật giáo tây tạng rất đơn giản nó bao gồm cun đa li li yoga thiện pháp và con đường mang trùm tình yêu."
+        }
+      }
+    ]
+  },
+  "invention": {
+    "events": [
+      {
+        "clip_id": "silence_01",
+        "audio_path": "corpus/audio/silence/silence_01.wav",
+        "arm": "whisper",
+        "window_start": 5.245,
+        "window_end": 9.245,
+        "window_seconds": 4.0,
+        "syllables": 0,
+        "syllables_overlap50": 0,
+        "wpm_of_silence": 0.0,
+        "segments": [],
+        "transcript_elsewhere_unchanged": null,
+        "syllables_in_full_silent_window": 0
+      },
+      {
+        "clip_id": "silence_01",
+        "audio_path": "corpus/audio/silence/silence_01.wav",
+        "arm": "phowhisper",
+        "window_start": 5.245,
+        "window_end": 9.245,
+        "window_seconds": 4.0,
+        "syllables": 30,
+        "syllables_overlap50": 0,
+        "wpm_of_silence": 450.0,
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 17.26,
+            "text": "bản báo cáo mở đầu bằng lời biện hộ cho cuộc tranh luận mở và tạo lập sự đồng thuận của hoa kỳ về chính sách đối với trung đông.",
+            "syllables": 30
+          }
+        ],
+        "transcript_elsewhere_unchanged": null,
+        "syllables_in_full_silent_window": 30
+      },
+      {
+        "clip_id": "silence_02",
+        "audio_path": "corpus/audio/silence/silence_02.wav",
+        "arm": "whisper",
+        "window_start": 8.3,
+        "window_end": 13.3,
+        "window_seconds": 5.0,
+        "syllables": 0,
+        "syllables_overlap50": 0,
+        "wpm_of_silence": 0.0,
+        "segments": [],
+        "transcript_elsewhere_unchanged": null,
+        "syllables_in_full_silent_window": 0
+      },
+      {
+        "clip_id": "silence_02",
+        "audio_path": "corpus/audio/silence/silence_02.wav",
+        "arm": "phowhisper",
+        "window_start": 8.3,
+        "window_end": 13.3,
+        "window_seconds": 5.0,
+        "syllables": 37,
+        "syllables_overlap50": 0,
+        "wpm_of_silence": 444.0,
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 22.52,
+            "text": "tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường.có hai người khuyết tật ngồi xe lăn mọi người cứ trầm lên và xô đẩy họ a khman vơ say nói.",
+            "syllables": 37
+          }
+        ],
+        "transcript_elsewhere_unchanged": null,
+        "syllables_in_full_silent_window": 37
+      },
+      {
+        "clip_id": "silence_03",
+        "audio_path": "corpus/audio/silence/silence_03.wav",
+        "arm": "whisper",
+        "window_start": 5.835,
+        "window_end": 11.835,
+        "window_seconds": 6.0,
+        "syllables": 0,
+        "syllables_overlap50": 0,
+        "wpm_of_silence": 0.0,
+        "segments": [],
+        "transcript_elsewhere_unchanged": null,
+        "syllables_in_full_silent_window": 0
+      },
+      {
+        "clip_id": "silence_03",
+        "audio_path": "corpus/audio/silence/silence_03.wav",
+        "arm": "phowhisper",
+        "window_start": 5.835,
+        "window_end": 11.835,
+        "window_seconds": 6.0,
+        "syllables": 29,
+        "syllables_overlap50": 0,
+        "wpm_of_silence": 290.0,
+        "segments": [
+          {
+            "start": 0.0,
+            "end": 16.8,
+            "text": "tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm hai mươi mốt hai mươi chấm dứt chuỗi mười lăm trận toàn thắng của oan tắc.",
+            "syllables": 29
+          }
+        ],
+        "transcript_elsewhere_unchanged": null,
+        "syllables_in_full_silent_window": 29
+      }
+    ],
+    "per_arm": {
+      "whisper": {
+        "silences": 3,
+        "silences_with_invention": 0,
+        "invented_syllables": 0,
+        "invented_syllables_overlap50": 0,
+        "invented_syllables_full_silent_window": 0,
+        "silence_seconds": 15.0,
+        "wpm_of_silence": 0.0,
+        "worst_examples": []
+      },
+      "phowhisper": {
+        "silences": 3,
+        "silences_with_invention": 3,
+        "invented_syllables": 96,
+        "invented_syllables_overlap50": 0,
+        "invented_syllables_full_silent_window": 96,
+        "silence_seconds": 15.0,
+        "wpm_of_silence": 384.0,
+        "worst_examples": [
+          {
+            "clip_id": "silence_02",
+            "audio": "corpus/audio/silence/silence_02.wav",
+            "arm": "phowhisper",
+            "timestamp": "00:00–00:23",
+            "start": 0.0,
+            "end": 22.52,
+            "text": "tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường.có hai người khuyết tật ngồi xe lăn mọi người cứ trầm lên và xô đẩy họ a khman vơ say nói.",
+            "syllables": 37,
+            "window": "00:08–00:13"
+          },
+          {
+            "clip_id": "silence_01",
+            "audio": "corpus/audio/silence/silence_01.wav",
+            "arm": "phowhisper",
+            "timestamp": "00:00–00:17",
+            "start": 0.0,
+            "end": 17.26,
+            "text": "bản báo cáo mở đầu bằng lời biện hộ cho cuộc tranh luận mở và tạo lập sự đồng thuận của hoa kỳ về chính sách đối với trung đông.",
+            "syllables": 30,
+            "window": "00:05–00:09"
+          }
+        ]
+      }
+    },
+    "inserted_silence_seconds": 15.0
+  },
+  "catch": {
+    "units": [
+      {
+        "clip_id": "silence_01",
+        "arm": "phowhisper",
+        "window": "00:05–00:09",
+        "invented_syllables": 30,
+        "flagged": false,
+        "flagged_spans": [],
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      {
+        "clip_id": "silence_02",
+        "arm": "phowhisper",
+        "window": "00:08–00:13",
+        "invented_syllables": 37,
+        "flagged": false,
+        "flagged_spans": [],
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      {
+        "clip_id": "silence_03",
+        "arm": "phowhisper",
+        "window": "00:06–00:12",
+        "invented_syllables": 29,
+        "flagged": false,
+        "flagged_spans": [],
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      }
+    ],
+    "silences_with_invention": 3,
+    "flagged": 0,
+    "catch_rate": 0.0,
+    "per_arm": {
+      "whisper": {
+        "silences_with_invention": 0,
+        "flagged": 0,
+        "catch_rate": null,
+        "invented_syllables": 0,
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      },
+      "phowhisper": {
+        "silences_with_invention": 3,
+        "flagged": 0,
+        "catch_rate": 0.0,
+        "invented_syllables": 96,
+        "flagged_syllables": 0,
+        "leaked_into_quotable_syllables": 0
+      }
+    },
+    "false_positive": {
+      "n_clean_clips": 18,
+      "clips_with_invented_flag": 0,
+      "clip_false_positive_rate": 0.0,
+      "invented_spans": 0,
+      "invented_syllables": 0,
+      "clean_audio_seconds": 204.42,
+      "spans_quoting_reference_text": 0,
+      "syllables_quoting_reference_text": 0,
+      "per_clip": [
+        {
+          "id": "fleurs_vi_001",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 14.94,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_002",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 10.2,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_003",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 8.88,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_004",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 8.52,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_005",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 10.08,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_006",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 10.56,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_007",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 9.06,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_008",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 10.8,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_009",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 10.98,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_010",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 8.46,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_011",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 6.9,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_012",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 9.42,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_013",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 13.26,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_014",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 16.68,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_015",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 13.5,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_016",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 13.86,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_017",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 17.52,
+          "spans": []
+        },
+        {
+          "id": "fleurs_vi_018",
+          "invented_spans": 0,
+          "invented_syllables": 0,
+          "audio_seconds": 10.8,
+          "spans": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,3 @@
+arm        n      P      R     F1  uncited  refused  s/item
+base       8  0.802  0.667  0.728        0        3    2.60
+tuned      8  0.958  0.875  0.915        0        0    7.79

@@ -1,0 +1,119 @@
+{
+  "arm": "base",
+  "base_model": "Qwen/Qwen3.5-4B",
+  "summary": {
+    "n": 8,
+    "precision": 0.8021,
+    "recall": 0.6667,
+    "f1": 0.7281,
+    "uncited": 0,
+    "refused": 3,
+    "mean_latency_s": 2.6
+  },
+  "items": [
+    {
+      "kept": 4,
+      "gold": 3,
+      "hit": 3,
+      "precision": 0.75,
+      "recall": 1.0,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 4,
+      "latency_s": 3.74,
+      "id": "ex17",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"Giỗ ông ngoại là ngày mười ba tháng tám\", \"lunar_day\": 13, \"lunar_month\": 8, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"cúng buổi chiều cho mát\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"Ông thích cua rang muối, nên mâm nào cũng có một đĩa\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"Con nhớ hạ mâm trước khi trời tối, đừng để tối mới hạ\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 3,
+      "gold": 2,
+      "hit": 2,
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 3,
+      "latency_s": 2.98,
+      "id": "ex18",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"Giỗ bà cố thì tính ngày mười lăm tháng mười hai\", \"lunar_day\": 15, \"lunar_month\": 12, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"Bà cố thì cúng đơn giản, một mâm chè với một nải chuối\", \"lunar_day\": 15, \"lunar_month\": 12, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"Nếu bận thì cúng trước một ngày, không ai trách\", \"lunar_day\": 15, \"lunar_month\": 12, \"leap\": false}]}"
+    },
+    {
+      "kept": 1,
+      "gold": 2,
+      "hit": 1,
+      "precision": 1.0,
+      "recall": 0.5,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 1,
+      "latency_s": 1.99,
+      "id": "ex19",
+      "raw": "{\"claims\": [{\"kind\": \"offering\", \"quote\": \"Mâm cúng phải có bánh xèo và cá lóc nướng trui, đúng kiểu miền Nam.\"}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 2,
+      "hit": 1,
+      "precision": 0.5,
+      "recall": 0.5,
+      "refused": 1,
+      "uncited": 0,
+      "parsed": 3,
+      "latency_s": 3.08,
+      "id": "ex20",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"Giỗ ông Hai là ngày mười bảy tháng tư, nhớ đúng tháng tư âm lịch.\", \"lunar_day\": \"mười bảy tháng tư\", \"lunar_month\": \"tháng tư âm lịch\", \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"Nhà mình kiêng cúng mực, nên đừng mua mực dù ông thích.\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"Trước khi cúng phải lau bàn thờ bằng nước sạch, không dùng khăn bếp.\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 3,
+      "hit": 1,
+      "precision": 0.5,
+      "recall": 0.3333333333333333,
+      "refused": 1,
+      "uncited": 0,
+      "parsed": 3,
+      "latency_s": 2.99,
+      "id": "ex21",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"Em út mất trẻ lắm, giỗ ngày mười tháng hai, cũng gọi là ngày giỗ non.\", \"lunar_day\": \"mười tháng hai\", \"lunar_month\": null, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"Mẹ nấu cháo gà với mua một ít bánh kẹo, con nít thích gì cúng đó.\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"Không đốt vàng mã nhiều, chỉ một ít thôi.\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 3,
+      "hit": 2,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 2,
+      "latency_s": 2.01,
+      "id": "ex22",
+      "raw": "{\"claims\": [{\"kind\": \"offering\", \"quote\": \"Cúng bà thì cúng xôi đậu xanh, thêm nồi gà kho gừng.\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"Con dâu trưởng dọn mâm, con gái thắp nhang.\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 3,
+      "hit": 2,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "refused": 1,
+      "uncited": 0,
+      "parsed": 3,
+      "latency_s": 1.97,
+      "id": "ex23",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"Giỗ cụ nội là ngày hai mươi tháng bảy\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"Mâm cỗ phải có một mâm ngũ quả và một con gà luộc nguyên con\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"Trưởng tộc khấn trước, sau đó mới tới các chi\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 3,
+      "hit": 2,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 2,
+      "latency_s": 2.04,
+      "id": "ex24",
+      "raw": "{\"claims\": [{\"kind\": \"offering\", \"quote\": \"Cúng dì thì cúng bánh bèo và chè bắp\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"Đừng quên đốt đèn trên bàn thờ suốt đêm hôm đó.\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    }
+  ]
+}

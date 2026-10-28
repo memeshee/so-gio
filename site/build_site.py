@@ -266,7 +266,7 @@ def build_model(run_item: dict, reading: dict | None, oracle: dict) -> dict:
 
 # --------------------------------------------------------------------------- optional eval
 
-def mini_md(text: str) -> str:
+def mini_md(text: str, heading_offset: int = 0) -> str:
     """A deliberately small markdown renderer: headings, tables, lists, paragraphs, **bold**, `code`.
 
     Anything it does not understand is shown as text, never dropped. Links are rendered as their
@@ -314,7 +314,7 @@ def mini_md(text: str) -> str:
                 continue
             if stripped.startswith("#"):
                 flush()
-                level = min(6, len(stripped) - len(stripped.lstrip("#")))
+                level = min(6, len(stripped) - len(stripped.lstrip("#")) + heading_offset)
                 out.append(f"<h{level}>{inline(stripped[level:].strip())}</h{level}>")
                 i += 1
                 continue
@@ -348,8 +348,32 @@ def _inside_rr(x: float, y: float, x0: float, y0: float, x1: float, y1: float, r
     return (x - cx) ** 2 + (y - cy) ** 2 <= r * r
 
 
+def _dist_to_segment(x: float, y: float, x0: float, y0: float, x1: float, y1: float) -> float:
+    dx, dy = x1 - x0, y1 - y0
+    t = 0.0 if (dx == 0 and dy == 0) else max(0.0, min(1.0, ((x - x0) * dx + (y - y0) * dy) / (dx * dx + dy * dy)))
+    return ((x - (x0 + t * dx)) ** 2 + (y - (y0 + t * dy)) ** 2) ** 0.5
+
+
+def seal_svg(size: int, color: str = "#1b1a17", paper: str = "#f7f2e8", *, label: str | None = None) -> str:
+    """The family seal: a lacquer square, a cream rule, one dot for the date, one line to stand it on.
+
+    Drawn at 64 units so the same geometry is used by the favicon, the masthead and the colophon.
+    """
+    title = f"<title>{esc(label)}</title>" if label else ""
+    role = f' role="img" aria-label="{attr(label)}"' if label else ' aria-hidden="true" focusable="false"'
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 64 64"{role}>{title}
+  <rect x="2" y="2" width="60" height="60" rx="6" fill="{color}"/>
+  <rect x="8.5" y="8.5" width="47" height="47" rx="2.8" fill="none" stroke="{paper}" stroke-width="2.9"/>
+  <circle cx="32" cy="31.5" r="5.3" fill="{paper}"/>
+  <path d="M23 43h18" stroke="{paper}" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+</svg>"""
+
+
+FAVICON_SVG = seal_svg(64, "#8c2f27", "#f7f2e8", label="Sổ Giỗ — con dấu của gia đình") + "\n"
+
+
 def favicon_rgba(size: int) -> list[bytes]:
-    """A seal: lacquer square, one cream rule, one cream dot — a date marked and stamped."""
+    """Rasterise the same seal: lacquer square, cream frame, the dot and its line."""
     ss = 4
     unit = 64.0 / size
     rows: list[bytes] = []
@@ -364,11 +388,12 @@ def favicon_rgba(size: int) -> list[bytes]:
                     if not _inside_rr(x, y, 2, 2, 62, 62, 6.0):
                         continue
                     color = RED
-                    # inner cream rule: between the two rounded rectangles
-                    if (_inside_rr(x, y, 9, 9, 55, 55, 2.6)
-                            and not _inside_rr(x, y, 11.3, 11.3, 52.7, 52.7, 1.7)):
+                    if (_inside_rr(x, y, 7.05, 7.05, 56.95, 56.95, 4.25)
+                            and not _inside_rr(x, y, 9.95, 9.95, 54.05, 54.05, 1.35)):
                         color = PAPER
-                    if (x - 32.0) ** 2 + (y - 35.5) ** 2 <= 5.2 ** 2:
+                    if (x - 32.0) ** 2 + (y - 31.5) ** 2 <= 5.3 ** 2:
+                        color = PAPER
+                    if _dist_to_segment(x, y, 23, 43, 41, 43) <= 1.25:
                         color = PAPER
                     sr += color[0]
                     sg += color[1]
@@ -404,15 +429,6 @@ def write_png(path: pathlib.Path, size: int) -> None:
     png += chunk(b"IDAT", zlib.compress(bytes(raw), 9))
     png += chunk(b"IEND", b"")
     path.write_bytes(png)
-
-
-FAVICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Sổ Giỗ — con dấu của gia đình">
-  <title>Sổ Giỗ — con dấu của gia đình</title>
-  <rect x="2" y="2" width="60" height="60" rx="6" fill="#8c2f27"/>
-  <rect x="9" y="9" width="46" height="46" rx="2.6" fill="none" stroke="#f7f2e8" stroke-width="2.3"/>
-  <circle cx="32" cy="35.5" r="5.2" fill="#f7f2e8"/>
-</svg>
-"""
 
 
 # --------------------------------------------------------------------------- css
@@ -509,6 +525,8 @@ p { margin: 0; }
 }
 .runhead b { font-weight: 400; color: var(--ink-2); letter-spacing: 0.1em; }
 
+.seal { margin: 0 0 1.35rem; line-height: 0; }
+
 .masthead h1 {
   font-size: clamp(2.55rem, 9.5vw, 3.9rem);
   line-height: 0.98;
@@ -536,6 +554,12 @@ p { margin: 0; }
 }
 .imprint dd { margin: 0; overflow-wrap: anywhere; }
 
+@media (max-width: 480px) {
+  .imprint { grid-template-columns: 1fr; gap: 0; }
+  .imprint dt { padding-top: 0.55rem; }
+  .imprint dd { margin: 0 0 0.4rem; }
+}
+
 .contents {
   display: flex; flex-wrap: wrap; gap: 0.35rem 0.95rem;
   margin: 1.15rem 0 0;
@@ -554,7 +578,7 @@ p { margin: 0; }
 .ch-no {
   font-family: var(--sans); font-size: 0.6875rem; font-weight: 400;
   letter-spacing: 0.13em; color: var(--ink-3);
-  display: inline-block; margin-right: 0.85em; vertical-align: 0.55em;
+  display: inline-block; margin-right: 0.35em; vertical-align: 0.55em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -592,7 +616,7 @@ p { margin: 0; }
   display: block; font-size: 1.85rem; line-height: 1;
   letter-spacing: -0.015em; font-variant-numeric: tabular-nums;
 }
-.figure .n .u { font-size: 0.66em; color: var(--ink-2); margin-left: 0.12em; letter-spacing: 0; }
+.figure .n .u { font-size: 0.66em; color: var(--ink-2); margin-left: 0.02em; letter-spacing: 0; }
 .figure .l {
   display: block; margin-top: 0.5rem;
   font-family: var(--sans); font-size: 0.71875rem; line-height: 1.4;
@@ -623,8 +647,9 @@ p { margin: 0; }
 }
 .small-note {
   font-family: var(--sans); font-size: 0.75rem; line-height: 1.55; color: var(--ink-3);
-  margin: 0.85rem 0 0; display: flex; gap: 0.5rem; align-items: baseline; flex-wrap: wrap;
+  margin: 0.85rem 0 0;
 }
+.small-note .chip { margin-right: 0.4em; }
 
 .licence {
   margin: 2rem 0 0; padding: 1rem 0 1rem 1rem;
@@ -733,7 +758,7 @@ a.chip:hover { border-bottom-color: var(--ink-2); }
   font-family: var(--sans); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--ink-3); margin: 0 0 0.55rem;
 }
-.kind .en { letter-spacing: 0.08em; text-transform: none; color: var(--ink-3); }
+.kind .en { letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
 .claim blockquote { margin: 0 0 0.75rem; }
 .claim blockquote p {
   font-size: 1.3rem; line-height: 1.48; text-indent: -0.4em; text-wrap: pretty;
@@ -746,8 +771,8 @@ a.chip:hover { border-bottom-color: var(--ink-2); }
 .claim-date { margin: 0.9rem 0 0; font-size: 1.0625rem; color: var(--ink-2); }
 .claim-date time { color: var(--red); font-variant-numeric: tabular-nums; }
 .claim-date .lbl {
-  font-family: var(--sans); font-size: 0.625rem; letter-spacing: 0.13em; text-transform: uppercase;
-  color: var(--ink-3); margin-right: 0.5rem;
+  font-family: var(--sans); font-size: 0.65625rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); margin-right: 0.15rem;
 }
 .claim-meta {
   margin: 0.7rem 0 0; font-family: var(--sans); font-size: 0.75rem; color: var(--ink-3);
@@ -815,9 +840,10 @@ a.chip:hover { border-bottom-color: var(--ink-2); }
 .table-wrap.spaced { margin-top: 1.7rem; }
 table.data {
   border-collapse: collapse; width: 100%;
-  font-family: var(--sans); font-size: 0.8125rem; line-height: 1.45;
+  font-family: var(--sans); font-size: 0.84375rem; line-height: 1.45;
   font-variant-numeric: tabular-nums;
 }
+table.data caption .chip { text-transform: none; letter-spacing: 0.02em; }
 table.data caption {
   caption-side: top; text-align: left; font-family: var(--sans);
   font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase;
@@ -847,7 +873,8 @@ table.data .arrow { color: var(--ink-3); padding: 0 0.1em; }
   table.data th { font-size: 0.65625rem; letter-spacing: 0.06em; }
   table.data th, table.data td { padding-right: 0.4rem; }
   table.data .opt { display: none; }
-  table.data caption { font-size: 0.625rem; letter-spacing: 0.08em; }
+  table.data caption .chip { text-transform: none; letter-spacing: 0.02em; }
+table.data caption { font-size: 0.625rem; letter-spacing: 0.08em; }
 }
 
 .moons td { font-size: 0.78rem; }
@@ -889,8 +916,8 @@ table.data .arrow { color: var(--ink-3); padding: 0 0.1em; }
   font-family: var(--sans); font-size: 0.75rem; line-height: 1.6; color: var(--ink-3);
 }
 .colophon p { margin: 0 0 0.55rem; max-width: 40em; }
-.colophon .mark { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.7rem; }
-.colophon .mark svg { display: block; }
+.colophon .mark { margin: 0 0 0.7rem; }
+.colophon .mark .seal-mark { display: inline-block; vertical-align: -4px; margin-right: 0.4rem; line-height: 0; }
 .colophon b { font-weight: 400; color: var(--ink-2); }
 
 /* ------------------------------------------------------------------ print */
@@ -907,11 +934,14 @@ table.data .arrow { color: var(--ink-3); padding: 0 0.1em; }
   .chapter { border-color: #000; }
   .chapter { margin-top: 22pt; }
   .deck, .lede { color: #000; }
-  .masthead h1 { font-size: 28pt; }
+  .seal { margin: 0 0 1.35rem; line-height: 0; }
+
+.masthead h1 { font-size: 28pt; }
   .chapter h2 { font-size: 16pt; }
   .ch-no { font-size: 7.5pt; color: #000; }
   .ch-en, .figure .l, .arm-sub, .small-note, .claim-cite, .reason, .notes, .colophon,
-  .cal-note, .years .y, .years .w, table.data th, table.data caption { color: #000; }
+  .cal-note, .years .y, .years .w, table.data th, table.data caption .chip { text-transform: none; letter-spacing: 0.02em; }
+table.data caption { color: #000; }
   .chip { color: #000; border: 0; font-size: 9pt; }
   .disputed { color: #000; text-decoration-color: #000; }
   .alarm { border-left: 2pt solid #000; }
@@ -955,7 +985,7 @@ def chip(text: str, *, href: str | None = None, title: str | None = None) -> str
 def chapter(no: str, slug: str, title: str, en: str, body: str) -> str:
     return f"""
 <section class="chapter" id="{attr(slug)}">
-  <h2><span class="ch-no" aria-hidden="true">{esc(no)}</span>{esc(title)}</h2>
+  <h2><span class="ch-no" aria-hidden="true">{esc(no)}</span> {esc(title)}</h2>
   <p class="ch-en" lang="en">{esc(en)}</p>
   {body}
 </section>"""
@@ -980,11 +1010,7 @@ def colophon(model: dict) -> str:
     build = model["build_time"]
     return f"""
 <footer class="colophon">
-  <p class="mark"><svg width="18" height="18" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-    <rect x="2" y="2" width="60" height="60" rx="6" fill="#1b1a17"/>
-    <rect x="9" y="9" width="46" height="46" rx="2.6" fill="none" stroke="#f7f2e8" stroke-width="2.3"/>
-    <circle cx="32" cy="35.5" r="5.2" fill="#f7f2e8"/>
-  </svg> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
+  <p class="mark"><span class="seal-mark">{seal_svg(18)}</span> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
   <p>Dựng lúc {esc(build.strftime("%H:%M · %d tháng %m, %Y"))} (+07) từ
     <span class="chip">data/runs/{esc(model["run_id"])}/run.json</span>
     và <span class="chip">data/oracle/report.json</span>.
@@ -1041,7 +1067,7 @@ def render_figures(model: dict) -> str:
     ]
     parts = []
     for number, unit, label in figures:
-        unit_html = f'<span class="u">{esc(unit)}</span>' if unit else ""
+        unit_html = f'<span class="u"> {esc(unit)}</span>' if unit else ""
         parts.append(
             f'<div class="figure"><span class="n">{esc(number)}{unit_html}</span>'
             f'<span class="l">{esc(label)}</span></div>'
@@ -1134,14 +1160,15 @@ def render_invented(model: dict, *, full: bool = False) -> str:
         start, end = row.get("start"), row.get("end")
         when = f"{mmss(start)}–{mmss(end)}" if start is not None and end is not None else ""
         silence = row.get("silence")
-        silence_text = ""
+        silence_note = ""
         if silence:
-            silence_text = f" · khoảng lặng {mmss(silence.get('start'))}–{mmss(silence.get('end'))}"
+            silence_note = (f" Bộ dò năng lượng xác nhận khoảng lặng "
+                            f"{mmss(silence.get('start'))}–{mmss(silence.get('end'))}.")
         parts.append(f"""
 <aside class="alarm">
-  <p class="alarm-label">Bịa trên khoảng lặng · {esc(when)}{esc(silence_text)}</p>
+  <p class="alarm-label">Bịa trên khoảng lặng · {esc(when)}</p>
   <p class="alarm-text"><del>“{esc(row.get("text", ""))}”</del></p>
-  <p class="alarm-note">{esc(row.get("who", "một mô hình"))} viết ra chữ ở chỗ mô hình kia nghe thấy im lặng.
+  <p class="alarm-note">{esc(row.get("who", "một mô hình"))} viết ra chữ ở chỗ mô hình kia nghe thấy im lặng.{esc(silence_note)}
     Câu này bị gạch khỏi bản đọc và không thể trở thành ngày giỗ.</p>
 </aside>""")
     return "".join(parts)
@@ -1176,7 +1203,7 @@ def render_claims(model: dict) -> str:
             if solar_next:
                 y, m, d = (int(x) for x in solar_next.split("-"))
                 date_bits = (
-                    f'<p class="claim-date"><span class="lbl">giỗ tới</span>'
+                    f'<p class="claim-date"><span class="lbl">giỗ tới</span> '
                     f'<time datetime="{iso(y, m, d)}">{esc(date_vn(y, m, d))}</time>'
                     f' <span class="chip">[âm {esc(lunar)}]</span></p>'
                 )
@@ -1233,8 +1260,8 @@ def next_note(dates: list[str], today: dt.date) -> str:
     if days < 0:
         return ""
     if days == 0:
-        return "Lần giỗ gần nhất là hôm nay."
-    return f"Lần giỗ gần nhất còn {vn_int(days)} ngày."
+        return "Lần giỗ gần nhất là đúng ngày dựng trang."
+    return f"Lần giỗ gần nhất còn {vn_int(days)} ngày, tính đến lúc dựng trang."
 
 
 def render_calendar_blocks(model: dict) -> str:
@@ -1372,6 +1399,7 @@ def render_index(model: dict) -> str:
     body = f"""
 <header class="masthead">
   <p class="runhead"><span>Bản chạy <b>{esc(model["run_id"])}</b></span><span>tr. 1</span></p>
+  <p class="seal" aria-hidden="true">{seal_svg(26)}</p>
   <h1>Sổ Giỗ</h1>
   <p class="deck">Ngày giỗ không được quên. Nhưng ký ức thì có thể sai, và máy thì có thể bịa.
     Cuốn sổ này chỉ ghi những chữ mà cả hai tai cùng nghe thấy — và chỉ rõ chỗ nó không nghe thấy gì.</p>
@@ -1399,21 +1427,23 @@ def render_index(model: dict) -> str:
 {render_arms(model)}
 <p class="small-note"><span class="chip">[run.json]</span>
   0,65× nghĩa là mỗi giây băng mất khoảng 1,5 giây máy; 0,32× là khoảng 3,1 giây máy.
-  Hai mô hình đều chạy cục bộ, int8, trên cùng một máy.</p>
+  Hai mô hình đều chạy cục bộ trên cùng một máy; whisper dùng int8, phowhisper chạy float32.
+  Máy trích xuất {esc(extractor.get("model") or run.get("model") or "—")} đọc {vn_int(int(extractor.get("prompt_tokens") or 0))} token
+  và viết {vn_int(int(extractor.get("completion_tokens") or 0))} token trong {vn_float(float(extractor.get("latency_s") or 0), 1)} giây.</p>
 <p class="licence"><strong>Bản ghi trong bản demo này là một câu trong bộ ngữ liệu mở FLEURS
   (Google, CC BY 4.0) — không phải băng riêng của một gia đình.</strong> Nó không nhắc đến giỗ;
   vì thế phần mười năm giỗ ở dưới nói thẳng là chưa có ngày nào, chứ không điền vào chỗ trống.</p>
 ''')}
 
 {chapter("II", "reading", "Bản đọc lại", "Reading copy", f'''
-<p class="lede">Nguyên văn bản whisper nghe được. Chỗ in nhạt, có chấm dưới là chỗ phowhisper nghe khác;
+<p class="lede">Nguyên văn những gì whisper nghe được. Chữ nhạt, có chấm dưới là chỗ phowhisper nghe khác;
   cả hai cách nghe đều được giữ, không bên nào được chọn làm sự thật.</p>
 {toggle()}
 {render_transcript(model, limit=2)}
 {render_notes(model)}
 {render_invented(model)}
 {"" if invented_count else f'<div class="zero"><span class="lbl">Bịa trên khoảng lặng</span><b>0 chỗ.</b> Không mô hình nào viết ra chữ ở chỗ mô hình kia nghe thấy im lặng. Đây là điều cuốn sổ muốn thấy, không phải điều nó muốn che.</div>'}
-<p class="more"><a href="reading-copy.html">Đọc toàn bản, kể cả những chỗ bị loại <span class="chip">[sổ giỗ · tr. 2]</span></a></p>
+<p class="more"><a href="reading-copy.html">Đọc toàn bản, kể cả những chỗ nghe lệch <span class="chip">[sổ giỗ · tr. 2]</span></a></p>
 ''')}
 
 {chapter("III", "kept", "Lời được giữ", "Claims kept", f'''
@@ -1431,7 +1461,7 @@ def render_index(model: dict) -> str:
 ''')}
 
 {chapter("V", "years", "Mười năm giỗ", "Ten years", f'''
-<p class="lede">Từ ngày âm trong lời kể, lịch tính ra ngày dương cho mười năm tới. Mô hình không được sinh ra
+<p class="lede">Từ ngày âm trong lời kể, lịch tính ra ngày dương cho mười năm tới. Mô hình không được phép sinh ra
   ngày nào; nó chỉ được nhắc lại lời.</p>
 {render_calendar_blocks(model) if calendar_count else f'<p class="empty">Lần chạy này không có ngày giỗ nào sống sót, nên không có bảng mười năm. Bản ghi là một câu trong bộ ngữ liệu FLEURS — nó không nhắc đến giỗ, và chúng tôi không điền ngày vào chỗ trống. <b>Một cuốn sổ trung thực phải có quyền để trống.</b></p>'}
 {render_example_calendar(model) if not calendar_count else ""}
@@ -1499,14 +1529,14 @@ def render_reading_page(model: dict) -> str:
     được sửa cho sạch.</p>
   <dl class="imprint">
     <dt>Băng</dt><dd>{esc(pathlib.PurePosixPath(str(run.get("audio", ""))).name)} · {vn_float(float(run.get("audio_seconds") or 0), 2)} giây</dd>
-    <dt>Đồng ý</dt><dd>{vn_float((run.get("agreement_rate") or 0) * 100, 1)} % âm tiết · {len(model["disputed"])} chỗ lệch · {invented} chỗ bịa</dd>
+    <dt>Độ khớp</dt><dd>{vn_float((run.get("agreement_rate") or 0) * 100, 1)} % âm tiết · {len(model["disputed"])} chỗ lệch · {invented} chỗ bịa</dd>
     <dt>Nguồn</dt><dd><span class="chip">reading_copy.md</span> và <span class="chip">run.json</span></dd>
   </dl>
 </header>
 
 <section class="chapter" id="copy">
-  <h2>Nguyên văn</h2>
-  <p class="ch-en" lang="en">Verbatim</p>
+  <h2>Nguyên văn bản đọc</h2>
+  <p class="ch-en" lang="en">The reading, verbatim</p>
   <dl class="legend">
     <div><dt><span class="disputed">chữ</span></dt><dd>hai mô hình nghe khác nhau — chấm dưới và số là chú thích, cả hai cách nghe đều được giữ</dd></div>
     <div><dt><del>chữ</del></dt><dd>một mô hình viết ra trên khoảng lặng — bị gạch, không vào sổ</dd></div>
@@ -1579,17 +1609,17 @@ def render_calendar_page(model: dict) -> str:
 <section class="chapter" id="eval">
   <h2>Bảng đánh giá</h2>
   <p class="ch-en" lang="en">Evaluation tables</p>
-  <div class="prose">{mini_md(md)}</div>
+  <div class="prose">{mini_md(md, heading_offset=2)}</div>
 </section>"""
 
     body = f"""
 <header class="masthead">
   <p class="runhead"><span><a href="index.html">Sổ Giỗ</a> · bản chạy <b>{esc(model["run_id"])}</b></span><span>tr. 3</span></p>
   <h1>Mười năm giỗ</h1>
-  <p class="deck">Ngày âm trong lời kể, ngày dương trong lịch. Không ngày nào do mô hình sinh ra; mỗi ngày đều
-    mở lại được trong băng và tính lại được bằng tay.</p>
+  <p class="deck">Ngày âm trong lời kể, ngày dương trong lịch. Không ngày nào do mô hình sinh ra — và khi lời kể
+    không có ngày, cuốn sổ để trống.</p>
   <dl class="imprint">
-    <dt>Ngày giỗ</dt><dd>{len(calendar)} người</dd>
+    <dt>Ngày giỗ</dt><dd>{f"{len(calendar)} ngày" if calendar else "chưa có ngày nào"}</dd>
     <dt>Lịch</dt><dd>âm lịch Việt Nam · UTC+7</dd>
     <dt>Đối chiếu</dt><dd>{s["moons_within"]}/{s["moons_n"]} kỳ trăng · {s["anchor_passed"]}/{s["anchor_n"]} ngày lễ</dd>
   </dl>
@@ -1609,7 +1639,7 @@ def render_calendar_page(model: dict) -> str:
     nhuận là tháng đầu tiên trong số đó không chứa trung khí, và nó lặp lại số của tháng trước.</p>
   <p>Giỗ rơi vào tháng nhuận: năm nào không có tháng nhuận ấy thì lịch bỏ năm đó, chứ không đoán sang tháng thường.
     Đó là một khoảng trống có chủ ý, không phải lỗi.</p>
-  <p class="small-note"><span class="chip">[core/lunar.py]</span> Không thư viện ngoài. Khoảng 200 dòng số học,
+  <p class="small-note"><span class="chip">[core/lunar.py]</span> Không thư viện ngoài; toàn bộ là số học trong một tệp,
     kiểm bằng 37 kỳ trăng của USNO và 17 ngày lễ đã công bố.</p>
 </div>
 ''')}
@@ -1621,7 +1651,7 @@ def render_calendar_page(model: dict) -> str:
 <div class="table-wrap">
 <table class="data">
   <caption>Kỳ trăng mới · cả hai giờ đều là UTC · <span class="chip">report.json</span></caption>
-  <thead><tr><th>Ngày</th><th>Giờ UTC · USNO → máy</th><th class="num">Lệch (giây)</th></tr></thead>
+  <thead><tr><th>Ngày</th><th>Giờ UTC<br>USNO → tính</th><th class="num">Lệch (giây)</th></tr></thead>
   <tbody>{moon_rows}</tbody>
 </table>
 </div>
@@ -1763,7 +1793,7 @@ def main(argv: list[str] | None = None) -> int:
 
     (DIST / "index.html").write_text(page(
         "Sổ Giỗ — sổ ghi ngày giỗ của gia đình",
-        "Một cuốn sổ giỗ chỉ ghi những chữ mà hai mô hình nghe cùng nghe thấy, "
+        "Một cuốn sổ giỗ chỉ ghi những chữ mà cả hai mô hình cùng nghe thấy, "
         "và để trống chỗ nó không nghe thấy.",
         render_index(model), current="index.html"), encoding="utf-8")
     (DIST / "reading-copy.html").write_text(page(

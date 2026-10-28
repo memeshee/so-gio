@@ -401,47 +401,11 @@ def measure_catch(runner: Runner, silence_manifest: dict, manifest: dict,
 
 
 # --------------------------------------------------------------------------- 4. extraction arms
+#
+# The matching rule lives in exactly one place, `eval/metrics.claims_match`, because the Tinker
+# arms are scored by a different process against the same gold set. Nothing here re-derives it.
 
-def claim_key(kind: str, quote: str, day, month) -> tuple:
-    return (kind, textnorm.normalise(quote), day, month)
-
-
-def quote_equivalent(a: str, b: str) -> bool:
-    """Same words, allowing one quote to be a sub-span of the other.
-
-    `core.baselines.regex_baseline` quotes a 40-character window ending at the month phrase, an
-    LLM often quotes just the date phrase, and the gold set quotes whatever the author chose.
-    Requiring byte equality would score that as a miss even when both name the same giỗ, so a
-    gold claim counts as found when either normalised quote contains the other — with the kind
-    and the lunar day/month also required to match, which is what makes the fact the same fact.
-    """
-    na, nb = textnorm.normalise(a), textnorm.normalise(b)
-    if not na or not nb:
-        return False
-    return na == nb or na in nb or nb in na
-
-
-def score_claims(kept: list, gold: list[dict]) -> dict:
-    gold_keys = [claim_key(g["kind"], g["quote"], g.get("lunar_day"), g.get("lunar_month"))
-                 for g in gold]
-    matched = [False] * len(gold_keys)
-    tp = strict_tp = 0
-    for c in kept:
-        for i, gk in enumerate(gold_keys):
-            if matched[i]:
-                continue
-            if c.kind == gk[0] and c.lunar_day == gk[2] and c.lunar_month == gk[3] \
-                    and quote_equivalent(c.quote, gk[1]):
-                matched[i] = True
-                tp += 1
-                if textnorm.normalise(c.quote) == gk[1]:
-                    strict_tp += 1
-                break
-    prec = tp / len(kept) if kept else 0.0
-    rec = tp / len(gold_keys) if gold_keys else 0.0
-    f1 = 2 * prec * rec / (prec + rec) if (prec + rec) else 0.0
-    return {"tp": tp, "strict_tp": strict_tp, "predicted": len(kept), "gold": len(gold_keys),
-            "precision": round(prec, 4), "recall": round(rec, 4), "f1": round(f1, 4)}
+from metrics import claims_match, score_claims  # noqa: E402
 
 
 def rel(path: Path) -> str:
@@ -462,14 +426,30 @@ def measure_extraction(heldout: Path) -> dict:
 
     def register(name: str, model: str):
         arms[name] = {"arm": name, "model": model, "kept": [], "refused": 0,
-                      "latencies": [], "uncited_kept": 0, "errors": [], "raw": []}
+                      "latencies": [], "uncited_kept": 0, "errors": [], "raw": [],
+                      "tp": 0, "predicted": 0, "gold": 0}
 
     register("gemma3:1b-it-qat", "ollama/gemma3:1b-it-qat")
     register("qwen2.5:3b-instruct", "ollama/qwen2.5:3b-instruct")
     register("regex", "core.baselines.regex_baseline")
     register("regex_all_dates", "core.baselines.regex_baseline(all_dates=True)")
 
-    today = (TODAY.year, TODAY.month, TODAY.day)
+    def absorb(arm: dict, claims: list, pieces: list, item: dict, dt: float):
+        verdict = guard.review(claims, pieces, (TODAY.year, TODAY.month, TODAY.day))
+        kept = [c.as_dict() for c in verdict.kept]
+        arm["kept"].extend(kept)
+        arm["refused"] += len(verdict.refused)
+        arm["uncited_kept"] += verdict.uncited_kept
+        arm["latencies"].append(dt)
+        # greedy one-to-one, scored per recording so a claim can only match gold from its own clip
+        s = score_claims(kept, item["gold"])
+        arm["tp"] += s["tp"]
+        arm["predicted"] += s["predicted"]
+        arm["gold"] += s["gold"]
+        arm["raw"].append({"id": item["id"], "suggested": len(claims), "kept": len(kept),
+                           "refused": len(verdict.refused), "tp": s["tp"],
+                           "latency_s": round(dt, 3)})
+
     for item in rows:
         pieces = [(float(p[0]), float(p[1]), p[2]) for p in item["pieces"]]
         prompt = extract.build_prompt([(t, txt) for t, _, txt in pieces])
@@ -479,33 +459,31 @@ def measure_extraction(heldout: Path) -> dict:
             try:
                 claims, usage = extract.ollama_extract(prompt, model=name)
                 dt = time.time() - t0
-                verdict = guard.review(claims, pieces, today)
-                arm["kept"].extend(verdict.kept)
-                arm["refused"] += len(verdict.refused)
-                arm["uncited_kept"] += verdict.uncited_kept
-                arm["latencies"].append(dt)
-                arm["raw"].append({"id": item["id"], "claims": len(claims), "kept": len(verdict.kept),
-                                   "refused": len(verdict.refused), "latency_s": round(dt, 2),
-                                   "response_excerpt": usage.get("raw", "")[:600]})
+                absorb(arm, claims, pieces, item, dt)
+                arm["raw"][-1]["response_excerpt"] = usage.get("raw", "")[:400]
             except Exception as exc:  # a dead ollama must not lose the other arms
                 arm["errors"].append({"id": item["id"], "error": f"{type(exc).__name__}: {exc}"})
         for name, all_dates in (("regex", False), ("regex_all_dates", True)):
-            arm = arms[name]
             t0 = time.time()
             claims = baselines.regex_baseline(pieces, all_dates=all_dates)
-            dt = time.time() - t0
-            verdict = guard.review(claims, pieces, today)
-            arm["kept"].extend(verdict.kept)
-            arm["refused"] += len(verdict.refused)
-            arm["uncited_kept"] += verdict.uncited_kept
-            arm["latencies"].append(dt)
+            absorb(arms[name], claims, pieces, item, time.time() - t0)
 
     out = {}
+    guard_failures = []
     for name, arm in arms.items():
-        s = score_claims(arm["kept"], [g for item in rows for g in item["gold"]])
         lat = arm["latencies"]
+        tp, pred, gold = arm["tp"], arm["predicted"], arm["gold"]
+        prec = tp / pred if pred else 0.0
+        rec = tp / gold if gold else 0.0
+        f1 = 2 * prec * rec / (prec + rec) if (prec + rec) else 0.0
+        bug = arm["uncited_kept"] != 0
         out[name] = {
-            "model": arm["model"], "n_items": len(rows), **s,
+            "model": arm["model"], "n_items": len(rows),
+            "guard_bug": bug,
+            "precision": None if bug else round(prec, 4),
+            "recall": None if bug else round(rec, 4),
+            "f1": None if bug else round(f1, 4),
+            "tp": tp, "predicted": pred, "gold": gold,
             "refusals": arm["refused"],
             "uncited_kept": arm["uncited_kept"],
             "mean_latency_s": round(sum(lat) / len(lat), 3) if lat else None,
@@ -513,10 +491,45 @@ def measure_extraction(heldout: Path) -> dict:
             "errors": arm["errors"],
             "per_item": arm["raw"],
         }
-        assert out[name]["uncited_kept"] == 0, f"{name}: uncited kept claims = {out[name]['uncited_kept']}"
+        if bug:
+            guard_failures.append(f"{name}: {arm['uncited_kept']} kept claims without a citation")
+            print(f"      !! GUARD BUG — {name} kept {arm['uncited_kept']} uncited claim(s); "
+                  f"arm NOT scored", flush=True)
+
     return {"status": "run", "path": rel(heldout), "n_items": len(rows),
-            "arms": out,
+            "arms": out, "guard_failures": guard_failures,
             "gold_total": sum(len(i["gold"]) for i in rows)}
+
+
+TINKER_FILES = {"tinker_base": "data/eval/tinker_base.json",
+                "tinker_tuned": "data/eval/tinker_tuned.json"}
+
+
+def read_tinker_arms() -> dict:
+    """Optional fifth/sixth arm: scored by another process, rendered not recomputed.
+
+    Each file is {"summary": {...}, "items": [...]}. We copy the summary through untouched —
+    re-deriving someone else's numbers here would defeat the point of a shared matching rule.
+    """
+    found = {}
+    for name, rel_path in TINKER_FILES.items():
+        path = ROOT / rel_path
+        if not path.exists():
+            continue
+        try:
+            data = load_json(path)
+        except Exception as exc:
+            found[name] = {"scored_separately": True, "error": f"{type(exc).__name__}: {exc}",
+                           "source": rel_path}
+            continue
+        summary = data.get("summary") if isinstance(data, dict) else None
+        found[name] = {"scored_separately": True,
+                       "remote": True,
+                       "source": rel_path,
+                       "summary": summary if isinstance(summary, dict) else {},
+                       "n_items": len(data.get("items") or []) if isinstance(data, dict) else None}
+    return found
+
 
 
 # --------------------------------------------------------------------------- main
@@ -605,17 +618,20 @@ def main(argv=None) -> int:
 
     if args.stage in ("all", "extract"):
         print("[4/4] extraction arms", flush=True)
-        try:
-            report["extraction"] = measure_extraction(ROOT / "data" / "extract" / "heldout.jsonl")
-        except AssertionError:
-            report["extraction"] = {"status": "failed", "reason": traceback.format_exc()[-1500:]}
-            raise
+        report["extraction"] = measure_extraction(ROOT / "data" / "extract" / "heldout.jsonl")
         if report["extraction"]["status"] == "pending":
             print(f"      PENDING: {report['extraction']['reason']}", flush=True)
         else:
             for name, a in report["extraction"]["arms"].items():
+                if a.get("guard_bug"):
+                    print(f"      {name:20s} GUARD BUG: {a['uncited_kept']} uncited kept — NOT SCORED",
+                          flush=True)
+                    continue
                 print(f"      {name:20s} P {a['precision']:.3f} R {a['recall']:.3f} "
                       f"F1 {a['f1']:.3f} refusals {a['refusals']}", flush=True)
+        report["tinker"] = read_tinker_arms()
+        for name, t in report["tinker"].items():
+            print(f"      {name:20s} scored separately ({t.get('source')})", flush=True)
 
     write_json(report_path, report)
 
@@ -623,6 +639,14 @@ def main(argv=None) -> int:
     table_md = render(report)
     (OUT / "tables.md").write_text(table_md, encoding="utf-8")
     print(f"wrote {report_path.relative_to(ROOT)} and data/eval/tables.md")
+
+    failures = (report.get("extraction") or {}).get("guard_failures") or []
+    if failures:
+        print("GUARD FAILURE — a kept claim lost its citation, which is a core/ bug, not a metric:",
+              flush=True)
+        for f in failures:
+            print(f"  !! {f}", flush=True)
+        return 2
     return 0
 
 

@@ -1,0 +1,11 @@
+  ex17 kept= 4 gold= 3 hit= 3 p=0.75 r=1.00   3.7s
+  ex18 kept= 3 gold= 2 hit= 2 p=0.67 r=1.00   3.0s
+  ex19 kept= 1 gold= 2 hit= 1 p=1.00 r=0.50   2.0s
+  ex20 kept= 2 gold= 2 hit= 1 p=0.50 r=0.50   3.1s
+  ex21 kept= 2 gold= 3 hit= 1 p=0.50 r=0.33   3.0s
+  ex22 kept= 2 gold= 3 hit= 2 p=1.00 r=0.67   2.0s
+  ex23 kept= 2 gold= 3 hit= 2 p=1.00 r=0.67   2.0s
+  ex24 kept= 2 gold= 3 hit= 2 p=1.00 r=0.67   2.0s
+
+base: {"n": 8, "precision": 0.8021, "recall": 0.6667, "f1": 0.7281, "uncited": 0, "refused": 3, "mean_latency_s": 2.6}
+wrote data/eval/tinker_base.json

@@ -142,7 +142,7 @@ p { margin: 0; }
 .ch-no {
   font-family: var(--sans); font-size: 0.6875rem; font-weight: 400;
   letter-spacing: 0.13em; color: var(--ink-3);
-  display: inline-block; margin-right: 0.85em; vertical-align: 0.55em;
+  display: inline-block; margin-right: 0.35em; vertical-align: 0.55em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -180,7 +180,7 @@ p { margin: 0; }
   display: block; font-size: 1.85rem; line-height: 1;
   letter-spacing: -0.015em; font-variant-numeric: tabular-nums;
 }
-.figure .n .u { font-size: 0.66em; color: var(--ink-2); margin-left: 0.12em; letter-spacing: 0; }
+.figure .n .u { font-size: 0.66em; color: var(--ink-2); margin-left: 0.02em; letter-spacing: 0; }
 .figure .l {
   display: block; margin-top: 0.5rem;
   font-family: var(--sans); font-size: 0.71875rem; line-height: 1.4;
@@ -211,8 +211,9 @@ p { margin: 0; }
 }
 .small-note {
   font-family: var(--sans); font-size: 0.75rem; line-height: 1.55; color: var(--ink-3);
-  margin: 0.85rem 0 0; display: flex; gap: 0.5rem; align-items: baseline; flex-wrap: wrap;
+  margin: 0.85rem 0 0;
 }
+.small-note .chip { margin-right: 0.4em; }
 
 .licence {
   margin: 2rem 0 0; padding: 1rem 0 1rem 1rem;
@@ -321,7 +322,7 @@ a.chip:hover { border-bottom-color: var(--ink-2); }
   font-family: var(--sans); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--ink-3); margin: 0 0 0.55rem;
 }
-.kind .en { letter-spacing: 0.08em; text-transform: none; color: var(--ink-3); }
+.kind .en { letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
 .claim blockquote { margin: 0 0 0.75rem; }
 .claim blockquote p {
   font-size: 1.3rem; line-height: 1.48; text-indent: -0.4em; text-wrap: pretty;
@@ -334,8 +335,8 @@ a.chip:hover { border-bottom-color: var(--ink-2); }
 .claim-date { margin: 0.9rem 0 0; font-size: 1.0625rem; color: var(--ink-2); }
 .claim-date time { color: var(--red); font-variant-numeric: tabular-nums; }
 .claim-date .lbl {
-  font-family: var(--sans); font-size: 0.625rem; letter-spacing: 0.13em; text-transform: uppercase;
-  color: var(--ink-3); margin-right: 0.5rem;
+  font-family: var(--sans); font-size: 0.65625rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); margin-right: 0.15rem;
 }
 .claim-meta {
   margin: 0.7rem 0 0; font-family: var(--sans); font-size: 0.75rem; color: var(--ink-3);
@@ -403,9 +404,10 @@ a.chip:hover { border-bottom-color: var(--ink-2); }
 .table-wrap.spaced { margin-top: 1.7rem; }
 table.data {
   border-collapse: collapse; width: 100%;
-  font-family: var(--sans); font-size: 0.8125rem; line-height: 1.45;
+  font-family: var(--sans); font-size: 0.84375rem; line-height: 1.45;
   font-variant-numeric: tabular-nums;
 }
+table.data caption .chip { text-transform: none; letter-spacing: 0.02em; }
 table.data caption {
   caption-side: top; text-align: left; font-family: var(--sans);
   font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase;
@@ -435,7 +437,8 @@ table.data .arrow { color: var(--ink-3); padding: 0 0.1em; }
   table.data th { font-size: 0.65625rem; letter-spacing: 0.06em; }
   table.data th, table.data td { padding-right: 0.4rem; }
   table.data .opt { display: none; }
-  table.data caption { font-size: 0.625rem; letter-spacing: 0.08em; }
+  table.data caption .chip { text-transform: none; letter-spacing: 0.02em; }
+table.data caption { font-size: 0.625rem; letter-spacing: 0.08em; }
 }
 
 .moons td { font-size: 0.78rem; }
@@ -477,8 +480,8 @@ table.data .arrow { color: var(--ink-3); padding: 0 0.1em; }
   font-family: var(--sans); font-size: 0.75rem; line-height: 1.6; color: var(--ink-3);
 }
 .colophon p { margin: 0 0 0.55rem; max-width: 40em; }
-.colophon .mark { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.7rem; }
-.colophon .mark svg { display: block; }
+.colophon .mark { margin: 0 0 0.7rem; }
+.colophon .mark .seal-mark { display: inline-block; vertical-align: -4px; margin-right: 0.4rem; line-height: 0; }
 .colophon b { font-weight: 400; color: var(--ink-2); }
 
 /* ------------------------------------------------------------------ print */
@@ -501,7 +504,8 @@ table.data .arrow { color: var(--ink-3); padding: 0 0.1em; }
   .chapter h2 { font-size: 16pt; }
   .ch-no { font-size: 7.5pt; color: #000; }
   .ch-en, .figure .l, .arm-sub, .small-note, .claim-cite, .reason, .notes, .colophon,
-  .cal-note, .years .y, .years .w, table.data th, table.data caption { color: #000; }
+  .cal-note, .years .y, .years .w, table.data th, table.data caption .chip { text-transform: none; letter-spacing: 0.02em; }
+table.data caption { color: #000; }
   .chip { color: #000; border: 0; font-size: 9pt; }
   .disputed { color: #000; text-decoration-color: #000; }
   .alarm { border-left: 2pt solid #000; }

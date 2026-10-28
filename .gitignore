@@ -12,3 +12,6 @@ data/private/
 data/models/
 corpus/audio/
 data/runs/*/audio.wav
+train/state.json
+data/eval/cache/
+scripts/state/

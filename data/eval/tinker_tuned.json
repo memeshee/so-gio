@@ -1,0 +1,119 @@
+{
+  "arm": "tuned",
+  "base_model": "Qwen/Qwen3.5-4B",
+  "summary": {
+    "n": 8,
+    "precision": 0.9583,
+    "recall": 0.875,
+    "f1": 0.9148,
+    "uncited": 0,
+    "refused": 0,
+    "mean_latency_s": 7.79
+  },
+  "items": [
+    {
+      "kept": 3,
+      "gold": 3,
+      "hit": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 3,
+      "latency_s": 10.22,
+      "id": "ex17",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"ngày mười ba tháng tám\", \"lunar_day\": 13, \"lunar_month\": 8, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"cua rang muối\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"hạ mâm trước khi trời tối\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 2,
+      "hit": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 2,
+      "latency_s": 3.39,
+      "id": "ex18",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"ngày mười lăm tháng mười hai\", \"lunar_day\": 15, \"lunar_month\": 12, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"một mâm chè với một nải chuối\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 2,
+      "hit": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 2,
+      "latency_s": 8.1,
+      "id": "ex19",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"ngày mười sáu tháng năm\", \"lunar_day\": 16, \"lunar_month\": 5, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"bánh xèo và cá lóc nướng trui\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 3,
+      "gold": 2,
+      "hit": 2,
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 3,
+      "latency_s": 7.99,
+      "id": "ex20",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"ngày mười bảy tháng tư\", \"lunar_day\": 17, \"lunar_month\": 4, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"kiêng cúng mực\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"lau bàn thờ bằng nước sạch\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 3,
+      "hit": 2,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 2,
+      "latency_s": 8.21,
+      "id": "ex21",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"ngày mười tháng hai\", \"lunar_day\": 10, \"lunar_month\": 2, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"cháo gà với mua một ít bánh kẹo\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 3,
+      "hit": 2,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 2,
+      "latency_s": 8.04,
+      "id": "ex22",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"ngày mồng năm tháng chín\", \"lunar_day\": 5, \"lunar_month\": 9, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"xôi đậu xanh, thêm nồi gà kho gừng\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 2,
+      "gold": 3,
+      "hit": 2,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 2,
+      "latency_s": 8.26,
+      "id": "ex23",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"ngày hai mươi tháng bảy\", \"lunar_day\": 20, \"lunar_month\": 7, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"một mâm ngũ quả và một con gà luộc nguyên con\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    },
+    {
+      "kept": 3,
+      "gold": 3,
+      "hit": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "refused": 0,
+      "uncited": 0,
+      "parsed": 3,
+      "latency_s": 8.08,
+      "id": "ex24",
+      "raw": "{\"claims\": [{\"kind\": \"gio_date\", \"quote\": \"ngày mười hai tháng mười\", \"lunar_day\": 12, \"lunar_month\": 10, \"leap\": false}, {\"kind\": \"offering\", \"quote\": \"bánh bèo và chè bắp\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}, {\"kind\": \"instruction\", \"quote\": \"đốt đèn trên bàn thờ suốt đêm hôm đó\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+    }
+  ]
+}

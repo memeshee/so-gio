@@ -20,10 +20,10 @@
 <header class="masthead">
   <p class="runhead"><span><a href="index.html">Sổ Giỗ</a> · bản chạy <b>smoke-001</b></span><span>tr. 3</span></p>
   <h1>Mười năm giỗ</h1>
-  <p class="deck">Ngày âm trong lời kể, ngày dương trong lịch. Không ngày nào do mô hình sinh ra; mỗi ngày đều
-    mở lại được trong băng và tính lại được bằng tay.</p>
+  <p class="deck">Ngày âm trong lời kể, ngày dương trong lịch. Không ngày nào do mô hình sinh ra — và khi lời kể
+    không có ngày, cuốn sổ để trống.</p>
   <dl class="imprint">
-    <dt>Ngày giỗ</dt><dd>0 người</dd>
+    <dt>Ngày giỗ</dt><dd>chưa có ngày nào</dd>
     <dt>Lịch</dt><dd>âm lịch Việt Nam · UTC+7</dd>
     <dt>Đối chiếu</dt><dd>37/37 kỳ trăng · 17/17 ngày lễ</dd>
   </dl>
@@ -31,7 +31,7 @@
 
 
 <section class="chapter" id="years">
-  <h2><span class="ch-no" aria-hidden="true">I</span>Ngày giỗ</h2>
+  <h2><span class="ch-no" aria-hidden="true">I</span> Ngày giỗ</h2>
   <p class="ch-en" lang="en">The dates</p>
   
 <p class="empty">Lần chạy này không có ngày giỗ nào sống sót, nên bảng mười năm để trống. Không có ngày nào bị điền vào chỗ trống.</p>
@@ -49,7 +49,7 @@
 
 
 <section class="chapter" id="method">
-  <h2><span class="ch-no" aria-hidden="true">II</span>Cách tính</h2>
+  <h2><span class="ch-no" aria-hidden="true">II</span> Cách tính</h2>
   <p class="ch-en" lang="en">The method</p>
   
 <div class="prose">
@@ -60,7 +60,7 @@
     nhuận là tháng đầu tiên trong số đó không chứa trung khí, và nó lặp lại số của tháng trước.</p>
   <p>Giỗ rơi vào tháng nhuận: năm nào không có tháng nhuận ấy thì lịch bỏ năm đó, chứ không đoán sang tháng thường.
     Đó là một khoảng trống có chủ ý, không phải lỗi.</p>
-  <p class="small-note"><span class="chip">[core/lunar.py]</span> Không thư viện ngoài. Khoảng 200 dòng số học,
+  <p class="small-note"><span class="chip">[core/lunar.py]</span> Không thư viện ngoài; toàn bộ là số học trong một tệp,
     kiểm bằng 37 kỳ trăng của USNO và 17 ngày lễ đã công bố.</p>
 </div>
 
@@ -68,7 +68,7 @@
 
 
 <section class="chapter" id="checks">
-  <h2><span class="ch-no" aria-hidden="true">III</span>Đối chiếu</h2>
+  <h2><span class="ch-no" aria-hidden="true">III</span> Đối chiếu</h2>
   <p class="ch-en" lang="en">Checks</p>
   
 <p class="lede">37 trong 37 kỳ trăng mới lệch dưới hai phút so với USNO; kỳ lệch nhất là
@@ -77,7 +77,7 @@
 <div class="table-wrap">
 <table class="data">
   <caption>Kỳ trăng mới · cả hai giờ đều là UTC · <span class="chip">report.json</span></caption>
-  <thead><tr><th>Ngày</th><th>Giờ UTC · USNO → máy</th><th class="num">Lệch (giây)</th></tr></thead>
+  <thead><tr><th>Ngày</th><th>Giờ UTC<br>USNO → tính</th><th class="num">Lệch (giây)</th></tr></thead>
   <tbody><tr><td class="nowrap">29/01/2025</td><td class="nowrap">12:36 <span class="arrow">→</span> 12:36</td><td class="num">+33,4</td></tr><tr><td class="nowrap">28/02/2025</td><td class="nowrap">00:45 <span class="arrow">→</span> 00:45</td><td class="num">+29,6</td></tr><tr><td class="nowrap">29/03/2025</td><td class="nowrap">10:58 <span class="arrow">→</span> 10:58</td><td class="num">+39,1</td></tr><tr><td class="nowrap">27/04/2025</td><td class="nowrap">19:31 <span class="arrow">→</span> 19:32</td><td class="num">+67,4</td></tr><tr><td class="nowrap">27/05/2025</td><td class="nowrap">03:02 <span class="arrow">→</span> 03:03</td><td class="num">+70,8</td></tr><tr><td class="nowrap">25/06/2025</td><td class="nowrap">10:31 <span class="arrow">→</span> 10:32</td><td class="num">+65,5</td></tr><tr><td class="nowrap">24/07/2025</td><td class="nowrap">19:11 <span class="arrow">→</span> 19:11</td><td class="num">+22,4</td></tr><tr><td class="nowrap">23/08/2025</td><td class="nowrap">06:06 <span class="arrow">→</span> 06:06</td><td class="num">+28,5</td></tr><tr><td class="nowrap">21/09/2025</td><td class="nowrap">19:54 <span class="arrow">→</span> 19:53</td><td class="num">−3,9</td></tr><tr><td class="nowrap">21/10/2025</td><td class="nowrap">12:25 <span class="arrow">→</span> 12:25</td><td class="num">+6,3</td></tr><tr><td class="nowrap">20/11/2025</td><td class="nowrap">06:47 <span class="arrow">→</span> 06:47</td><td class="num">+25,8</td></tr><tr><td class="nowrap">20/12/2025</td><td class="nowrap">01:43 <span class="arrow">→</span> 01:43</td><td class="num">+44,1</td></tr><tr><td class="nowrap">18/01/2026</td><td class="nowrap">19:52 <span class="arrow">→</span> 19:52</td><td class="num">+36,2</td></tr><tr><td class="nowrap">17/02/2026</td><td class="nowrap">12:01 <span class="arrow">→</span> 12:01</td><td class="num">+57,1</td></tr><tr><td class="nowrap">19/03/2026</td><td class="nowrap">01:23 <span class="arrow">→</span> 01:24</td><td class="num">+84,2</td></tr><tr><td class="nowrap">17/04/2026</td><td class="nowrap">11:52 <span class="arrow">→</span> 11:52</td><td class="num">+48,7</td></tr><tr><td class="nowrap">16/05/2026</td><td class="nowrap">20:01 <span class="arrow">→</span> 20:02</td><td class="num">+60,9</td></tr><tr><td class="nowrap">15/06/2026</td><td class="nowrap">02:54 <span class="arrow">→</span> 02:54</td><td class="num">+56,0</td></tr><tr><td class="nowrap">14/07/2026</td><td class="nowrap">09:43 <span class="arrow">→</span> 09:44</td><td class="num">+64,1</td></tr><tr><td class="nowrap">12/08/2026</td><td class="nowrap">17:37 <span class="arrow">→</span> 17:36</td><td class="num">−7,3</td></tr><tr><td class="nowrap">11/09/2026</td><td class="nowrap">03:27 <span class="arrow">→</span> 03:26</td><td class="num">−2,9</td></tr><tr><td class="nowrap">10/10/2026</td><td class="nowrap">15:50 <span class="arrow">→</span> 15:50</td><td class="num">+2,6</td></tr><tr><td class="nowrap">09/11/2026</td><td class="nowrap">07:02 <span class="arrow">→</span> 07:02</td><td class="num">+9,8</td></tr><tr><td class="nowrap">09/12/2026</td><td class="nowrap">00:52 <span class="arrow">→</span> 00:52</td><td class="num">+6,9</td></tr><tr><td class="nowrap">07/01/2027</td><td class="nowrap">20:24 <span class="arrow">→</span> 20:24</td><td class="num">+48,3</td></tr><tr><td class="nowrap">06/02/2027</td><td class="nowrap">15:56 <span class="arrow">→</span> 15:56</td><td class="num">+27,7</td></tr><tr><td class="nowrap">08/03/2027</td><td class="nowrap">09:29 <span class="arrow">→</span> 09:29</td><td class="num">+48,7</td></tr><tr><td class="nowrap">06/04/2027</td><td class="nowrap">23:51 <span class="arrow">→</span> 23:51</td><td class="num">+27,9</td></tr><tr><td class="nowrap">06/05/2027</td><td class="nowrap">10:58 <span class="arrow">→</span> 10:58</td><td class="num">+52,4</td></tr><tr><td class="nowrap">04/06/2027</td><td class="nowrap">19:40 <span class="arrow">→</span> 19:40</td><td class="num">+41,5</td></tr><tr><td class="nowrap">04/07/2027</td><td class="nowrap">03:02 <span class="arrow">→</span> 03:02</td><td class="num">+29,4</td></tr><tr><td class="nowrap">02/08/2027</td><td class="nowrap">10:05 <span class="arrow">→</span> 10:05</td><td class="num">+33,5</td></tr><tr><td class="nowrap">31/08/2027</td><td class="nowrap">17:41 <span class="arrow">→</span> 17:41</td><td class="num">+30,5</td></tr><tr><td class="nowrap">30/09/2027</td><td class="nowrap">02:36 <span class="arrow">→</span> 02:36</td><td class="num">+28,3</td></tr><tr><td class="nowrap">29/10/2027</td><td class="nowrap">13:36 <span class="arrow">→</span> 13:36</td><td class="num">+51,9</td></tr><tr><td class="nowrap">28/11/2027</td><td class="nowrap">03:24 <span class="arrow">→</span> 03:24</td><td class="num">+42,3</td></tr><tr><td class="nowrap">27/12/2027</td><td class="nowrap">20:12 <span class="arrow">→</span> 20:12</td><td class="num">+44,9</td></tr></tbody>
 </table>
 </div>
@@ -105,12 +105,13 @@
 <nav class="pager no-print" aria-label="Trang khác"><a href="index.html">Bìa <span class="no">tr. 1</span></a><a href="reading-copy.html">Bản đọc lại <span class="no">tr. 2</span></a></nav>
 
 <footer class="colophon">
-  <p class="mark"><svg width="18" height="18" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-    <rect x="2" y="2" width="60" height="60" rx="6" fill="#1b1a17"/>
-    <rect x="9" y="9" width="46" height="46" rx="2.6" fill="none" stroke="#f7f2e8" stroke-width="2.3"/>
-    <circle cx="32" cy="35.5" r="5.2" fill="#f7f2e8"/>
-  </svg> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
-  <p>Dựng lúc 08:02 · 28 tháng 10, 2026 (+07) từ
+  <p class="mark"><span class="seal-mark"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+  <rect x="2" y="2" width="60" height="60" rx="6" fill="#1b1a17"/>
+  <rect x="8.5" y="8.5" width="47" height="47" rx="2.8" fill="none" stroke="#f7f2e8" stroke-width="2.9"/>
+  <circle cx="32" cy="31.5" r="5.3" fill="#f7f2e8"/>
+  <path d="M23 43h18" stroke="#f7f2e8" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+</svg></span> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
+  <p>Dựng lúc 08:11 · 28 tháng 10, 2026 (+07) từ
     <span class="chip">data/runs/smoke-001/run.json</span>
     và <span class="chip">data/oracle/report.json</span>.
     Không có yêu cầu mạng nào khi mở trang: chữ, dấu và mã đều nằm trong thư mục này.</p>

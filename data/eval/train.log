@@ -1,0 +1,11 @@
+training Qwen/Qwen3.5-4B rank=16 lr=0.0001 on 16 passages, 80 steps
+  step   0  loss/supervised-token=0.1393  supervised_tokens=410.0
+  step  10  loss/supervised-token=0.0248  supervised_tokens=459.0
+  step  20  loss/supervised-token=0.0030  supervised_tokens=461.0
+  step  30  loss/supervised-token=0.0002  supervised_tokens=415.0
+  step  40  loss/supervised-token=0.0001  supervised_tokens=489.0
+  step  50  loss/supervised-token=0.0000  supervised_tokens=491.0
+  step  60  loss/supervised-token=0.0000  supervised_tokens=456.0
+  step  70  loss/supervised-token=0.0000  supervised_tokens=416.0
+  step  79  loss/supervised-token=0.0000  supervised_tokens=536.0
+saved handle -> state.json
