@@ -75,6 +75,18 @@ def run(audio: pathlib.Path, out_dir: pathlib.Path, model: str) -> dict:
                                silences=len(hearing.silences),
                                invented_spans=len(hearing.invented_spans))
 
+    # The timestamp heuristic inside `hear()` cannot flag invention (Whisper emits one segment that spans the
+    # silence), so the pipeline asks the models directly: hand each non-speech window over alone, and whatever
+    # comes back is invented by construction. Without this step the reading copy would show "0 invented" on a
+    # recording that is 34% verified silence, which is a worse lie than showing nothing.
+    with telemetry.span("pipeline.probe_silences", silences=len(hearing.silences)) as _probe:
+        probed = asr.probe_silences(str(audio))
+        seen = {(round(sp.start, 2), round(sp.end, 2)) for sp in hearing.invented_spans}
+        fresh = [sp for sp in probed if (round(sp.start, 2), round(sp.end, 2)) not in seen]
+        hearing.invented_spans.extend(fresh)
+        telemetry.trace_result("probe.result", probed=len(probed), new=len(fresh),
+                               syllables=sum(len((sp.text_a or sp.text_b or "").split()) for sp in probed))
+
     with telemetry.span("pipeline.ground") as _:
         quotable, excluded = grounded_pieces(hearing)
         telemetry.trace_result("ground.result", quotable=len(quotable), excluded=len(excluded),

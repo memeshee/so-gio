@@ -195,17 +195,18 @@ def render(report: dict) -> str:
         parts.append(_table(
             ["Arm", "Probe×arm pairs", "Pairs with invention", "Flagged as invented", "Catch rate",
              "Segments ≥50% inside detected silence", "…of those, suppressed by the other arm"], rows))
+        n_inv = catch["silences_with_invention"]
+        caught = (f"It caught {catch['flagged']} of {n_inv}." if n_inv else
+                  "With no invention in the corpus the catch rate is undefined rather than a flattering 0/0.")
         parts.append(
             f"\n*An (arm, silence) pair “has invention” when that arm added syllables because the silence was "
             f"there; it is “flagged” when `core.asr` emitted an `invented` span for that arm overlapping the "
             f"silent window (both conditions: the segment is ≥50% inside detected non-speech **and** the other "
-            f"arm has no segment there). With {catch['silences_with_invention']} pairs of invention the catch "
-            f"rate is undefined rather than 0/0-favourable. The last two columns are the mechanism, not an "
-            f"excuse: they count the segments each arm placed ≥50% inside detected non-speech — the raw "
-            f"material for an invented flag — and how many of those the other arm's segments overlapped, which "
-            f"suppresses the flag by construction. `invented_spans` fired "
-            f"{catch['spans_fired_anywhere']} time(s) across all {catch['recordings_checked']} recordings in "
-            f"this evaluation.{_leak_note(catch)}*\n")
+            f"arm has no segment there). {caught} The last two columns are the mechanism, not an excuse: they "
+            f"count the segments each arm placed ≥50% inside detected non-speech — the raw material for an "
+            f"invented flag — and how many of those the other arm's segments overlapped, which suppresses the "
+            f"flag by construction. `invented_spans` fired {catch['spans_fired_anywhere']} time(s) across all "
+            f"{catch['recordings_checked']} recordings in this evaluation.{_leak_note(catch)}*\n")
 
         parts.append("## 3b. False positives on clean audio\n")
         parts.append(_table(

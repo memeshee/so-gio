@@ -16,3 +16,4 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
       pairs with invention 5/24, flagged 1; FP on 0/18 clean clips; spans fired anywhere: 1
       asr stages took 275s wall
 [4/4] extraction arms
+EXIT=143

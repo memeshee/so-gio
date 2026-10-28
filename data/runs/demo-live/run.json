@@ -1,0 +1,97 @@
+{
+  "audio": "corpus/audio/silence/silence_01.wav",
+  "audio_seconds": 17.26,
+  "generated_at": "2026-10-28T02:23:47+00:00",
+  "model": "gemma3:1b-it-qat",
+  "usage": {
+    "model": "gemma3:1b-it-qat",
+    "latency_s": 57.92,
+    "prompt_tokens": 316,
+    "completion_tokens": 42,
+    "raw": "{\"claims\": [{\"kind\": \"person\", \"quote\": \"báo cáo mở đầu bằng\", \"lunar_day\": null, \"lunar_month\": null, \"leap\": false}]}"
+  },
+  "arms": [
+    {
+      "arm": "whisper",
+      "model": "faster-whisper/small",
+      "latency_s": 29.85,
+      "realtime_factor": 0.58,
+      "chars": 124
+    },
+    {
+      "arm": "phowhisper",
+      "model": "vinai/PhoWhisper-small",
+      "latency_s": 98.01,
+      "realtime_factor": 0.18,
+      "chars": 128
+    }
+  ],
+  "agreement_rate": 0.8519,
+  "silences": [
+    {
+      "start": 4.45,
+      "end": 9.68
+    }
+  ],
+  "invented": [
+    {
+      "text": "Cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo.",
+      "start": 4.45369,
+      "end": 9.683
+    },
+    {
+      "text": "điều này từ thành công của thủ tướng ở việt nam.",
+      "start": 4.45369,
+      "end": 9.683
+    }
+  ],
+  "quotable_spans": [
+    {
+      "start": 0.0,
+      "end": 5.0,
+      "text": "báo cáo mở đầu bằng"
+    },
+    {
+      "start": 0.0,
+      "end": 5.0,
+      "text": "biện hộ"
+    },
+    {
+      "start": 9.0,
+      "end": 17.0,
+      "text": "mở và tạo lập sự đồng"
+    },
+    {
+      "start": 9.0,
+      "end": 17.0,
+      "text": "của hoa kỳ về chính sách đối với trung đông"
+    }
+  ],
+  "excluded_spans": [],
+  "claims_kept": [
+    {
+      "kind": "person",
+      "quote": "báo cáo mở đầu bằng",
+      "t_start": 0.0,
+      "t_end": 5.0,
+      "lunar_day": null,
+      "lunar_month": null,
+      "leap": false,
+      "solar_next": null,
+      "status": "kept",
+      "reason": "",
+      "model": "gemma3:1b-it-qat"
+    }
+  ],
+  "claims_refused": [],
+  "calendar": [],
+  "summary": {
+    "kept": 1,
+    "refused": 0,
+    "uncited_kept": 0,
+    "kinds": {
+      "person": 1
+    },
+    "refused_reasons": []
+  }
+}
