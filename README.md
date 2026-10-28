@@ -7,7 +7,7 @@ become a claim. A deterministic lunar engine turns those claims into the next te
 durable workflow holds each one until the day arrives. Everything the models were unsure about is shown,
 marked, and never allowed to become a date.
 
-**Live demo: https://memeshee.github.io/so-gio/** (mirror, once DNS moves: `gio.uconfidant.tech`)
+**Live demo: https://gio.uconfidant.tech/**
 
 ---
 
@@ -167,12 +167,15 @@ Code MIT. Demo audio: **Google FLEURS `vi_vn`, CC-BY-4.0** — see `corpus/LICEN
 text and the items excluded for licensing reasons. The extraction dataset (`data/extract/`) is authored by the
 entrant and labelled as such everywhere it is used; it is not a recording and does not claim to be.
 
-## Deployment note (the one thing that needs a human)
+## Deployment
 
 The demo is a static build pushed to the `gh-pages` branch and served from GitHub Pages, which cannot spin down.
-The `.tech` domain (`gio.uconfidant.tech`) needs one DNS record at the registrar it was claimed from — a
-`CNAME gio → memeshee.github.io` — plus the custom domain entered in the repository's Pages settings. Until that
-record exists, Pages must **not** be configured with the custom domain, or the `github.io` URL redirects to a
-host that does not resolve: a demo that 301s into nothing is worse than no domain at all. That is a lesson from
-this build, not a theory — the link was briefly broken that way and is checked by
-`python scripts/check_links.py` before every push.
+
+- Canonical URL: **https://gio.uconfidant.tech/** (`.tech` domain claimed through Hacktoberfest, Let's Encrypt
+  certificate, HTTPS enforced at the edge).
+- Secondary URL: **https://memeshee.github.io/so-gio/** — GitHub 301s it to the canonical host.
+- Wiring, in the order that avoids breaking the link: the `CNAME` record at the registrar
+  (`CNAME gio → memeshee.github.io`) **first**, confirmed with `dig`, and only then the custom domain in the
+  repository's Pages settings. Setting the custom domain before the record resolves makes GitHub 301 the
+  `github.io` URL to a name that does not answer, which turns a working demo into a dead one — that happened
+  during this build, and `python scripts/check_links.py` now re-statuses every advertised URL before each push.

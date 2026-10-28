@@ -315,8 +315,8 @@ Five categories, each one carrying a real part of the build rather than a logo.
   awake. Of the 36 live demo links among this series' winners, **five are already dead** — every one of them a
   suspended free instance. A prebuilt HTML page with a `.nojekyll` costs nothing to serve, loads in one request,
   prints correctly, and the link a judge clicks three weeks after the deadline is the same bytes I tested today.
-  (While the DNS record propagates, the same build answers at
-  [memeshee.github.io/so-gio](https://memeshee.github.io/so-gio/).)
+  Live at [gio.uconfidant.tech](https://gio.uconfidant.tech/) behind a Let's Encrypt certificate issued this
+  afternoon, with the `.github.io` hostname as the fallback GitHub redirects to it automatically.
 
 ---
 
