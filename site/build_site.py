@@ -14,6 +14,7 @@ Writes:
     site/dist/index.html
     site/dist/reading-copy.html
     site/dist/calendar.html
+    site/dist/eval.html              (only when data/eval/report.json + tables.md exist)
     site/dist/assets/site.css, site/dist/assets/site.js, site/dist/assets/fonts/*
     site/dist/favicon.svg, favicon-32.png, favicon-180.png
     site/dist/.nojekyll
@@ -200,6 +201,23 @@ def load_oracle() -> dict:
     return json_load(path)
 
 
+def load_eval() -> dict | None:
+    """The evaluation is produced by another process; it is optional and never required."""
+    report_path = ROOT / "data" / "eval" / "report.json"
+    tables_path = ROOT / "data" / "eval" / "tables.md"
+    if not (report_path.exists() and tables_path.exists()):
+        return None
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        tables = tables_path.read_text(encoding="utf-8")
+    except Exception as exc:
+        print(f"  eval present but unreadable: {exc}", file=sys.stderr)
+        return None
+    if not report.get("catch") or not report.get("invention"):
+        return None
+    return {"report": report, "tables": tables}
+
+
 def build_model(run_item: dict, reading: dict | None, oracle: dict) -> dict:
     run = run_item["run"]
     kept = run.get("claims_kept") or []
@@ -260,6 +278,7 @@ def build_model(run_item: dict, reading: dict | None, oracle: dict) -> dict:
         "disputed": disputed,
         "oracle": oracle,
         "oracle_summary": oracle_summary,
+        "eval": load_eval(),
         "build_time": dt.datetime.now(TZ_VN),
     }
 
@@ -281,13 +300,16 @@ def mini_md(text: str, heading_offset: int = 0) -> str:
         def inline(value: str) -> str:
             value = esc(value)
             value = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", value)
+            value = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"<em>\1</em>", value)
             value = re.sub(r"`([^`]+)`", r"<code>\1</code>", value)
             value = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", value)
             return value
 
         def flush() -> None:
             if para:
-                out.append("<p>" + inline(" ".join(para)).replace("  ", "<br>") + "</p>")
+                raw = " ".join(para)
+                cls = ' class="tnote"' if re.fullmatch(r"\*[^*].*\*", raw.strip(), re.S) else ""
+                out.append(f"<p{cls}>" + inline(raw).replace("  ", "<br>") + "</p>")
                 para.clear()
 
         while i < len(lines):
@@ -305,11 +327,15 @@ def mini_md(text: str, heading_offset: int = 0) -> str:
                 while i < len(lines) and lines[i].strip().startswith("|"):
                     rows.append([c.strip() for c in lines[i].strip().strip("|").split("|")])
                     i += 1
-                out.append('<div class="table-wrap"><table class="data"><thead><tr>')
+                out.append('<div class="table-wrap"><table class="data eval"><thead><tr>')
                 out.extend(f"<th>{inline(c)}</th>" for c in header)
                 out.append("</tr></thead><tbody>")
                 for row in rows:
-                    out.append("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in row) + "</tr>")
+                    cells = []
+                    for index, cell in enumerate(row):
+                        label = re.sub(r"[`*]", "", header[index]) if index < len(header) else ""
+                        cells.append(f'<td data-label="{attr(label)}">{inline(cell)}</td>')
+                    out.append("<tr>" + "".join(cells) + "</tr>")
                 out.append("</tbody></table></div>")
                 continue
             if stripped.startswith("#"):
@@ -436,17 +462,17 @@ def write_png(path: pathlib.Path, size: int) -> None:
 CSS = r"""
 @font-face {
   font-family: "So Gio Serif";
-  src: url("fonts/LiberationSerif-Regular.woff2") format("woff2");
+  src: url("fonts/SoGioSerif-Regular.woff2") format("woff2");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "So Gio Serif";
-  src: url("fonts/LiberationSerif-Italic.woff2") format("woff2");
+  src: url("fonts/SoGioSerif-Italic.woff2") format("woff2");
   font-weight: 400; font-style: italic; font-display: swap;
 }
 @font-face {
   font-family: "So Gio Serif";
-  src: url("fonts/LiberationSerif-Bold.woff2") format("woff2");
+  src: url("fonts/SoGioSerif-Bold.woff2") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
 }
 
@@ -783,6 +809,11 @@ a.chip:hover { border-bottom-color: var(--ink-2); }
 .refusal blockquote { margin: 0 0 0.7rem; font-size: 1.0625rem; line-height: 1.62; color: var(--ink-2); }
 .refusal blockquote p { text-indent: -0.38em; }
 .refusal s { text-decoration-color: rgba(27, 26, 23, 0.45); }
+.answer {
+  margin: 1.6rem 0 0; padding-top: 1rem; border-top: 1px solid var(--rule);
+  font-size: 1.125rem; line-height: 1.55; color: var(--ink-2); max-width: 30em;
+}
+.answer b { font-weight: 700; color: var(--ink); }
 .reason {
   font-family: var(--sans); font-size: 0.75rem; line-height: 1.5; color: var(--ink-2);
   display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: baseline;
@@ -879,6 +910,34 @@ table.data caption { font-size: 0.625rem; letter-spacing: 0.08em; }
 
 .moons td { font-size: 0.78rem; }
 
+/* ------------------------------------------------------------------ evaluation appendix */
+
+.eval-page .sheet { max-width: calc(44rem + var(--pad) * 2); }
+.eval-page .masthead, .eval-page .chapter > h2, .eval-page .ch-en,
+.eval-page .lede, .eval-page .figures, .eval-page .imprint, .eval-page .prose {
+  max-width: 34em;
+}
+.eval-tables > p, .eval-tables > h3, .eval-tables > h4, .eval-tables > ul { max-width: 36em; }
+.eval-tables .tnote {
+  font-family: var(--sans); font-size: 0.78rem; line-height: 1.55; color: var(--ink-3);
+  max-width: 62ch;
+}
+.eval-tables .tnote em { font-style: normal; }
+
+@media (max-width: 700px) {
+  table.data.eval thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  table.data.eval, table.data.eval tbody, table.data.eval tr, table.data.eval td { display: block; width: auto; }
+  table.data.eval tr { padding: 0.7rem 0; border-bottom: 1px solid var(--rule-soft); }
+  table.data.eval td {
+    border: 0; padding: 0.14rem 0;
+    display: grid; grid-template-columns: 6.6rem minmax(0, 1fr); gap: 0.55rem;
+  }
+  table.data.eval td::before {
+    content: attr(data-label); font-family: var(--sans); font-size: 0.625rem; line-height: 1.4;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-3); padding-top: 0.2em;
+  }
+}
+
 /* ------------------------------------------------------------------ misc */
 
 .more { margin: 1.4rem 0 0; font-family: var(--sans); font-size: 0.8125rem; }
@@ -945,7 +1004,8 @@ table.data caption { color: #000; }
   .chip { color: #000; border: 0; font-size: 9pt; }
   .disputed { color: #000; text-decoration-color: #000; }
   .alarm { border-left: 2pt solid #000; }
-  .alarm-label, .claim-date time, .years li.next .d, .years li.next .w, .years li.checked .d { color: #000; }
+  .alarm-label, .claim-date time, .years li.next .d, .years li.next .w, .years li.checked .d,
+  .answer, .answer b { color: #000; }
   .alarm-label { font-weight: 700; }
   .claim, .refusal, .alarm, .cal, .example, .figure, table.data tr { break-inside: avoid; }
   h1, h2, h3, .cal-head { break-after: avoid; }
@@ -955,6 +1015,12 @@ table.data caption { color: #000; }
   .colophon { border-top: 1px solid #000; }
   table.data { font-size: 8.5pt; }
   .moons td { font-size: 8.5pt; }
+  .eval-page .sheet { max-width: none; }
+  .eval-page .masthead, .eval-page .chapter > h2, .eval-page .ch-en,
+  .eval-page .lede, .eval-page .figures, .eval-page .imprint, .eval-page .prose,
+  .eval-tables > p, .eval-tables > h3, .eval-tables > h4, .eval-tables > ul { max-width: 124mm; }
+  .eval-tables .table-wrap { overflow: visible; }
+  table.data.eval { font-size: 7.5pt; }
   .years li { border-color: #999; }
   .years .d { font-size: 10.5pt; }
 }
@@ -991,14 +1057,16 @@ def chapter(no: str, slug: str, title: str, en: str, body: str) -> str:
 </section>"""
 
 
+PAGES: list[tuple[str, str, str]] = [
+    ("index.html", "Bìa", "1"),
+    ("reading-copy.html", "Bản đọc lại", "2"),
+    ("calendar.html", "Mười năm &amp; lịch", "3"),
+]
+
+
 def pager(current: str) -> str:
-    pages = [
-        ("index.html", "Bìa", "1"),
-        ("reading-copy.html", "Bản đọc lại", "2"),
-        ("calendar.html", "Mười năm &amp; lịch", "3"),
-    ]
     links = []
-    for href, label, no in pages:
+    for href, label, no in PAGES:
         if href == current:
             continue
         links.append(f'<a href="{href}">{label} <span class="no">tr. {no}</span></a>')
@@ -1015,13 +1083,13 @@ def colophon(model: dict) -> str:
     <span class="chip">data/runs/{esc(model["run_id"])}/run.json</span>
     và <span class="chip">data/oracle/report.json</span>.
     Không có yêu cầu mạng nào khi mở trang: chữ, dấu và mã đều nằm trong thư mục này.</p>
-  <p>Chữ: Liberation Serif (SIL OFL 1.1), tự lưu ở <b>assets/fonts</b>. Dấu: SVG, kèm PNG dựng bằng Python, không dùng thư viện ngoài.</p>
+  <p>Chữ: So Gio Serif — bản rút gọn của Liberation Serif (SIL OFL 1.1) — tự lưu ở <b>assets/fonts</b>. Dấu: SVG, kèm PNG dựng bằng Python, không dùng thư viện ngoài.</p>
   <p>Băng: Google FLEURS, config vi_vn, CC BY 4.0 — bản ghi mở, không phải băng riêng của gia đình.
     Mã: memeshee/so-gio. In trang này trên A4.</p>
 </footer>"""
 
 
-def page(title: str, description: str, body: str, *, current: str) -> str:
+def page(title: str, description: str, body: str, *, current: str, body_class: str = "") -> str:
     return f"""<!doctype html>
 <html lang="vi">
 <head>
@@ -1031,13 +1099,17 @@ def page(title: str, description: str, body: str, *, current: str) -> str:
 <meta name="description" content="{attr(description)}">
 <meta name="theme-color" content="#f7f2e8">
 <meta name="color-scheme" content="light">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{attr(title)}">
+<meta property="og:description" content="{attr(description)}">
+<meta property="og:locale" content="vi_VN">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="favicon-180.png">
 <link rel="stylesheet" href="assets/site.css">
 <script>document.documentElement.classList.add('js')</script>
 </head>
-<body>
+<body{f' class="{attr(body_class)}"' if body_class else ""}>
 <a class="skip" href="#main">Bỏ qua đến nội dung · Skip to content</a>
 <main id="main" class="sheet">
 {body}
@@ -1055,24 +1127,25 @@ LAST_MODEL: dict = {}
 
 # --------------------------------------------------------------------------- index
 
-def render_figures(model: dict) -> str:
-    run = model["run"]
-    invented = len(model["invented"])
-    disputed = len(model["disputed"])
-    figures = [
-        (vn_float(run.get("audio_seconds", 0.0), 2), "giây", "độ dài băng"),
-        (vn_float((run.get("agreement_rate") or 0) * 100, 1), "%", "âm tiết hai bản trùng nhau"),
-        (str(disputed), "", "chỗ hai bên nghe lệch"),
-        (str(invented), "", "chỗ bịa trên khoảng lặng"),
-    ]
+def figures_block(items: list[tuple[str, str, str]]) -> str:
     parts = []
-    for number, unit, label in figures:
+    for number, unit, label in items:
         unit_html = f'<span class="u"> {esc(unit)}</span>' if unit else ""
         parts.append(
             f'<div class="figure"><span class="n">{esc(number)}{unit_html}</span>'
             f'<span class="l">{esc(label)}</span></div>'
         )
     return f'<div class="figures">{"".join(parts)}</div>'
+
+
+def render_figures(model: dict) -> str:
+    run = model["run"]
+    return figures_block([
+        (vn_float(run.get("audio_seconds", 0.0), 2), "giây", "độ dài băng"),
+        (vn_float((run.get("agreement_rate") or 0) * 100, 1), "%", "âm tiết hai bản trùng nhau"),
+        (str(len(model["disputed"])), "", "chỗ hai bên nghe lệch"),
+        (str(len(model["invented"])), "", "chỗ bịa trên khoảng lặng"),
+    ])
 
 
 def render_arms(model: dict) -> str:
@@ -1387,6 +1460,158 @@ def oracle_anchor_rows(model: dict, names: list[str]) -> str:
 
 # --------------------------------------------------------------------------- pages
 
+def chapter_plain(slug: str, title: str, en: str, body: str) -> str:
+    return f"""
+<section class="chapter" id="{attr(slug)}">
+  <h2>{esc(title)}</h2>
+  <p class="ch-en" lang="en">{esc(en)}</p>
+  {body}
+</section>"""
+
+
+def render_eval_page(model: dict) -> str:
+    ev = model.get("eval")
+    if not ev:
+        return ""
+    report = ev["report"]
+    env = report.get("environment") or {}
+    corpus = report.get("corpus") or {}
+    per_arm = ((report.get("invention") or {}).get("per_arm") or {})
+    pho = per_arm.get("phowhisper") or {}
+    whisper = per_arm.get("whisper") or {}
+    catch = report.get("catch") or {}
+    per_catch = ((catch.get("per_arm") or {}).get("phowhisper") or {})
+    fp = catch.get("false_positive") or {}
+
+    inserted = float(pho.get("silence_seconds") or corpus.get("inserted_silence_seconds") or 0)
+    pho_syllables = int(pho.get("invented_syllables") or 0)
+    whisper_syllables = int(whisper.get("invented_syllables") or 0)
+    flagged = int(catch.get("flagged") or 0)
+    silences = int(catch.get("silences_with_invention") or 0)
+    leaked = int(per_catch.get("leaked_into_quotable_syllables") or 0)
+    wpm = float(pho.get("wpm_of_silence") or 0)
+    fp_clips = int(fp.get("clips_with_invented_flag") or 0)
+    fp_n = int(fp.get("n_clean_clips") or 0)
+
+    n_clean = int(corpus.get("clips_with_reference") or fp.get("n_clean_clips") or 0)
+    n_silence = int(corpus.get("silence_clips") or 0)
+    silence_label = f"âm tiết phowhisper viết trong {vn_float(inserted, 0)} giây lặng"
+
+    run_at = str(env.get("run_at") or "")
+    try:
+        stamp = dt.datetime.fromisoformat(run_at).strftime("%H:%M, %d tháng %m, %Y")
+    except Exception:
+        stamp = run_at
+
+    alarms = []
+    for ex in (pho.get("worst_examples") or [])[:2]:
+        alarms.append(f"""
+<aside class="alarm">
+  <p class="alarm-label">phowhisper · {esc(ex.get("clip_id", ""))}.wav · lặng {esc(ex.get("window", ""))}</p>
+  <p class="alarm-text"><del>“{esc(ex.get("text", ""))}”</del></p>
+  <p class="alarm-note">Đoạn mô hình tự gán {esc(ex.get("timestamp", ""))} · {vn_int(int(ex.get("syllables") or 0))} âm tiết.
+    Câu này không có trong bản ghi; khoảng lặng được ghép vào {esc(ex.get("window", ""))}.
+    Bộ dò của cuốn sổ không đánh dấu câu này.</p>
+</aside>""")
+
+    tables = ev["tables"].splitlines()
+    if tables and tables[0].startswith("# "):
+        tables = tables[1:]
+    tables_md = "\n".join(tables).strip()
+
+    return f"""
+<header class="masthead">
+  <p class="runhead"><span><a href="index.html">Sổ Giỗ</a> · bản chạy <b>{esc(model["run_id"])}</b></span><span>tr. 4</span></p>
+  <h1>Đánh giá</h1>
+  <p class="deck">{vn_int(n_clean)} clip sạch, {vn_int(n_silence)} khoảng lặng ghép, hai mô hình. Những con số dưới
+    đây không phải điểm số của sản phẩm — chúng là chỗ sản phẩm còn hở.</p>
+  <dl class="imprint">
+    <dt>Dữ liệu</dt><dd>{vn_int(int(corpus.get("clips_with_reference") or 0))} clip · {vn_float(float(corpus.get("audio_seconds") or 0), 2)} giây FLEURS
+      · {vn_int(int(corpus.get("silence_clips") or 0))} khoảng lặng ghép · {vn_float(inserted, 1)} giây</dd>
+    <dt>Chạy lúc</dt><dd>{esc(stamp)} (+07) · {esc(env.get("cpu_count") or "?")} vCPU, không GPU</dd>
+    <dt>Máy</dt><dd>{esc(env.get("cpu_model") or "—")} · Python {esc(env.get("python") or "?")}</dd>
+    <dt>Nguồn</dt><dd><span class="chip">data/eval/report.json</span> và <span class="chip">tables.md</span></dd>
+  </dl>
+</header>
+
+<div class="chapter">
+  <h2>Bốn con số</h2>
+  <p class="ch-en" lang="en">Four numbers</p>
+  {figures_block([
+      (vn_int(pho_syllables), "", silence_label),
+      (f"{flagged}/{silences}", "", "chỗ bộ dò hai tai đánh dấu được"),
+      (vn_int(leaked), "", "âm tiết bịa lọt vào phần hai bên cùng nghe"),
+      (f"{fp_clips}/{fp_n}", "", "clip sạch bị gắn cờ nhầm"),
+  ])}
+  <p class="lede">Whisper: {vn_int(whisper_syllables)} âm tiết bịa trong cùng {vn_float(inserted, 0)} giây lặng. Toàn bộ chỗ bịa
+    đến từ phowhisper, và nó bịa dày: {vn_float(wpm, 0)} âm tiết mỗi phút lặng.</p>
+</div>
+
+{chapter_plain("invented", "Chỗ bịa, nguyên văn", "The inventions, verbatim", f'''
+<p class="lede">Hai câu dưới đây được phowhisper viết ra trong khoảng lặng đã ghép vào bản ghi. Chúng không có
+  trong băng, không có trong bản tham chiếu — và cũng không bị cuốn sổ đánh dấu.</p>
+{"".join(alarms)}
+''')}
+
+{chapter_plain("missed", "Vì sao bộ dò bỏ sót", "Why the flag missed it", f'''
+<div class="prose">
+  <p>Phowhisper trả về một đoạn duy nhất gần như trùm cả clip — 00:00–00:23 cho một khoảng lặng 5 giây. Phép dò
+    của cuốn sổ hỏi một câu hẹp hơn: <em>đoạn này có nằm phần lớn trong khoảng lặng mà bộ dò năng lượng đánh dấu
+    không?</em> Nó còn đòi bên kia không có đoạn nào chồng lên đoạn ấy. Đoạn 23 giây không thể nằm phần lớn trong
+    một khoảng lặng 5 giây, và nó chồng lên mọi đoạn của whisper — cả hai điều kiện đều trượt. Nên câu bịa dài
+    37 âm tiết vẫn không bị gắn cờ, dù 37 âm tiết ấy nằm đúng trong khoảng lặng.</p>
+  <p>Đây là lỗi ở mức thiết kế phép dò, không phải lỗi của mô hình. Mô hình bịa; bộ dò hỏi sai câu hỏi.</p>
+</div>
+''')}
+
+{chapter_plain("safe", "Vì sao không vào sổ", "Why it did not reach the book", f'''
+<div class="prose">
+  <p><b>0 trong {vn_int(pho_syllables)} âm tiết bịa lọt vào phần hai bên cùng nghe.</b> Muốn vào sổ, một lời phải
+    có nguyên văn trong chuỗi âm tiết mà cả whisper và phowhisper cùng đọc. Âm tiết chỉ một bên đọc thì không có
+    mặt trong chuỗi đó, nên không thể được trích xuất, không thể có mốc thời gian, không thể thành ngày giỗ.</p>
+  <p>Ở đây, cửa thứ hai — sự đồng ý của hai tai — đã chặn. Nhưng nếu cả hai mô hình cùng bịa giống nhau, cửa ấy
+    không còn tác dụng; lúc đó chỉ còn bộ dò khoảng lặng, và bộ dò ấy vừa bỏ sót {flagged}/{silences}. Đó là lý do
+    phải sửa nó trước khi dùng với băng thật, chứ không phải vì bản demo này đang sai.</p>
+  <p><b>Việc phải làm:</b> kiểm ở mức âm tiết. Một âm tiết có mốc thời gian rơi trong khoảng lặng, mà bên kia
+    không đọc âm tiết tương ứng, thì phải bị gạch — kể cả khi đoạn chứa nó dài hơn khoảng lặng. Bản này chưa sửa;
+    nó đang ghi lại đúng chỗ mình yếu.</p>
+</div>
+''')}
+
+{chapter_plain("tables", "Bảng đầy đủ", "The full tables", f'''
+<p class="lede">Năm bảng, lấy nguyên văn từ <span class="chip">data/eval/tables.md</span>. Không bảng nào được
+  chọn lọc; cả phần ghi chú cũng giữ nguyên.</p>
+<div class="eval-tables">{mini_md(tables_md, heading_offset=1)}</div>
+<p class="small-note"><span class="chip">[eval/run_eval.py]</span> Sinh lúc {esc(stamp)} (+07).
+  Mô hình: {esc(env.get("whisper_model") or "—")} và {esc(env.get("phowhisper_model") or "—")}.
+  WER âm tiết (micro): whisper {vn_float(float((report.get("asr") or {}).get("per_arm", {}).get("whisper", {}).get("micro_wer") or 0), 3)},
+  phowhisper {vn_float(float((report.get("asr") or {}).get("per_arm", {}).get("phowhisper", {}).get("micro_wer") or 0), 3)}.</p>
+''')}
+"""
+
+
+def eval_note(model: dict) -> str:
+    ev = model.get("eval")
+    if not ev:
+        return ""
+    report = ev["report"]
+    pho = ((report.get("invention") or {}).get("per_arm") or {}).get("phowhisper") or {}
+    catch = report.get("catch") or {}
+    inserted = float((report.get("corpus") or {}).get("inserted_silence_seconds")
+                     or pho.get("silence_seconds") or 0)
+    syllables = int(pho.get("invented_syllables") or 0)
+    flagged = int(catch.get("flagged") or 0)
+    silences = int(catch.get("silences_with_invention") or 0)
+    return f"""
+<aside class="alarm">
+  <p class="alarm-label">Một chỗ yếu · phép thử khoảng lặng</p>
+  <p class="alarm-text">{vn_int(syllables)} âm tiết bịa trong {vn_float(inserted, 0)} giây lặng; bộ dò hai tai đánh dấu
+    {flagged}/{silences} chỗ.</p>
+  <p class="alarm-note">Không âm tiết nào lọt vào phần hai bên cùng nghe, nên không thành lời trong sổ.
+    Nhưng nhãn gạch đang hỏng ở đúng chỗ khó nhất. <a href="eval.html">Đọc tr. 4</a>.</p>
+</aside>"""
+
+
 def render_index(model: dict) -> str:
     run = model["run"]
     arms = model["arms"]
@@ -1416,6 +1641,7 @@ def render_index(model: dict) -> str:
     <a href="#years">V · Mười năm giỗ</a>
     <a href="#calendar-check">VI · Lịch đã kiểm</a>
     <a href="#purpose">VII · Để làm gì</a>
+    {"" if not model.get("eval") else '<a href="eval.html">Đánh giá · tr. 4</a>'}
   </nav>
 </header>
 
@@ -1443,6 +1669,7 @@ def render_index(model: dict) -> str:
 {render_notes(model)}
 {render_invented(model)}
 {"" if invented_count else f'<div class="zero"><span class="lbl">Bịa trên khoảng lặng</span><b>0 chỗ.</b> Không mô hình nào viết ra chữ ở chỗ mô hình kia nghe thấy im lặng. Đây là điều cuốn sổ muốn thấy, không phải điều nó muốn che.</div>'}
+{eval_note(model)}
 <p class="more"><a href="reading-copy.html">Đọc toàn bản, kể cả những chỗ nghe lệch <span class="chip">[sổ giỗ · tr. 2]</span></a></p>
 ''')}
 
@@ -1458,6 +1685,7 @@ def render_index(model: dict) -> str:
 <p class="lede">Mỗi lời bị từ chối đều có lý do, và lý do được ghi lại nguyên văn. Không lời nào được sửa cho đúng;
   không ngày nào được làm tròn cho đẹp.</p>
 {render_refusals(model)}
+<p class="answer">Không có trong băng, hoặc không tính được: cuốn sổ không đoán. Câu trả lời là <b>hỏi gia đình.</b></p>
 ''')}
 
 {chapter("V", "years", "Mười năm giỗ", "Ten years", f'''
@@ -1597,20 +1825,10 @@ def render_calendar_page(model: dict) -> str:
     })
     sources_html = " · ".join(esc(x) for x in sources)
 
-    eval_dir = ROOT / "data" / "eval"
-    eval_html = ""
-    if (eval_dir / "tables.md").exists():
-        try:
-            md = (eval_dir / "tables.md").read_text(encoding="utf-8")
-        except Exception:
-            md = ""
-        if md.strip():
-            eval_html = f"""
-<section class="chapter" id="eval">
-  <h2>Bảng đánh giá</h2>
-  <p class="ch-en" lang="en">Evaluation tables</p>
-  <div class="prose">{mini_md(md, heading_offset=2)}</div>
-</section>"""
+    eval_link = ""
+    if model.get("eval"):
+        eval_link = ('<p class="more"><a href="eval.html">Đánh giá đầy đủ: WER, chỗ bịa trên khoảng lặng, '
+                     'và chỗ bộ dò bỏ sót <span class="chip">[tr. 4]</span></a></p>')
 
     body = f"""
 <header class="masthead">
@@ -1673,7 +1891,7 @@ def render_calendar_page(model: dict) -> str:
   Không có tháng nhuận sai, không có ngày ảo, không có tháng mười ba.</p>
 ''')}
 
-{eval_html}
+{eval_link}
 """
     return body
 
@@ -1784,8 +2002,15 @@ def main(argv: list[str] | None = None) -> int:
     reading = parse_reading_copy(run_item["path"].parent / "reading_copy.md")
     oracle = load_oracle()
     model = build_model(run_item, reading, oracle)
-    global LAST_MODEL
+    global LAST_MODEL, PAGES
     LAST_MODEL = model
+    PAGES = [
+        ("index.html", "Bìa", "1"),
+        ("reading-copy.html", "Bản đọc lại", "2"),
+        ("calendar.html", "Mười năm &amp; lịch", "3"),
+    ]
+    if model["eval"]:
+        PAGES.append(("eval.html", "Đánh giá", "4"))
 
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -1805,10 +2030,20 @@ def main(argv: list[str] | None = None) -> int:
         "Mười năm ngày giỗ tính từ âm lịch, và những phép đối chiếu lịch với USNO cùng ngày lễ Việt Nam.",
         render_calendar_page(model), current="calendar.html"), encoding="utf-8")
 
+    if model["eval"]:
+        (DIST / "eval.html").write_text(page(
+            "Đánh giá — Sổ Giỗ",
+            "Năm phép thử trên 18 clip sạch và 3 khoảng lặng ghép: WER, chỗ bịa, và chỗ bộ dò hai tai bỏ sót.",
+            render_eval_page(model), current="eval.html", body_class="eval-page"), encoding="utf-8")
+
     (DIST / "assets" / "site.css").write_text(CSS.lstrip(), encoding="utf-8")
     (DIST / "assets" / "site.js").write_text(JS.lstrip(), encoding="utf-8")
     for font in sorted((ASSETS / "fonts").glob("*")):
         shutil.copy2(font, DIST / "assets" / "fonts" / font.name)
+
+    cname = SITE / "CNAME"
+    if cname.exists():
+        shutil.copy2(cname, DIST / "CNAME")
 
     (DIST / "favicon.svg").write_text(FAVICON_SVG, encoding="utf-8")
     write_png(DIST / "favicon-32.png", 32)
@@ -1827,6 +2062,13 @@ def main(argv: list[str] | None = None) -> int:
     s = model["oracle_summary"]
     print(f"oracle    {s['moons_within']}/{s['moons_n']} new moons within 2 min · "
           f"{s['anchor_passed']}/{s['anchor_n']} published dates · {s['structure_violations']} structure violations")
+    if model["eval"]:
+        ev = model["eval"]["report"]
+        pho = ((ev.get("invention") or {}).get("per_arm") or {}).get("phowhisper") or {}
+        catch = ev.get("catch") or {}
+        print(f"eval      {pho.get('invented_syllables', 0)} invented syllables in "
+              f"{pho.get('silence_seconds', 0)} s silence · {catch.get('flagged', 0)}/{catch.get('silences_with_invention', 0)} flagged · "
+              f"{((catch.get('per_arm') or {}).get('phowhisper') or {}).get('leaked_into_quotable_syllables', 0)} leaked")
     print()
     for path in sorted(DIST.rglob("*")):
         if path.is_file():

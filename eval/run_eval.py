@@ -225,140 +225,239 @@ def measure_asr(runner: Runner, manifest: dict) -> dict:
 
 # --------------------------------------------------------------------------- 2. invention over silence
 
-def measure_invention(runner: Runner, silence_manifest: dict) -> dict:
-    events = []
-    for clip in silence_manifest["clips"]:
-        h = runner.hearing(clip["output_audio"])
-        arms = arm_of(h)
-        for ins in clip["insertions"]:
-            start, end = ins["offset_seconds"], ins["offset_seconds"] + ins["duration_seconds"]
-            for name in ("whisper", "phowhisper"):
-                n_mid, segs_mid = syllables_in(arms[name], start, end, "midpoint")
-                n_ov, _ = syllables_in(arms[name], start, end, "overlap50")
-                events.append({
-                    "clip_id": clip["id"], "audio_path": clip["output_audio"], "arm": name,
-                    "window_start": round(start, 3), "window_end": round(end, 3),
-                    "window_seconds": round(end - start, 3),
-                    "syllables": n_mid, "syllables_overlap50": n_ov,
-                    "wpm_of_silence": round(n_mid / ((end - start) / 60.0), 1) if end > start else 0.0,
-                    "segments": segs_mid,
-                    "transcript_elsewhere_unchanged": None,
-                })
-    # secondary, wider window: inserted silence + the natural pause it was spliced into
-    for clip in silence_manifest["clips"]:
-        h = runner.hearing(clip["output_audio"])
-        arms = arm_of(h)
-        for win in clip.get("silent_windows", []):
-            for name in ("whisper", "phowhisper"):
-                n, _ = syllables_in(arms[name], win["start_seconds"], win["end_seconds"], "midpoint")
-                for ev in events:
-                    if ev["clip_id"] == clip["id"] and ev["arm"] == name:
-                        ev.setdefault("syllables_in_full_silent_window", n)
+TAIL_SECONDS = 5.0
+PROBE_DIR = ROOT / "data" / "eval" / "probe"
+# Every third clean clip, in manifest order: six probes spanning 6.9 s to 13.9 s, none of them
+# costing an extra clean-audio pass that is not already cached. Enough to say something real on
+# this 4-core box without spending an hour of CPU on a probe whose expected rate is ~1%.
+TAIL_STRIDE = 3
 
-    per_arm = {}
+
+def build_probes(silence_manifest: dict, manifest: dict) -> list[dict]:
+    """Two probe families, both with a window where the reference transcript is empty.
+
+    `splice` — digital silence spliced into a real mid-utterance pause (from the corpus manifest).
+    `tail`   — 5 s of digital silence appended after the last word, which is what a family
+               recording actually looks like when someone forgets to stop the phone. Built here,
+               deterministically, from the same clean clips.
+    """
+    probes = []
+    for clip in silence_manifest["clips"]:
+        for ins in clip["insertions"]:
+            probes.append({
+                "probe": "splice", "clip_id": clip["id"], "source_clip_id": clip["source_clip_id"],
+                "audio_path": clip["output_audio"], "clean_audio": clip["source_audio"],
+                "window_start": round(ins["offset_seconds"], 3),
+                "window_end": round(ins["offset_seconds"] + ins["duration_seconds"], 3),
+                "note": "digital silence spliced into a detected mid-utterance pause",
+            })
+    PROBE_DIR.mkdir(parents=True, exist_ok=True)
+    for clip in manifest["clips"][::TAIL_STRIDE]:
+        out = PROBE_DIR / f"tail_{clip['id']}.wav"
+        if not out.exists():
+            import subprocess
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(ROOT / clip["audio_path"]),
+                            "-af", f"apad=pad_dur={TAIL_SECONDS}", "-c:a", "pcm_s16le", str(out)],
+                           check=True)
+        probes.append({
+            "probe": "tail", "clip_id": f"tail_{clip['id']}", "source_clip_id": clip["id"],
+            "audio_path": str(out.relative_to(ROOT)), "clean_audio": clip["audio_path"],
+            "window_start": round(clip["duration_seconds"], 3),
+            "window_end": round(clip["duration_seconds"] + TAIL_SECONDS, 3),
+            "note": f"{TAIL_SECONDS:.0f} s of digital silence appended after the last word",
+        })
+    return probes
+
+
+def content_delta(clean_text: str, probe_text: str) -> tuple[int, str]:
+    """Syllables the model produced on the probed file that have no counterpart in its own
+    transcript of the unmodified source — the timestamp-free definition of invention.
+
+    Needed because one arm (PhoWhisper) returns a single segment per 25 s window, so its
+    timestamps cannot say *where* inside the window a syllable was spoken. Comparing content is
+    the only fair test for both arms, and it also catches the classic failure of repeating real
+    words into the silence, which a timestamp test would miss.
+    """
+    d = textnorm.diff_transcripts(clean_text, probe_text)
+    return len(d.only_b), " ".join(d.only_b)
+
+
+def measure_invention(runner: Runner, probes: list[dict]) -> dict:
+    events = []
+    for p in probes:
+        h = runner.hearing(p["audio_path"])
+        hc = runner.hearing(p["clean_audio"])
+        arms, clean_arms = arm_of(h), arm_of(hc)
+        for name in ("whisper", "phowhisper"):
+            n_mid, segs_mid = syllables_in(arms[name], p["window_start"], p["window_end"], "midpoint")
+            n_ov, _ = syllables_in(arms[name], p["window_start"], p["window_end"], "overlap50")
+            added, added_text = content_delta(clean_arms[name]["text"], arms[name]["text"])
+            durs = sorted(s["end"] - s["start"] for s in arms[name]["segments"]) or [0.0]
+            median_seg = durs[len(durs) // 2]
+            before = [s["end"] for s in arms[name]["segments"] if s["end"] <= p["window_start"]]
+            after = [s["start"] for s in arms[name]["segments"] if s["start"] >= p["window_end"]]
+            events.append({
+                "probe": p["probe"], "clip_id": p["clip_id"], "source_clip_id": p["source_clip_id"],
+                "audio_path": p["audio_path"], "arm": name,
+                "window_start": p["window_start"], "window_end": p["window_end"],
+                "window_seconds": round(p["window_end"] - p["window_start"], 3),
+                "timestamp_usable": median_seg <= 8.0,
+                "median_segment_seconds": round(median_seg, 2),
+                "prev_segment_end": max(before) if before else None,
+                "next_segment_start": min(after) if after else None,
+                "syllables": n_mid,                      # timestamp-localised
+                "syllables_overlap50": n_ov,
+                "syllables_added": added,                # content delta — the published number
+                "added_text": added_text,
+                "wpm_of_silence": round(added / ((p["window_end"] - p["window_start"]) / 60.0), 1)
+                if p["window_end"] > p["window_start"] else 0.0,
+                "segments": segs_mid,
+                "text_probe": arms[name]["text"],
+                "text_clean": clean_arms[name]["text"],
+            })
+
+    per_arm, by_probe = {}, {}
     for name in ("whisper", "phowhisper"):
         evs = [e for e in events if e["arm"] == name]
-        total_syl = sum(e["syllables"] for e in evs)
+        total_syl = sum(e["syllables_added"] for e in evs)
         total_sec = sum(e["window_seconds"] for e in evs)
-        worst = sorted((e for e in evs if e["syllables"]), key=lambda e: -e["syllables"])[:2]
+        usable = all(e["timestamp_usable"] for e in evs) if evs else False
+        worst = sorted((e for e in evs if e["syllables_added"]), key=lambda e: -e["syllables_added"])[:2]
         worst_examples = []
         for e in worst:
-            for seg in sorted(e["segments"], key=lambda s: -s["syllables"])[:2]:
+            inside = sorted(e["segments"], key=lambda s: -s["syllables"])
+            if inside:
+                for seg in inside[:2]:
+                    worst_examples.append({
+                        "clip_id": e["clip_id"], "audio": e["audio_path"], "arm": name,
+                        "timestamp": f"{mmss(seg['start'])}–{mmss(seg['end'])}",
+                        "start": seg["start"], "end": seg["end"], "text": seg["text"],
+                        "syllables": seg["syllables"],
+                        "window": f"{mmss(e['window_start'])}–{mmss(e['window_end'])}",
+                        "located": True,
+                    })
+            else:  # no usable timestamps: quote the surplus syllables themselves
                 worst_examples.append({
                     "clip_id": e["clip_id"], "audio": e["audio_path"], "arm": name,
-                    "timestamp": f"{mmss(seg['start'])}–{mmss(seg['end'])}",
-                    "start": seg["start"], "end": seg["end"],
-                    "text": seg["text"], "syllables": seg["syllables"],
+                    "timestamp": "n/a", "start": None, "end": None,
+                    "text": e["added_text"] or "(none)", "syllables": e["syllables_added"],
                     "window": f"{mmss(e['window_start'])}–{mmss(e['window_end'])}",
+                    "located": False,
                 })
             if len(worst_examples) >= 2:
                 break
         per_arm[name] = {
-            "silences": len(evs),
-            "silences_with_invention": sum(1 for e in evs if e["syllables"] > 0),
+            "probes": len(evs),
+            "probes_with_invention": sum(1 for e in evs if e["syllables_added"] > 0),
             "invented_syllables": total_syl,
-            "invented_syllables_overlap50": sum(e["syllables_overlap50"] for e in evs),
-            "invented_syllables_full_silent_window": sum(e.get("syllables_in_full_silent_window", 0) for e in evs),
+            "syllables_in_window_by_timestamp": sum(e["syllables"] for e in evs),
             "silence_seconds": round(total_sec, 2),
             "wpm_of_silence": round(total_syl / (total_sec / 60.0), 1) if total_sec else 0.0,
+            "timestamp_usable": usable,
+            "median_segment_seconds": round(sorted(e["median_segment_seconds"] for e in evs)[len(evs) // 2], 2) if evs else None,
             "worst_examples": worst_examples[:2],
         }
+        for kind in ("splice", "tail"):
+            sub = [e for e in evs if e["probe"] == kind]
+            sec = sum(e["window_seconds"] for e in sub)
+            per_arm[name].setdefault("by_probe", {})[kind] = {
+                "probes": len(sub),
+                "probes_with_invention": sum(1 for e in sub if e["syllables_added"] > 0),
+                "invented_syllables": sum(e["syllables_added"] for e in sub),
+                "silence_seconds": round(sec, 2),
+                "wpm_of_silence": round(sum(e["syllables_added"] for e in sub) / (sec / 60.0), 1) if sec else 0.0,
+            }
     return {"events": events, "per_arm": per_arm,
-            "inserted_silence_seconds": round(sum(e["window_seconds"] for e in events
-                                                  if e["arm"] == "whisper"), 2)}
+            "silence_seconds_total": round(sum(e["window_seconds"] for e in events
+                                               if e["arm"] == "whisper"), 2),
+            "probe_count": {kind: sum(1 for p in probes if p["probe"] == kind)
+                            for kind in ("splice", "tail")}}
 
 
 # --------------------------------------------------------------------------- 3. does the diff catch it?
 
-def measure_catch(runner: Runner, silence_manifest: dict, manifest: dict,
-                  invention: dict) -> dict:
+def measure_catch(runner: Runner, probes: list[dict], manifest: dict, invention: dict) -> dict:
     units = []
-    for clip in silence_manifest["clips"]:
-        h = runner.hearing(clip["output_audio"])
+    for p in probes:
+        h = runner.hearing(p["audio_path"])
         hearing = hearing_from_dict(h)
         invented = h["invented_spans"]
         quotable = asr.agreed_spans(hearing)
-        for ins in clip["insertions"]:
-            start, end = ins["offset_seconds"], ins["offset_seconds"] + ins["duration_seconds"]
-            for name in ("whisper", "phowhisper"):
-                ev = next(e for e in invention["events"]
-                          if e["clip_id"] == clip["id"] and e["arm"] == name)
-                if ev["syllables"] == 0:
+        evs = {e["arm"]: e for e in invention["events"] if e["clip_id"] == p["clip_id"]}
+        start, end = p["window_start"], p["window_end"]
+        for name in ("whisper", "phowhisper"):
+            ev = evs[name]
+            flagged_spans, leaked = [], 0
+            for span in invented:
+                who = "whisper" if span["text_a"] else "phowhisper"
+                if who != name or span["start"] is None or span["end"] is None:
                     continue
-                flagged_spans, leaked = [], 0
-                for span in invented:
-                    who = "whisper" if span["text_a"] else "phowhisper"
-                    if who != name:
-                        continue
-                    if span["start"] is None or span["end"] is None:
-                        continue
-                    if span["start"] < end and start < span["end"]:  # any overlap with the splice
-                        flagged_spans.append(span)
-                invented_text = " ".join(s["text"] for s in ev["segments"])
-                inv_norm = textnorm.normalise(invented_text)
-                for qs, qe, qtext in quotable:
-                    if not (qs < end and start < qe):
-                        continue
-                    qn = textnorm.normalise(qtext)
-                    # exact leak test: the invented segment's own words survive inside a quotable span
-                    for s in ev["segments"]:
-                        sn = textnorm.normalise(s["text"])
-                        if sn and sn in qn and sn in inv_norm:
-                            leaked += s["syllables"]
-                units.append({
-                    "clip_id": clip["id"], "arm": name,
-                    "window": f"{mmss(start)}–{mmss(end)}",
-                    "invented_syllables": ev["syllables"],
-                    "flagged": bool(flagged_spans),
-                    "flagged_spans": [{"start": s["start"], "end": s["end"],
-                                       "text": s["text_a"] or s["text_b"]} for s in flagged_spans],
-                    "flagged_syllables": sum(len(textnorm.syllables(s["text_a"] or s["text_b"]))
-                                             for s in flagged_spans),
-                    "leaked_into_quotable_syllables": leaked,
-                })
+                if span["start"] < end and start < span["end"]:  # any overlap with the dead air
+                    flagged_spans.append(span)
+            for qs, qe, qtext in quotable:
+                if not (qs < end and start < qe):
+                    continue
+                qn = textnorm.normalise(qtext)
+                for seg in ev["segments"]:
+                    sn = textnorm.normalise(seg["text"])
+                    if sn and sn in qn:
+                        leaked += seg["syllables"]
+            units.append({
+                "probe": p["probe"], "clip_id": p["clip_id"], "arm": name,
+                "window": f"{mmss(start)}–{mmss(end)}",
+                "invented_syllables": ev["syllables_added"],
+                "invented_syllables_by_timestamp": ev["syllables"],
+                "flagged": bool(flagged_spans),
+                "flagged_spans": [{"start": s["start"], "end": s["end"],
+                                   "text": s["text_a"] or s["text_b"]} for s in flagged_spans],
+                "flagged_syllables": sum(len(textnorm.syllables(s["text_a"] or s["text_b"]))
+                                         for s in flagged_spans),
+                "leaked_into_quotable_syllables": leaked,
+            })
 
     with_inv = [u for u in units if u["invented_syllables"] > 0]
     flagged = [u for u in with_inv if u["flagged"]]
+
+    # Why the invented flag can or cannot fire: count each arm's segments that sit ≥50% inside
+    # detected non-speech, and how many of those the *other* arm's segments overlapped (which
+    # suppresses the flag by construction in core/asr.hear).
+    cand = {name: {"candidates": 0, "suppressed_by_other_arm": 0} for name in ("whisper", "phowhisper")}
+    for p in probes:
+        h = runner.hearing(p["audio_path"])
+        hearing = hearing_from_dict(h)
+        arms = {a["arm"]: a for a in h["arms"]}
+        for name, other in (("whisper", "phowhisper"), ("phowhisper", "whisper")):
+            for seg in arms[name]["segments"]:
+                if asr._in_silence(asr.Segment(**seg), hearing.silences, 0.5):
+                    cand[name]["candidates"] += 1
+                    if any(asr._overlaps(seg["start"], seg["end"], o["start"], o["end"])
+                           for o in arms[other]["segments"]):
+                        cand[name]["suppressed_by_other_arm"] += 1
+
     per_arm = {}
     for name in ("whisper", "phowhisper"):
         us = [u for u in with_inv if u["arm"] == name]
-        per_arm[name] = {"silences_with_invention": len(us),
+        per_arm[name] = {"pairs": len([u for u in units if u["arm"] == name]),
+                         "pairs_with_invention": len(us),
                          "flagged": sum(1 for u in us if u["flagged"]),
                          "catch_rate": round(sum(1 for u in us if u["flagged"]) / len(us), 3) if us else None,
                          "invented_syllables": sum(u["invented_syllables"] for u in us),
                          "flagged_syllables": sum(u["flagged_syllables"] for u in us),
-                         "leaked_into_quotable_syllables": sum(u["leaked_into_quotable_syllables"] for u in us)}
+                         "leaked_into_quotable_syllables": sum(u["leaked_into_quotable_syllables"] for u in us),
+                         **cand[name]}
 
-    # ---- false positives: the pipeline's invented flag on clips with no splice
+    # ---- false positives: the pipeline's invented flag on clips with no added silence
     fp_rows = []
     clean_flagged_clips = 0
     total_spans = 0
     total_syl = 0
     in_reference_spans = 0
     in_reference_syl = 0
+    spans_anywhere = 0
     for clip in manifest["clips"]:
         h = runner.hearing(clip["audio_path"])
         spans = h["invented_spans"]
+        spans_anywhere += len(spans)
         syls = sum(len(textnorm.syllables(s["text_a"] or s["text_b"])) for s in spans)
         row = {"id": clip["id"], "invented_spans": len(spans), "invented_syllables": syls,
                "audio_seconds": h["audio_seconds"], "spans": []}
@@ -379,13 +478,19 @@ def measure_catch(runner: Runner, silence_manifest: dict, manifest: dict,
                 in_reference_syl += len(words)
         fp_rows.append(row)
 
+    for p in probes:
+        spans_anywhere += len(runner.hearing(p["audio_path"])["invented_spans"])
+
     n_clean = len(manifest["clips"])
     return {
         "units": units,
+        "probe_arm_pairs": len(units),
         "silences_with_invention": len(with_inv),
         "flagged": len(flagged),
         "catch_rate": round(len(flagged) / len(with_inv), 3) if with_inv else None,
         "per_arm": per_arm,
+        "spans_fired_anywhere": spans_anywhere,
+        "recordings_checked": n_clean + len(probes),
         "false_positive": {
             "n_clean_clips": n_clean,
             "clips_with_invented_flag": clean_flagged_clips,
@@ -398,6 +503,7 @@ def measure_catch(runner: Runner, silence_manifest: dict, manifest: dict,
             "per_clip": fp_rows,
         },
     }
+
 
 
 # --------------------------------------------------------------------------- 4. extraction arms
@@ -591,28 +697,38 @@ def main(argv=None) -> int:
                                              for c in silence_manifest["clips"]
                                              for i in c["insertions"]), 2),
         "silence_licence": silence_manifest["clips"][0]["licence"],
+        "probes": {
+            "splice": len(silence_manifest["clips"]),
+            "tail": len(manifest["clips"][::TAIL_STRIDE]),
+            "tail_seconds": TAIL_SECONDS,
+            "silence_seconds": round(sum(i["duration_seconds"] for c in silence_manifest["clips"]
+                                         for i in c["insertions"])
+                                     + TAIL_SECONDS * len(manifest["clips"][::TAIL_STRIDE]), 2),
+        },
     }
 
     if args.stage in ("all", "asr"):
         runner = Runner(force=args.force)
+        probes = build_probes(silence_manifest, manifest)
         t0 = time.time()
         print(f"[1/4] ASR accuracy: {len(manifest['clips'])} clips × 2 arms", flush=True)
         report["asr"] = measure_asr(runner, manifest)
         for name, s in report["asr"]["per_arm"].items():
             print(f"      {name:11s} mean WER {s['mean_wer']:.3f}  RTF {s['realtime_factor_aggregate']:.2f}x", flush=True)
 
-        print("[2/4] invention over silence", flush=True)
-        report["invention"] = measure_invention(runner, silence_manifest)
+        print(f"[2/4] invention over silence: {len(probes)} probes × 2 arms", flush=True)
+        report["invention"] = measure_invention(runner, probes)
         for name, s in report["invention"]["per_arm"].items():
             print(f"      {name:11s} {s['invented_syllables']} syllables over {s['silence_seconds']}s "
-                  f"({s['wpm_of_silence']} wpm)", flush=True)
+                  f"({s['wpm_of_silence']} wpm); timestamps usable: {s['timestamp_usable']}", flush=True)
 
         print("[3/4] does the two-model diff catch it?", flush=True)
-        report["catch"] = measure_catch(runner, silence_manifest, manifest, report["invention"])
-        print(f"      catch rate {report['catch']['catch_rate']} "
-              f"({report['catch']['flagged']}/{report['catch']['silences_with_invention']}); "
+        report["catch"] = measure_catch(runner, probes, manifest, report["invention"])
+        print(f"      pairs with invention {report['catch']['silences_with_invention']}"
+              f"/{report['catch']['probe_arm_pairs']}, flagged {report['catch']['flagged']}; "
               f"FP on {report['catch']['false_positive']['clips_with_invented_flag']}"
-              f"/{report['catch']['false_positive']['n_clean_clips']} clean clips", flush=True)
+              f"/{report['catch']['false_positive']['n_clean_clips']} clean clips; "
+              f"spans fired anywhere: {report['catch']['spans_fired_anywhere']}", flush=True)
         print(f"      asr stages took {time.time() - t0:.0f}s wall", flush=True)
         write_json(report_path, report)
 

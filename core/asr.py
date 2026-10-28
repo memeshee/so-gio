@@ -264,3 +264,35 @@ def agreed_spans(h: Hearing, min_words: int = 2) -> list[tuple[float, float, str
         end = a.segments[seg_to].end
         out.append((start, end, " ".join(words)))
     return out
+
+# --------------------------------------------------------------------------- silence probe
+
+def probe_silences(path: str, max_slices: int = 8, min_len: float = 1.0,
+                   whisper_model=None) -> list[Span]:
+    """Put each detected non-speech stretch to the models on its own.
+
+    The timestamp-based test in `hear()` has a structural weakness that only shows up on real audio: Whisper
+    emits one long segment that spans the silence, so "did the other arm say something here" is always true and
+    nothing is ever flagged. Asking each model to transcribe a slice of pure non-speech is unambiguous — there
+    is no speech in the input, so any text that comes back is invented, whatever the timestamps claim.
+    """
+    import tempfile
+
+    silences = [s for s in detect_silence(path) if (s.end - s.start) >= min_len][:max_slices]
+    spans: list[Span] = []
+    with tempfile.TemporaryDirectory() as tmp:
+        for i, sil in enumerate(silences):
+            slice_path = f"{tmp}/silence_{i}.wav"
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-ss", f"{sil.start:.3f}",
+                            "-t", f"{sil.end - sil.start:.3f}", "-ac", "1", "-ar", "16000", slice_path],
+                           capture_output=True, check=False)
+            pcm = load_pcm(slice_path)
+            if len(pcm) < 4000:
+                continue
+            for arm in (run_whisper(pcm, slice_path, whisper_model), run_phowhisper(pcm, slice_path)):
+                text = textnorm.normalise(arm.text)
+                if len(text.split()) < 2:
+                    continue
+                spans.append(Span("invented", arm.text if arm.arm == "whisper" else "",
+                                  arm.text if arm.arm != "whisper" else "", sil.start, sil.end))
+    return spans

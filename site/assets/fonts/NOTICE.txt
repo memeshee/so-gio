@@ -1,0 +1,8 @@
+So Gio Serif — a subset of Liberation Serif, renamed for this site.
+
+Liberation Serif is Copyright (c) 2012 Red Hat, Inc., with digitized data
+copyright (c) 2010 Google Corporation, licensed under the SIL Open Font
+License, Version 1.1 (see OFL.txt). No glyph outlines were redrawn; the
+subset keeps the Latin and Vietnamese glyphs the pages use and drops the
+rest. The internal family name was changed to "So Gio Serif" so the
+modified font does not carry the reserved name "Liberation".

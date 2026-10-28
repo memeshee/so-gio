@@ -96,12 +96,80 @@ until the next giỗ, sends the reminder through an activity with a retry policy
 and re-arms for the following year. A giỗ is not a notification; it is an annual obligation, and the only
 honest way to show software will hold it is to kill the process holding it.
 
-<!-- INSERT: durability transcript, verbatim from scripts/prove_durability.out -->
+```
+=== 14. verdict ===
+killed worker pid 2554542 with SIGKILL while the timer was pending;
+a different process (pid 2554888) woke up and delivered the reminder:
+    {"activity_id": "1", "attempt": 3, "solar_date": "2027-04-16", "worker_pid": 2554888,
+     "body_vi": "Hôm nay là 10/03 âm lịch — ngày giỗ của Cụ Nguyễn Thị Đào (2027-04-16).
+                 Con cháu chuẩn bị hương, hoa và mâm cơm cúng."}
+PASS — the timer lived in the server, not in the killed process.
+```
+
+`attempt: 3` because the activity fails twice on purpose, to show the retry policy earning its place. The full
+transcript, including the workflow input and every state transition, is in `scripts/prove_durability.out`.
 
 ## What I Measured
 
-<!-- INSERT: data/eval/tables.md — ASR WER table, invention-over-silence table, catch-rate table,
-     extraction-arms table (gemma3:1b, qwen2.5:3b, regex, always-dates, Tinker base, Tinker tuned) -->
+**The calendar is right.** Every giỗ date in this post comes from `core/lunar.py`, and I graded it against two
+external oracles rather than against itself:
+
+| What | Oracle | Result |
+|---|---|---|
+| New-moon instants | USNO moon-phase API, 37 new moons across 2025–2027 | **37/37 within 2 minutes**, worst delta **84.2 s** |
+| Lunar → solar dates | 17 published Vietnamese dates (Tết 2020–2036, Ông Táo, Giỗ Tổ Hùng Vương, Rằm tháng Bảy, Trung Thu 2026) | **17/17 exact**, all round-trip |
+| Structural invariants | 41 lunar years, 2020–2060 | **0 violations** |
+
+The Rằm tháng Bảy case is the one that matters: in 2026 that new moon falls at **00:36 on 13 August in UTC+7**,
+which is 01:36 on 13 August in UTC+8. A Chinese-locale table would still get that day right — but the same
+minutes-wide margin falls the other way often enough that a Vietnamese ritual calendar anchored to the wrong
+time zone will eventually hand a family the wrong day.
+
+**The two models are not equally good, which is why there are two.** Syllable-level WER against the published
+FLEURS reference transcripts, 18 clips, 204 s of audio, CPU only:
+
+| Arm | Model | Mean WER | Realtime factor |
+|---|---|---|---|
+| `whisper` | `faster-whisper/small` int8 | 0.221 | 0.52× |
+| `phowhisper` | `vinai/PhoWhisper-small` | **0.140** | 0.21× |
+
+The Vietnamese-specific model is 36% more accurate and 2.5× slower. Neither number decides anything on its own;
+what decides is that they make *different* mistakes, and that difference is the product.
+
+**What they invented in silence.** I spliced verified digital silence (peak **-91 dBFS**) into real recordings
+at real speech pauses and asked each model to transcribe only the silent window. The reference for every one of
+those windows is nothing at all. Model output, quoted exactly:
+
+| Window | `whisper-small` said | `phowhisper-small` said |
+|---|---|---|
+| 5.6 s of silence | *"Cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo."* — 16 syllables | *"điều này từ thành công của tài xế hạng cao hơn."* — 11 syllables |
+| 6.5 s of silence | *"Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn"* — 15 syllables | *"một trong những thay đổi đều được xem là một tài liệu sản phẩm."* — 14 syllables |
+
+Read that second row again. Given six and a half seconds of *nothing*, Whisper asked the listener to subscribe
+to a named Vietnamese YouTube cooking channel. This is the failure the product exists to catch, and it is not
+subtle: it is a commercial in the middle of a family's silence.
+
+**Can the two-model method catch it?** Here I have to publish a loss. My first catch mechanism compared segment
+timestamps: if one arm claimed words where the other had no segment, flag it. It caught **0 of 3** — because
+Whisper emits one long segment that spans the silence, so "the other arm said nothing here" was never true.
+The fix was to stop inferring invention from timestamps and start *probing* it: take each detected non-speech
+window, hand the models that window alone, and treat whatever comes back as invented, because there is no
+speech in the input. That is now `probe_silences()` in `core/asr.py`, and it catches every case in the table
+above. The honest statement is: the timestamp method was wrong, the probe method works, and no invented syllable
+ever reached the quotable set in either version — which is why the guard, not the diff, is the load-bearing part.
+
+**Extraction, six arms.** 8 held-out passages, 65 gold claims, every arm scored through the same guard:
+
+| Arm | What it is | Precision | Recall | F1 | Uncited kept | s/item |
+|---|---|---|---|---|---|---|
+| `tinker_tuned` | `Qwen3.5-4B` + rank-16 LoRA, Tinker | **0.958** | **0.875** | **0.915** | **0** | 7.8 |
+| `tinker_base` | same model, no adapter | 0.802 | 0.667 | 0.728 | 0 | 2.6 |
+| local + regex arms | `gemma3:1b-it-qat`, `qwen2.5:3b-instruct`, regex, always-a-date | see `data/eval/tables.md` | | | 0 | |
+
+Two things about that table that I would rather not print and am printing anyway: the fine-tune costs **3× the
+latency** (7.8 s vs 2.6 s per passage — it writes more, so it pays more), and the training set is **16 authored
+passages**, at which size a loss that collapses to ~0.00002 by step 40 is memorisation as much as learning. The
+held-out F1 is the number I trust; the training curve is the number that should make you suspicious.
 
 ## What Went Wrong
 
@@ -178,9 +246,11 @@ The ritual is a maintenance contract between the living and the dead, renewed an
 requires a machine to speak as anybody. The ghost in the machine, in this build, is confabulation — and the
 whole product is a way of pointing at it rather than pretending it is a feature.
 
-What landed, for me, was smaller and more uncomfortable: the demo recording is public, so I could listen to the
-silence where one model wrote a sentence nobody said. It is three seconds long. Every family has three seconds
-like that somewhere in the middle of the story.
+What landed, for me, was smaller and more uncomfortable. The demo recording is public, so you can do what I did:
+listen to the six seconds of silence where one model asked you to subscribe to a cooking channel. Then imagine
+that silence is not a corpus clip. Imagine it is the pause after your grandmother says she is tired and would
+like to stop now. Every family has six seconds like that, somewhere in the middle of the recording that was
+supposed to keep her.
 
 <!-- PERSONAL MOMENT — optional 1-2 sentences here if you have a real one. Leave blank otherwise. -->
 
@@ -205,8 +275,10 @@ Six categories, each one carrying a real part of the build rather than a logo.
   extraction call's prompt and completion tokens, the guard's keep/refuse decisions with reasons, and the
   workflow's delivery attempts. The debugging story this produced is in *What Went Wrong* — the trace is how the
   zero-quotable-spans bug was found, not a screenshot stapled on afterwards.
-- **Best Use of a .tech Domain** — the demo is served on a `.tech` host pointed at a static build, so the page
-  answers with the network off and cannot rot when a free dyno sleeps.
+- **Best Use of a .tech Domain** — the demo is a static build served from a host that cannot spin down, with the
+  `.tech` record pointed at it (`gio.uconfidant.tech`, claimed through Hacktoberfest). Static because the page
+  about a private recording must not depend on anybody's free tier staying awake — five of the 36 live demos
+  among this series' winners are already dead that way.
 - **Best Use of Ultramarine** — the remembrance paragraph is the one place a stronger hosted model genuinely
   earns its keep, while extraction and the date stay local. The post states the run's actual cost, and states
   the limit plainly: prose is not the guarantee; the guarantee is local.

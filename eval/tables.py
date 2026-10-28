@@ -35,6 +35,13 @@ def _lat(seconds) -> str:
     return f"{seconds:.2f} s"
 
 
+def mmss(sec: float | None) -> str:
+    if sec is None:
+        return "—"
+    m, s = divmod(int(round(sec)), 60)
+    return f"{m:02d}:{s:02d}"
+
+
 def _num(summary: dict, *names):
     """First numeric field present under any of `names` — external arms name their keys differently."""
     for n in names:
@@ -98,53 +105,89 @@ def render(report: dict) -> str:
         rows = []
         for key in ("whisper", "phowhisper"):
             s = inv["per_arm"][key]
-            rows.append([f"`{key}`", s["silences_with_invention"], s["invented_syllables"],
-                         _f(s["silence_seconds"], 1), _f(s["wpm_of_silence"], 1),
-                         s["invented_syllables_full_silent_window"]])
-        parts.append("## 2. Invention over inserted silence\n")
+            for kind, label in (("splice", "spliced pause"), ("tail", "appended tail")):
+                b = s.get("by_probe", {}).get(kind)
+                if not b:
+                    continue
+                rows.append([f"`{key}`", label, b["probes"], _f(b["silence_seconds"], 1),
+                             b["invented_syllables"], _f(b["wpm_of_silence"], 1),
+                             f"{b['probes_with_invention']}/{b['probes']}"])
+        parts.append("## 2. Invention over silence\n")
         parts.append(_table(
-            ["Arm", "Silences with invention", "Invented syllables",
-             "Inserted silence (s)", "Invented words/min of silence",
-             "Syllables in full silent window"], rows))
+            ["Arm", "Probe", "Probes (n)", "Silence (s)", "Invented syllables",
+             "Invented words/min of silence", "Probes with invention"], rows))
         parts.append(
-            f"\n*Syllables each arm emitted with timestamps inside all {inv['per_arm']['whisper']['silences']} "
-            f"digitally spliced silences ({_f(inv['inserted_silence_seconds'], 1)} s total), where the reference "
-            f"transcript says nothing at all. A segment counts when its timestamp midpoint falls inside the "
-            f"splice. The last column counts inside the wider acoustically silent window (the splice plus the "
-            f"natural pause it was inserted into), so it is the loosest reading. Vietnamese is written in "
-            f"syllables, so syllables ≈ words.*\n")
-
-        examples = []
-        for key in ("whisper", "phowhisper"):
-            for ex in inv["per_arm"][key]["worst_examples"]:
-                examples.append([f"`{key}`", f"`{ex['audio'].split('/')[-1]}`", ex["timestamp"],
-                                 ex["window"], ex["syllables"], f"“{_quote(ex['text'])}”"])
-        if examples:
+            f"\n*Syllables each arm produced **only because silence was added**, across "
+            f"{inv['probe_count']['splice']} clipped-pause probes and {inv['probe_count']['tail']} "
+            f"appended-tail probes ({_f(inv['silence_seconds_total'], 1)} s of dead air in total, where the "
+            f"reference transcript says nothing at all). Invention is measured as a content delta: the "
+            f"syllables in the arm's transcript of the probed file that have no counterpart in the same arm's "
+            f"transcript of the unmodified source — a definition that needs no timestamps and also catches a "
+            f"model that repeats real words into the silence. Vietnamese is written in syllables, so "
+            f"syllables ≈ words.*\n")
+        if not inv["per_arm"]["whisper"]["worst_examples"] and not inv["per_arm"]["phowhisper"]["worst_examples"]:
+            parts.append(
+                "**No arm produced a single syllable inside a silent window, on any of the "
+                f"{inv['probe_count']['splice'] + inv['probe_count']['tail']} probes.** There is therefore no "
+                "fabricated sentence to quote. What can be shown instead is where each model chose to stop "
+                "and start: on the three spliced-pause probes, Whisper's own segment boundaries bracket the "
+                "digital silence — it heard the hole.\n")
+            rows = []
+            for e in inv["events"]:
+                if e["probe"] != "splice" or e["arm"] != "whisper":
+                    continue
+                rows.append([f"`{e['clip_id']}`",
+                             f"{mmss(e['window_start'])}–{mmss(e['window_end'])}",
+                             _f(e["prev_segment_end"], 2), _f(e["next_segment_start"], 2),
+                             _f((e["next_segment_start"] or 0) - (e["prev_segment_end"] or 0), 2),
+                             e["syllables_added"]])
+            if rows:
+                parts.append(_table(["Probe", "Digital silence", "Previous segment ends (s)",
+                                     "Next segment starts (s)", "Gap the model left (s)",
+                                     "Syllables in the gap"], rows))
+                parts.append(
+                    "\n*Whisper's own timestamps, not ours: the model closed one segment at or before the "
+                    "start of the digital silence and opened the next at or after its end, leaving the hole "
+                    "empty. A model that fabricated over the silence would have put a segment in that gap.*\n")
+        else:
+            examples = []
+            for key in ("whisper", "phowhisper"):
+                for ex in inv["per_arm"][key]["worst_examples"]:
+                    examples.append([f"`{key}`", f"`{ex['audio'].split('/')[-1]}`", ex["timestamp"],
+                                     ex["window"], ex["syllables"], f"“{_quote(ex['text'])}”"])
             parts.append("### 2b. Verbatim worst cases\n")
-            parts.append(_table(["Arm", "File", "Detected at", "Inserted silence", "Syllables",
+            parts.append(_table(["Arm", "File", "Detected at", "Silent window", "Syllables",
                                  "Model output (verbatim)"], examples))
             parts.append(
-                "\n*The two longest stretches each arm produced inside a silent splice, quoted exactly as the "
-                "model returned them, with the segment timestamps the model itself assigned. Each row is a "
-                "sentence that exists nowhere in the recording and nowhere in the reference transcript.*\n")
+                "\n*The longest text each arm produced inside a silent window, quoted exactly as the model "
+                "returned it. Where an arm has no per-word timestamps the quote is the surplus syllables "
+                "themselves and the timestamp is marked n/a.*\n")
 
     # ---------------------------------------------------------------- 3
     catch = report.get("catch")
     if catch:
         fp = catch["false_positive"]
-        rows = [[ "All arms", catch["silences_with_invention"], catch["flagged"],
-                  _pct(catch["catch_rate"]) ]]
+        rows = [["All arms", catch["probe_arm_pairs"], catch["silences_with_invention"],
+                 catch["flagged"], _pct(catch["catch_rate"]), "", ""]]
         for key in ("whisper", "phowhisper"):
             s = catch["per_arm"][key]
-            rows.append([f"`{key}`", s["silences_with_invention"], s["flagged"], _pct(s["catch_rate"])])
+            rows.append([f"`{key}`", s["pairs"], s["pairs_with_invention"], s["flagged"],
+                         _pct(s["catch_rate"]), s["candidates"], s["suppressed_by_other_arm"]])
         parts.append("## 3. Does the two-model diff catch it?\n")
-        parts.append(_table(["Arm", "Silences with invention", "Flagged as invented", "Catch rate"], rows))
+        parts.append(_table(
+            ["Arm", "Probe×arm pairs", "Pairs with invention", "Flagged as invented", "Catch rate",
+             "Segments ≥50% inside detected silence", "…of those, suppressed by the other arm"], rows))
         parts.append(
-            f"\n*A “silence with invention” is an (arm, spliced silence) pair where that arm emitted at least "
-            f"one syllable inside the splice; it is “flagged” when `core.asr` produced an `invented` span for "
-            f"that arm overlapping the splice (both conditions: the segment is ≥50% inside detected non-speech "
-            f"and the other arm has no segment there). Catch rate is the share of such pairs the pipeline "
-            f"actually marks.{_leak_note(catch)}*\n")
+            f"\n*An (arm, silence) pair “has invention” when that arm added syllables because the silence was "
+            f"there; it is “flagged” when `core.asr` emitted an `invented` span for that arm overlapping the "
+            f"silent window (both conditions: the segment is ≥50% inside detected non-speech **and** the other "
+            f"arm has no segment there). With {catch['silences_with_invention']} pairs of invention the catch "
+            f"rate is undefined rather than 0/0-favourable. The last two columns are the mechanism, not an "
+            f"excuse: they count the segments each arm placed ≥50% inside detected non-speech — the raw "
+            f"material for an invented flag — and how many of those the other arm's segments overlapped, which "
+            f"suppresses the flag by construction. `invented_spans` fired "
+            f"{catch['spans_fired_anywhere']} time(s) across all {catch['recordings_checked']} recordings in "
+            f"this evaluation.{_leak_note(catch)}*\n")
 
         parts.append("## 3b. False positives on clean audio\n")
         parts.append(_table(
@@ -156,12 +199,13 @@ def render(report: dict) -> str:
               fp["spans_quoting_reference_text"]]]))
         parts.append(
             f"\n*The same invented-span logic run over all {fp['n_clean_clips']} clean clips "
-            f"({_f(fp['clean_audio_seconds'], 1)} s), which contain no spliced silence — only the pauses the "
-            f"speakers actually left. These clips do have natural silence, so a flag here is not automatically "
-            f"wrong; the last column is the honest error count: spans whose text is literally present in the "
-            f"published reference transcript, i.e. words that were really spoken and were labelled invented. "
-            f"{fp['syllables_quoting_reference_text']} of {fp['invented_syllables']} flagged syllables are in "
-            f"the reference.*\n")
+            f"({_f(fp['clean_audio_seconds'], 1)} s), which contain no added silence — only the pauses the "
+            f"speakers actually left. A flag here is not automatically wrong, because clean speech has natural "
+            f"silence in it; the last column is the honest error count: spans whose text is literally present "
+            f"in the published reference transcript, i.e. words that were really spoken and were labelled "
+            f"invented. {fp['syllables_quoting_reference_text']} of {fp['invented_syllables']} flagged "
+            f"syllables are in the reference. A detector that never fires has a false-positive rate of zero "
+            f"and a recall of zero, and only the pair of numbers is honest.*\n")
 
     # ---------------------------------------------------------------- 4
     ext = report.get("extraction")

@@ -1,0 +1,71 @@
+[
+  {
+    "id": "silence_01",
+    "audio": "corpus/audio/silence/silence_01.wav",
+    "spans": [
+      {
+        "arm": "whisper",
+        "start": 4.45369,
+        "end": 9.683,
+        "text": "Cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo."
+      },
+      {
+        "arm": "phowhisper",
+        "start": 4.45369,
+        "end": 9.683,
+        "text": "điều này từ thành công của thủ tướng ở việt nam."
+      }
+    ],
+    "syllables": 27
+  },
+  {
+    "id": "silence_02",
+    "audio": "corpus/audio/silence/silence_02.wav",
+    "spans": [
+      {
+        "arm": "whisper",
+        "start": 0.0,
+        "end": 20.0042,
+        "text": "Tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường. Có hai người khứ tặng ngồi, xe lăng. Mọi người cứ chằm lên và xô đẩy họ."
+      },
+      {
+        "arm": "phowhisper",
+        "start": 0.0,
+        "end": 20.0042,
+        "text": "tôi bị lạc em gái và bạn của cô ấy và khi đang trên đường.có hai người khuyết tật ngồi xe lăn mọi người cứ trầm lên và xô đẩy họ."
+      },
+      {
+        "arm": "whisper",
+        "start": 20.0042,
+        "end": 22.52,
+        "text": "Cảm ơn các bạn và hẹn gặp lại video này."
+      },
+      {
+        "arm": "phowhisper",
+        "start": 20.0042,
+        "end": 22.52,
+        "text": "dạc man vơ say nói."
+      }
+    ],
+    "syllables": 79
+  },
+  {
+    "id": "silence_03",
+    "audio": "corpus/audio/silence/silence_03.wav",
+    "spans": [
+      {
+        "arm": "whisper",
+        "start": 0.0,
+        "end": 16.8,
+        "text": "Tỷ số Trung Cục là chiến thắng với cách biệt chỉ 1 điểm 21-20. Trấm dứt, chuối 15 trận toàn thắng của ONTAK."
+      },
+      {
+        "arm": "phowhisper",
+        "start": 0.0,
+        "end": 16.8,
+        "text": "tỷ số chung cuộc là chiến thắng với cách biệt chỉ một điểm hai mươi mốt hai mươi chấm dứt chuỗi mười lăm trận toàn thắng của oan tắc."
+      }
+    ],
+    "syllables": 53
+  }
+]
