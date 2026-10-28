@@ -51,6 +51,38 @@ def _num(summary: dict, *names):
     return None
 
 
+def _tp_cell(summary: dict) -> str:
+    tp = _num(summary, "tp")
+    kept = _num(summary, "predicted", "kept", "n_predicted")
+    if tp is None or kept is None:
+        return "—"
+    return f"{tp}/{kept}"
+
+
+def _pho_ts_splice(inv: dict) -> int:
+    """Timestamp-localised PhoWhisper syllables on the probes whose silence sits inside real speech."""
+    return sum(e["syllables"] for e in inv.get("events", [])
+               if e["arm"] == "phowhisper" and e["probe"] in ("splice", "tail"))
+
+
+def _physical_cores() -> int | None:
+    try:
+        ids = set()
+        phys = core = None
+        for line in Path("/proc/cpuinfo").read_text().splitlines():
+            if line.startswith("physical id"):
+                phys = line.split(":", 1)[1].strip()
+            elif line.startswith("core id"):
+                core = line.split(":", 1)[1].strip()
+            elif not line.strip() and phys is not None and core is not None:
+                ids.add((phys, core)); phys = core = None
+        if phys is not None and core is not None:
+            ids.add((phys, core))
+        return len(ids) or None
+    except Exception:
+        return None
+
+
 def _table(headers: list[str], rows: list[list[str]]) -> str:
     out = ["| " + " | ".join(headers) + " |",
            "|" + "|".join("---" for _ in headers) + "|"]
@@ -71,8 +103,10 @@ def render(report: dict) -> str:
     parts.append("# Sổ Giỗ — evaluation tables\n")
     parts.append(
         f"Every number below was produced by `python eval/run_eval.py` on "
-        f"{env.get('run_at', 'n/a')}. Machine: {env.get('cpu_count', '?')} vCPU "
-        f"({env.get('cpu_model', 'unknown')}), {env.get('machine', '')}, Python {env.get('python', '?')}. "
+        f"{env.get('run_at', 'n/a')}. Machine: {env.get('cpu_model', 'unknown')}, "
+        f"{env.get('cpu_count', '?')} vCPU"
+        f"{' over ' + str(_physical_cores()) + ' physical cores' if _physical_cores() else ''}"
+        f", {env.get('machine', '')}, Python {env.get('python', '?')}. "
         f"ASR: `{env.get('whisper_model', '')}` and `{env.get('phowhisper_model', '')}`, CPU only, "
         f"models warm-loaded once before timing. Audio: {corpus.get('name', '')} "
         f"({corpus.get('licence', '')}).\n")
@@ -83,7 +117,8 @@ def render(report: dict) -> str:
         rows = []
         for key in ("whisper", "phowhisper"):
             s = asr["per_arm"][key]
-            rows.append([f"`{key}`", f"`{s['model']}`", s["n_clips"],
+            label = f"faster-whisper/{s['model']}" if key == "whisper" else s["model"]
+            rows.append([f"`{key}`", f"`{label}`", s["n_clips"],
                          _f(s["audio_seconds"], 1), _f(s["mean_wer"], 3),
                          _f(s["micro_wer"], 3),
                          f"{s['realtime_factor_aggregate']:.2f}×",
@@ -131,10 +166,11 @@ def render(report: dict) -> str:
             f"carelessly recorded family tape looks like, and they are reported separately because the stock "
             f"pipelines do not fail there. Vietnamese is written in syllables, so syllables ≈ words. The last "
             f"column says on how many probes the arm's own timestamps are fine enough to place a syllable; "
-            f"counting by timestamp instead would credit PhoWhisper with "
-            f"{inv['per_arm']['phowhisper']['syllables_in_window_by_timestamp']} syllables on the "
-            f"clips-with-silence-bolted-in probes alone, and every one of them is the clip's real speech "
-            f"carried by a single segment spanning the whole 25 s window.*\n")
+            f"counting by timestamp across all twelve probes would credit PhoWhisper with "
+            f"{inv['per_arm']['phowhisper']['syllables_in_window_by_timestamp']} syllables, and "
+            f"{_pho_ts_splice(inv)} of those sit on the six probes where the silence was bolted into real "
+            f"speech — every one of them the clip's own words, carried by a single segment spanning the whole "
+            f"25 s window.*\n")
         if not inv["per_arm"]["whisper"]["worst_examples"] and not inv["per_arm"]["phowhisper"]["worst_examples"]:
             tail_ev = [e for e in inv["events"] if e["probe"] == "tail" and e["arm"] == "whisper"]
             closed = [e for e in tail_ev if e["prev_segment_end"] is not None]
@@ -178,15 +214,16 @@ def render(report: dict) -> str:
                                  "Model output (verbatim)"], examples))
             parts.append(
                 "\n*The longest text each arm produced inside a silent window, quoted exactly as the model "
-                "returned it. Where an arm has no per-word timestamps the quote is the surplus syllables "
-                "themselves and the timestamp is marked n/a.*\n")
+                "returned it. The timestamp is the segment the model itself put the text in; for PhoWhisper "
+                "that segment is the whole window, so it says where the audio began, not where a word was "
+                "spoken.*\n")
 
     # ---------------------------------------------------------------- 3
     catch = report.get("catch")
     if catch:
         fp = catch["false_positive"]
         rows = [["All arms", catch["probe_arm_pairs"], catch["silences_with_invention"],
-                 catch["flagged"], _pct(catch["catch_rate"]), "", ""]]
+                 catch["flagged"], _pct(catch["catch_rate"]), "—", "—"]]
         for key in ("whisper", "phowhisper"):
             s = catch["per_arm"][key]
             rows.append([f"`{key}`", s["pairs"], s["pairs_with_invention"], s["flagged"],
@@ -222,9 +259,8 @@ def render(report: dict) -> str:
             f"speakers actually left. A flag here is not automatically wrong, because clean speech has natural "
             f"silence in it; the last column is the honest error count: spans whose text is literally present "
             f"in the published reference transcript, i.e. words that were really spoken and were labelled "
-            f"invented. {fp['syllables_quoting_reference_text']} of {fp['invented_syllables']} flagged "
-            f"syllables are in the reference. A detector that never fires has a false-positive rate of zero "
-            f"and a recall of zero, and only the pair of numbers is honest.*\n")
+            f"invented. {_fp_sentence(fp)} A detector that never fires has a false-positive rate of zero and a "
+            f"recall of zero, and only the pair of numbers is honest.*\n")
 
     # ---------------------------------------------------------------- 4
     ext = report.get("extraction")
@@ -243,8 +279,7 @@ def render(report: dict) -> str:
             s = t.get("summary") or {}
             rows.append([f"`{name}` †", _f(_num(s, "precision"), 3), _f(_num(s, "recall"), 3),
                          _f(_num(s, "f1"), 3),
-                         f"{_num(s, 'tp') if _num(s, 'tp') is not None else '?'}/"
-                         f"{_num(s, 'predicted', 'kept', 'n_predicted') if _num(s, 'predicted', 'kept', 'n_predicted') is not None else '?'}",
+                         _tp_cell(s),
                          _num(s, "gold", "n_gold", "gold_total") if _num(s, "gold", "n_gold", "gold_total") is not None else ext["gold_total"],
                          _num(s, "refusals") if _num(s, "refusals") is not None else "—",
                          _num(s, "uncited_kept") if _num(s, "uncited_kept") is not None else "—",
@@ -269,6 +304,14 @@ def render(report: dict) -> str:
             f"so each gold claim can be found once. Precision and recall are pooled over all recordings. "
             f"Uncited kept claims must be 0 for every arm; if any arm broke that rule the row shows the count "
             f"in bold and the arm is left unscored, because that is a bug in the guard, not a metric.{tail}*\n")
+        zero = [f"`{n}` kept {a['predicted']} claims and matched none"
+                for n, a in ext["arms"].items()
+                if a.get("tp") == 0 and a.get("predicted") and not a.get("guard_bug")]
+        if zero:
+            parts.append("> **A model that quotes and still loses:** " + "; ".join(zero) +
+                         ". Every quote was verbatim in the transcript, so the guard passed it — the "
+                         "extractor picked the wrong thing to quote, which is the failure the guard cannot "
+                         "catch and the gold set can.\n")
         if ext.get("guard_failures"):
             parts.append("\n> **Guard failure:** " + "; ".join(ext["guard_failures"]) +
                          ". A kept claim without a citation is a `core/guard.py` bug — "
@@ -279,6 +322,13 @@ def render(report: dict) -> str:
                      f"The harness (`eval/run_eval.py`) runs this table as soon as the file exists.*\n")
 
     return "\n".join(parts).rstrip() + "\n"
+
+
+def _fp_sentence(fp: dict) -> str:
+    if not fp["invented_syllables"]:
+        return "There were no flagged syllables to check."
+    return (f"{fp['syllables_quoting_reference_text']} of {fp['invented_syllables']} flagged syllables "
+            f"are in the reference.")
 
 
 def _leak_note(catch: dict) -> str:

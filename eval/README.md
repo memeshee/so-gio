@@ -21,6 +21,9 @@ costs nothing and a crash never loses completed work.
 | `metrics.py` | **the** claim-matching rule (`claims_match`) shared with any arm scored elsewhere |
 | `build_tail_probes.py` | warms the cache for the appended-silence probes (run_eval builds them too) |
 
+Measurement 4 is not cached: it re-runs the two local models on every invocation (temperature 0,
+fixed seed), which is why `--stage extract` exists. Measurements 1–3 come from the cache in seconds.
+
 ## What each measurement means
 
 **1. ASR accuracy.** Syllable-level WER (`core.textnorm.wer`) of `faster-whisper small` int8 and
@@ -28,9 +31,10 @@ costs nothing and a crash never loses completed work.
 realtime factor (audio seconds ÷ inference seconds) on this box. Both models are warm-loaded once
 before the timed loop, so per-clip latency is inference only.
 
-**2. Invention over silence.** Two probe families where the reference transcript for a window is
+**2. Invention over silence.** Three probe families where the reference transcript for a window is
 empty by construction:
 
+- `isolated` — the verified non-vocal window fed to each model **on its own** (3 windows, 19.25 s). No speech in the input at all, so anything returned is fabrication; this is the condition that reproduces the published Whisper-over-silence failure, and it is what the shipped `asr.probe_silences` does;
 - `splice` — digital silence inserted into a real mid-utterance pause (`data/corpus/silence_manifest.json`, 3 clips, 4–6 s each);
 - `tail` — 5 s of digital silence appended after the last word, every third clean clip (6 clips), which is what a family recording looks like when nobody stops the phone.
 

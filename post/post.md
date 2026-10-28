@@ -150,18 +150,29 @@ words per minute from one arm and 131 from the other. Both arms do it, on differ
 argument for running two: sample one silence and you would conclude that Whisper is safe and PhoWhisper is not —
 the third window says the opposite of the first two.
 
+The narrowing matters as much as the finding. I ran two more conditions: silences spliced **into** continuous
+speech at 15 s total, and 5 s tails appended after the last word at 30 s total. Both arms produced **zero**
+invented syllables on all of them. So this is not "Whisper invents whenever it hears quiet" — it invents when a
+silent stretch arrives as a clean block with nothing around it, which is precisely what a long pause at the end
+of a recording, a gap where the tape was stopped, or a trimmed file looks like. The measurement that would have
+flattered the product (one big scary percentage) is not the one I am reporting.
+
 Read the second row again. Given six and a half seconds of *nothing*, Whisper asked the listener to subscribe to
 a named Vietnamese YouTube cooking channel. This is the failure the product exists to catch, and it is not
 subtle: it is a commercial playing in the pause where a grandmother stopped talking.
 
-**Can the two-model method catch it?** Here I have to publish a loss. My first catch mechanism compared segment
-timestamps: if one arm claimed words where the other had no segment, flag it. It caught **0 of 3** — because
-Whisper emits one long segment that spans the silence, so "the other arm said nothing here" was never true.
+**Can the two-model method catch it?** Here I have to publish a loss. The catch rule compares segment
+timestamps: if one arm placed words where the other had no segment, flag it invented. Across 24 (arm × silence)
+pairs, five had real invention and it flagged **one — 20%**. The mechanism is not mysterious: 14 segments sat
+more than half inside detected non-speech, and **13 of those were suppressed** because the other arm had emitted
+one long segment spanning the whole window, so "nothing was said here" was never true.
 The fix was to stop inferring invention from timestamps and start *probing* it: take each detected non-speech
-window, hand the models that window alone, and treat whatever comes back as invented, because there is no
-speech in the input. That is now `probe_silences()` in `core/asr.py`, and it catches every case in the table
-above. The honest statement is: the timestamp method was wrong, the probe method works, and no invented syllable
-ever reached the quotable set in either version — which is why the guard, not the diff, is the load-bearing part.
+window, hand the models that window alone, and treat whatever comes back as invented, because there is no speech
+in the input. That is `probe_silences()`, and it is now wired into the pipeline rather than sitting in an
+evaluation script, which it was for one embarrassing afternoon. It cannot miss by construction, which is exactly
+what the in-transcript rule cannot say. And no invented syllable ever reached the quotable set under either
+method — `agreed_spans` only keeps syllables both arms produced — which is why the guard, not the detector, is
+the load-bearing part.
 
 **Extraction, six arms.** 8 held-out passages, 65 gold claims, every arm scored through the same guard:
 
@@ -295,7 +306,7 @@ Five categories, each one carrying a real part of the build rather than a logo.
   project:4512199446757376 host:o1068235.ingest.us.sentry.io`.
 
   And the honest limit: tracing did not find my bug. The bug that mattered — an invention detector that caught
-  **zero** of three hallucinations — was found by measuring against ground truth, and it is in *What I Measured*
+  **one of five** hallucinations — was found by measuring against ground truth, and it is in *What I Measured*
   with the numbers attached. Sentry's contribution here is the refusal ledger and the retry trail: the thing that
   makes "we invented nothing" and "it fired after the crash" auditable after the fact rather than asserted.
 

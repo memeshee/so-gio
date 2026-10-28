@@ -4,7 +4,8 @@
 One command, idempotent:
 
     python eval/run_eval.py            # run everything that can be run
-    python eval/run_eval.py --stage 1  # only re-do ASR + invention + catch
+    python eval/run_eval.py --stage asr      # only measurements 1-3 (all cached, seconds)
+    python eval/run_eval.py --stage extract  # only measurement 4
     python eval/run_eval.py --force    # ignore the ASR cache
 
 Four measurements, each written to data/eval/report.json and rendered into
