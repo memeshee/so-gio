@@ -22,7 +22,7 @@
 <main id="main" class="sheet">
 
 <header class="masthead">
-  <p class="runhead"><span>Bản chạy <b>smoke-001</b></span><span>tr. 1</span></p>
+  <p class="runhead"><span>Bản chạy <b>demo-live</b></span><span>tr. 1</span></p>
   <p class="seal" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
   <rect x="2" y="2" width="60" height="60" rx="6" fill="#1b1a17"/>
   <rect x="8.5" y="8.5" width="47" height="47" rx="2.8" fill="none" stroke="#f7f2e8" stroke-width="2.9"/>
@@ -33,7 +33,7 @@
   <p class="deck">Ngày giỗ không được quên. Nhưng ký ức thì có thể sai, và máy thì có thể bịa.
     Cuốn sổ này chỉ ghi những chữ mà cả hai tai cùng nghe thấy — và chỉ rõ chỗ nó không nghe thấy gì.</p>
   <dl class="imprint">
-    <dt>Băng</dt><dd>fleurs_vi_001.wav · 14,94 giây</dd>
+    <dt>Băng</dt><dd>silence_01.wav · 17,26 giây</dd>
     <dt>Hai tai nghe</dt><dd>faster-whisper/small + vinai/PhoWhisper-small</dd>
     <dt>Máy trích xuất</dt><dd>gemma3:1b-it-qat · chạy trên máy, không gửi lên mạng</dd>
   </dl>
@@ -54,36 +54,36 @@
   <h2><span class="ch-no" aria-hidden="true">I</span> Cuộn băng</h2>
   <p class="ch-en" lang="en">The recording</p>
   
-<p class="lede">Một tệp âm thanh 14,94 giây, đưa qua hai mô hình nhận dạng
+<p class="lede">Một tệp âm thanh 17,26 giây, đưa qua hai mô hình nhận dạng
   tiếng Việt độc lập. Không mô hình nào thấy kết quả của mô hình kia; chỗ nào cả hai nghe ra giống nhau thì mới có
   thể trở thành lời trong sổ.</p>
-<div class="figures"><div class="figure"><span class="n">14,94<span class="u"> giây</span></span><span class="l">độ dài băng</span></div><div class="figure"><span class="n">83,9<span class="u"> %</span></span><span class="l">âm tiết hai bản trùng nhau</span></div><div class="figure"><span class="n">5</span><span class="l">chỗ hai bên nghe lệch</span></div><div class="figure"><span class="n">0</span><span class="l">chỗ bịa trên khoảng lặng</span></div></div>
+<div class="figures"><div class="figure"><span class="n">17,26<span class="u"> giây</span></span><span class="l">độ dài băng</span></div><div class="figure"><span class="n">85,2<span class="u"> %</span></span><span class="l">âm tiết hai bản trùng nhau</span></div><div class="figure"><span class="n">3</span><span class="l">chỗ hai bên nghe lệch</span></div><div class="figure"><span class="n">2</span><span class="l">chỗ bịa trên khoảng lặng</span></div></div>
 <div class="arms">
 <div class="arm">
   <div class="arm-top">
     <span class="arm-name">whisper</span>
-    <span class="arm-rtf">0,65× <span class="x">thời gian thực</span></span>
+    <span class="arm-rtf">0,58× <span class="x">thời gian thực</span></span>
   </div>
   <p class="arm-model">faster-whisper/small</p>
-  <p class="arm-sub">23,1 giây cho 14,94 giây băng
-    · 146 ký tự
-    · 1,5 giây máy cho mỗi giây băng</p>
+  <p class="arm-sub">29,9 giây cho 17,26 giây băng
+    · 124 ký tự
+    · 1,7 giây máy cho mỗi giây băng</p>
 </div>
 <div class="arm">
   <div class="arm-top">
     <span class="arm-name">phowhisper</span>
-    <span class="arm-rtf">0,32× <span class="x">thời gian thực</span></span>
+    <span class="arm-rtf">0,18× <span class="x">thời gian thực</span></span>
   </div>
   <p class="arm-model">vinai/PhoWhisper-small</p>
-  <p class="arm-sub">46,9 giây cho 14,94 giây băng
-    · 142 ký tự
-    · 3,1 giây máy cho mỗi giây băng</p>
+  <p class="arm-sub">98,0 giây cho 17,26 giây băng
+    · 128 ký tự
+    · 5,7 giây máy cho mỗi giây băng</p>
 </div></div>
 <p class="small-note"><span class="chip">[run.json]</span>
   0,65× nghĩa là mỗi giây băng mất khoảng 1,5 giây máy; 0,32× là khoảng 3,1 giây máy.
   Hai mô hình đều chạy cục bộ trên cùng một máy; whisper dùng int8, phowhisper chạy float32.
-  Máy trích xuất gemma3:1b-it-qat đọc 327 token
-  và viết 39 token trong 29,3 giây.</p>
+  Máy trích xuất gemma3:1b-it-qat đọc 316 token
+  và viết 42 token trong 57,9 giây.</p>
 <p class="licence"><strong>Bản ghi trong bản demo này là một câu trong bộ ngữ liệu mở FLEURS
   (Google, CC BY 4.0) — không phải băng riêng của một gia đình.</strong> Nó không nhắc đến giỗ;
   vì thế phần mười năm giỗ ở dưới nói thẳng là chưa có ngày nào, chứ không điền vào chỗ trống.</p>
@@ -102,15 +102,27 @@
   <input type="checkbox" id="marks" checked>
   <span>Hiện chỗ hai mô hình nghe lệch</span>
 </label>
-<div class="copy"><div class="line"><span class="t chip">[00:00]</span><p class="copy-text">Một số loài <span class="disputed" title="phowhisper: động">đậm<sup class="fn"><a href="#d1" id="r1" aria-label="chú thích 1">1</a></sup></span> vật như vôi và <span class="disputed" title="phowhisper: hũ cao">hỗ cầu<sup class="fn"><a href="#d2" id="r2" aria-label="chú thích 2">2</a></sup></span> cổ, thường hay lại <span class="disputed" title="phowhisper: gần xa">gặn xe<sup class="fn"><a href="#d3" id="r3" aria-label="chú thích 3">3</a></sup></span> và chỉ <span class="disputed" title="phowhisper: với">phải<sup class="fn"><a href="#d4" id="r4" aria-label="chú thích 4">4</a></sup></span> các <span class="disputed" title="phowhisper: dụng cụ">nhung cầu<sup class="fn"><a href="#d5" id="r5" aria-label="chú thích 5">5</a></sup></span> bình thường. Chúng ta cũng sẽ quan sát một cách dễ dàng.</p></div></div>
-<ol class="notes"><li id="d1"><span><span class="w">whisper</span> “đậm” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “động”</span><a class="back" href="#r1" aria-label="Về chỗ đánh dấu 1">↩</a></li><li id="d2"><span><span class="w">whisper</span> “hỗ cầu” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “hũ cao”</span><a class="back" href="#r2" aria-label="Về chỗ đánh dấu 2">↩</a></li><li id="d3"><span><span class="w">whisper</span> “gặn xe” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “gần xa”</span><a class="back" href="#r3" aria-label="Về chỗ đánh dấu 3">↩</a></li><li id="d4"><span><span class="w">whisper</span> “phải” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “với”</span><a class="back" href="#r4" aria-label="Về chỗ đánh dấu 4">↩</a></li><li id="d5"><span><span class="w">whisper</span> “nhung cầu” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “dụng cụ”</span><a class="back" href="#r5" aria-label="Về chỗ đánh dấu 5">↩</a></li></ol>
+<div class="copy"><div class="line"><span class="t chip">[00:00]</span><p class="copy-text">Bạn báo cáo mở đầu bằng biện hộ châu cục.</p></div><div class="line"><span class="t chip">[00:09]</span><p class="copy-text">Trên lượng mở và tạo lập sự đồng <span class="disputed" title="phowhisper: thuận">thận<sup class="fn"><a href="#d3" id="r3" aria-label="chú thích 3">3</a></sup></span> của Hoa Kỳ về chính sách đối với Trung Đông.</p></div></div>
+<ol class="notes"><li id="d1"><span><span class="w">whisper</span> “bạn” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “bản”</span><a class="back" href="#r1" aria-label="Về chỗ đánh dấu 1">↩</a></li><li id="d2"><span><span class="w">whisper</span> “châu cục trên lượng” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “cho cuộc tranh luận”</span><a class="back" href="#r2" aria-label="Về chỗ đánh dấu 2">↩</a></li><li id="d3"><span><span class="w">whisper</span> “thận” <span aria-hidden="true">·</span> <span class="w">phowhisper</span> “thuận”</span><a class="back" href="#r3" aria-label="Về chỗ đánh dấu 3">↩</a></li></ol>
 
-<div class="zero"><span class="lbl">Bịa trên khoảng lặng</span><b>0 chỗ.</b> Không mô hình nào viết ra chữ ở chỗ mô hình kia nghe thấy im lặng. Đây là điều cuốn sổ muốn thấy, không phải điều nó muốn che.</div>
+<aside class="alarm">
+  <p class="alarm-label">Bịa trên khoảng lặng · 00:04–00:10</p>
+  <p class="alarm-text"><del>“Cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo.”</del></p>
+  <p class="alarm-note">whisper viết ra chữ ở chỗ mô hình kia nghe thấy im lặng. Bộ dò năng lượng xác nhận khoảng lặng 00:04–00:10.
+    Câu này bị gạch khỏi bản đọc và không thể trở thành ngày giỗ.</p>
+</aside>
+<aside class="alarm">
+  <p class="alarm-label">Bịa trên khoảng lặng · 00:04–00:10</p>
+  <p class="alarm-text"><del>“điều này từ thành công của thủ tướng ở việt nam.”</del></p>
+  <p class="alarm-note">phowhisper viết ra chữ ở chỗ mô hình kia nghe thấy im lặng. Bộ dò năng lượng xác nhận khoảng lặng 00:04–00:10.
+    Câu này bị gạch khỏi bản đọc và không thể trở thành ngày giỗ.</p>
+</aside>
+
 
 <aside class="alarm">
   <p class="alarm-label">Một chỗ yếu · phép thử khoảng lặng</p>
-  <p class="alarm-text">96 âm tiết bịa trong 15 giây lặng; bộ dò hai tai đánh dấu
-    0/3 chỗ.</p>
+  <p class="alarm-text">42 âm tiết bịa trong 15 giây lặng; bộ dò hai tai đánh dấu
+    1/5 chỗ.</p>
   <p class="alarm-note">Không âm tiết nào lọt vào phần hai bên cùng nghe, nên không thành lời trong sổ.
     Nhưng nhãn gạch đang hỏng ở đúng chỗ khó nhất. <a href="eval.html">Đọc tr. 4</a>.</p>
 </aside>
@@ -128,8 +140,8 @@
 
 <article class="claim">
   <p class="kind">người <span class="en">· person</span></p>
-  <blockquote><p>“một số loài”</p></blockquote>
-  <p class="claim-cite"><span class="chip">[00:00–00:15]</span><span>nghe thấy trong băng</span></p>
+  <blockquote><p>“báo cáo mở đầu bằng”</p></blockquote>
+  <p class="claim-cite"><span class="chip">[00:00–00:05]</span><span>nghe thấy trong băng</span></p>
   
 </article>
 <p class="small-note"><span class="chip">[guard.py]</span> Nhãn loại (người, ngày giỗ, đồ cúng) do mô hình trích xuất gán.
@@ -236,8 +248,8 @@
   <circle cx="32" cy="31.5" r="5.3" fill="#f7f2e8"/>
   <path d="M23 43h18" stroke="#f7f2e8" stroke-width="2.5" stroke-linecap="round" fill="none"/>
 </svg></span> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
-  <p>Dựng lúc 08:36 · 28 tháng 10, 2026 (+07) từ
-    <span class="chip">data/runs/smoke-001/run.json</span>,
+  <p>Dựng lúc 09:24 · 28 tháng 10, 2026 (+07) từ
+    <span class="chip">data/runs/demo-live/run.json</span>,
     <span class="chip">data/oracle/report.json</span> và <span class="chip">data/eval/report.json</span>.
     Không có yêu cầu mạng nào khi mở trang: chữ, dấu và mã đều nằm trong thư mục này.</p>
   <p>Chữ: So Gio Serif — bản rút gọn của Liberation Serif (SIL OFL 1.1) — tự lưu ở <b>assets/fonts</b>. Dấu: SVG, kèm PNG dựng bằng Python, không dùng thư viện ngoài.</p>
