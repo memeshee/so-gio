@@ -32,7 +32,7 @@ date, not the prose.**
 
 ## Demo
 
-**https://memeshee.github.io/so-gio/**
+[memeshee.github.io/so-gio](https://memeshee.github.io/so-gio/)
 
 What to do, in order:
 
@@ -275,10 +275,11 @@ Six categories, each one carrying a real part of the build rather than a logo.
   extraction call's prompt and completion tokens, the guard's keep/refuse decisions with reasons, and the
   workflow's delivery attempts. The debugging story this produced is in *What Went Wrong* — the trace is how the
   zero-quotable-spans bug was found, not a screenshot stapled on afterwards.
-- **Best Use of a .tech Domain** — the demo is a static build served from a host that cannot spin down, with the
-  `.tech` record pointed at it (`gio.uconfidant.tech`, claimed through Hacktoberfest). Static because the page
-  about a private recording must not depend on anybody's free tier staying awake — five of the 36 live demos
-  among this series' winners are already dead that way.
+- **Best Use of a .tech Domain** — `gio.uconfidant.tech`, claimed through Hacktoberfest, serving the static
+  build. Static on purpose: a page about a private recording must not depend on anybody's free tier staying
+  awake. Of the 36 live demo links among this series' winners, **five are already dead** — all of them suspended
+  free instances of exactly that kind. Add a `.nojekyll`, publish the prebuilt HTML, and the link a judge clicks
+  three weeks from now is the same bytes I tested today.
 - **Best Use of Ultramarine** — the remembrance paragraph is the one place a stronger hosted model genuinely
   earns its keep, while extraction and the date stay local. The post states the run's actual cost, and states
   the limit plainly: prose is not the guarantee; the guarantee is local.

@@ -1,0 +1,84 @@
+{
+  "summary": {
+    "windows": 3,
+    "silence_seconds": 19.25,
+    "invented_syllables": {
+      "whisper": 31,
+      "phowhisper": 42
+    },
+    "per_arm_wpm": {
+      "whisper": 96.6,
+      "phowhisper": 130.9
+    },
+    "arms_that_invented": 2,
+    "arms_measured": 2
+  },
+  "clips": [
+    {
+      "clip": "silence_01",
+      "window": [
+        4.453,
+        10.036
+      ],
+      "window_seconds": 5.58,
+      "arms": {
+        "whisper": {
+          "model": "faster-whisper/small",
+          "syllables": 16,
+          "text": "Cảm ơn các bạn đã chào tạm biệt và hẹn gặp lại trong video tiếp theo.",
+          "words_per_minute_of_silence": 172.0
+        },
+        "phowhisper": {
+          "model": "vinai/PhoWhisper-small",
+          "syllables": 11,
+          "text": "điều này từ thành công của tài xế hạng cao hơn.",
+          "words_per_minute_of_silence": 118.2
+        }
+      }
+    },
+    {
+      "clip": "silence_02",
+      "window": [
+        7.571,
+        14.03
+      ],
+      "window_seconds": 6.46,
+      "arms": {
+        "whisper": {
+          "model": "faster-whisper/small",
+          "syllables": 15,
+          "text": "Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn",
+          "words_per_minute_of_silence": 139.3
+        },
+        "phowhisper": {
+          "model": "vinai/PhoWhisper-small",
+          "syllables": 14,
+          "text": "một trong những thay đổi đều được xem là một tài liệu sản phẩm.",
+          "words_per_minute_of_silence": 130.1
+        }
+      }
+    },
+    {
+      "clip": "silence_03",
+      "window": [
+        5.232,
+        12.439
+      ],
+      "window_seconds": 7.21,
+      "arms": {
+        "whisper": {
+          "model": "faster-whisper/small",
+          "syllables": 0,
+          "text": "",
+          "words_per_minute_of_silence": 0.0
+        },
+        "phowhisper": {
+          "model": "vinai/PhoWhisper-small",
+          "syllables": 17,
+          "text": "một trong những thay tòa soạn nhất là các tàu ngầm vũ trang sức và tính mạng.",
+          "words_per_minute_of_silence": 141.5
+        }
+      }
+    }
+  ]
+}

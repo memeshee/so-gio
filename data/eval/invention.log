@@ -18,3 +18,12 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
       "Hãy subscribe cho kênh Ghiền Mì Gõ Để không bỏ lỡ những video hấp dẫn"
     phowhisper   14 syllables  INVENTED
       "một trong những thay đổi đều được xem là một tài liệu sản phẩm."
+[transformers] Both `max_new_tokens` (=225) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+
+=== silence_03  silent window 5.23–12.44s (7.2s, reference says nothing)
+    whisper       0 syllables  silent (correct)
+    phowhisper   17 syllables  INVENTED
+      "một trong những thay tòa soạn nhất là các tàu ngầm vũ trang sức và tính mạng."
+
+SUMMARY {"windows": 3, "silence_seconds": 19.25, "invented_syllables": {"whisper": 31, "phowhisper": 42}, "per_arm_wpm": {"whisper": 96.6, "phowhisper": 130.9}, "arms_that_invented": 2, "arms_measured": 2}
+wrote data/eval/invention_groundtruth.json

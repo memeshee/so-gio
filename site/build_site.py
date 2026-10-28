@@ -1753,8 +1753,8 @@ def render_reading_page(model: dict) -> str:
 <header class="masthead">
   <p class="runhead"><span><a href="index.html">Sổ Giỗ</a> · bản chạy <b>{esc(model["run_id"])}</b></span><span>tr. 2</span></p>
   <h1>Bản đọc lại</h1>
-  <p class="deck">Toàn bộ những gì hai mô hình nghe được — kể cả chỗ chúng nghe khác nhau. Không chữ nào ở đây
-    được sửa cho sạch.</p>
+  <p class="deck">Bản whisper đọc, nguyên văn. Chỗ nào phowhisper nghe khác thì đánh dấu và giữ cả hai cách
+    nghe — không chữ nào ở đây được sửa cho sạch.</p>
   <dl class="imprint">
     <dt>Băng</dt><dd>{esc(pathlib.PurePosixPath(str(run.get("audio", ""))).name)} · {vn_float(float(run.get("audio_seconds") or 0), 2)} giây</dd>
     <dt>Độ khớp</dt><dd>{vn_float((run.get("agreement_rate") or 0) * 100, 1)} % âm tiết · {len(model["disputed"])} chỗ lệch · {invented} chỗ bịa</dd>

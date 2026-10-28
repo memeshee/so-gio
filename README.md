@@ -165,3 +165,13 @@ Requirements: ~1.5 GB disk for models, 6 GB RAM is enough, **no GPU required**. 
 Code MIT. Demo audio: **Google FLEURS `vi_vn`, CC-BY-4.0** — see `corpus/LICENSES.md` for the exact licence
 text and the items excluded for licensing reasons. The extraction dataset (`data/extract/`) is authored by the
 entrant and labelled as such everywhere it is used; it is not a recording and does not claim to be.
+
+## Deployment note (the one thing that needs a human)
+
+The demo is a static build pushed to the `gh-pages` branch and served from GitHub Pages, which cannot spin down.
+The `.tech` domain (`gio.uconfidant.tech`) needs one DNS record at the registrar it was claimed from — a
+`CNAME gio → memeshee.github.io` — plus the custom domain entered in the repository's Pages settings. Until that
+record exists, Pages must **not** be configured with the custom domain, or the `github.io` URL redirects to a
+host that does not resolve: a demo that 301s into nothing is worse than no domain at all. That is a lesson from
+this build, not a theory — the link was briefly broken that way and is checked by
+`python scripts/check_links.py` before every push.

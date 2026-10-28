@@ -13,7 +13,7 @@ From the repository root:
 /home/kiter/.pyenv/versions/3.12.6/bin/python site/build_site.py --run smoke-001
 ```
 
-The script prints every file it writes with its byte size, then parses all four pages and fails
+The script prints every file it writes with its byte size, then parses every page it wrote and fails
 if a tag is unclosed, an id is duplicated, a local reference is missing, or a page points at
 anything outside the folder.
 
