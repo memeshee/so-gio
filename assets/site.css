@@ -89,6 +89,8 @@ p { margin: 0; }
 }
 .runhead b { font-weight: 400; color: var(--ink-2); letter-spacing: 0.1em; }
 
+.seal { margin: 0 0 1.35rem; line-height: 0; }
+
 .masthead h1 {
   font-size: clamp(2.55rem, 9.5vw, 3.9rem);
   line-height: 0.98;
@@ -115,6 +117,12 @@ p { margin: 0; }
   color: var(--ink-3); padding-top: 0.22em;
 }
 .imprint dd { margin: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 480px) {
+  .imprint { grid-template-columns: 1fr; gap: 0; }
+  .imprint dt { padding-top: 0.55rem; }
+  .imprint dd { margin: 0 0 0.4rem; }
+}
 
 .contents {
   display: flex; flex-wrap: wrap; gap: 0.35rem 0.95rem;
@@ -487,7 +495,9 @@ table.data .arrow { color: var(--ink-3); padding: 0 0.1em; }
   .chapter { border-color: #000; }
   .chapter { margin-top: 22pt; }
   .deck, .lede { color: #000; }
-  .masthead h1 { font-size: 28pt; }
+  .seal { margin: 0 0 1.35rem; line-height: 0; }
+
+.masthead h1 { font-size: 28pt; }
   .chapter h2 { font-size: 16pt; }
   .ch-no { font-size: 7.5pt; color: #000; }
   .ch-en, .figure .l, .arm-sub, .small-note, .claim-cite, .reason, .notes, .colophon,

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sổ Giỗ — sổ ghi ngày giỗ của gia đình</title>
-<meta name="description" content="Một cuốn sổ giỗ chỉ ghi những chữ mà hai mô hình nghe cùng nghe thấy, và để trống chỗ nó không nghe thấy.">
+<meta name="description" content="Một cuốn sổ giỗ chỉ ghi những chữ mà cả hai mô hình cùng nghe thấy, và để trống chỗ nó không nghe thấy.">
 <meta name="theme-color" content="#f7f2e8">
 <meta name="color-scheme" content="light">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -19,6 +19,11 @@
 
 <header class="masthead">
   <p class="runhead"><span>Bản chạy <b>smoke-001</b></span><span>tr. 1</span></p>
+  <p class="seal" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 64 64">
+    <rect x="2" y="2" width="60" height="60" rx="6" fill="#1b1a17"/>
+    <rect x="9" y="9" width="46" height="46" rx="2.6" fill="none" stroke="#f7f2e8" stroke-width="2.3"/>
+    <circle cx="32" cy="35.5" r="5.2" fill="#f7f2e8"/>
+  </svg></p>
   <h1>Sổ Giỗ</h1>
   <p class="deck">Ngày giỗ không được quên. Nhưng ký ức thì có thể sai, và máy thì có thể bịa.
     Cuốn sổ này chỉ ghi những chữ mà cả hai tai cùng nghe thấy — và chỉ rõ chỗ nó không nghe thấy gì.</p>
@@ -70,7 +75,9 @@
 </div></div>
 <p class="small-note"><span class="chip">[run.json]</span>
   0,65× nghĩa là mỗi giây băng mất khoảng 1,5 giây máy; 0,32× là khoảng 3,1 giây máy.
-  Hai mô hình đều chạy cục bộ, int8, trên cùng một máy.</p>
+  Hai mô hình đều chạy cục bộ trên cùng một máy; whisper dùng int8, phowhisper chạy float32.
+  Máy trích xuất gemma3:1b-it-qat đọc 327 token
+  và viết 39 token trong 29,3 giây.</p>
 <p class="licence"><strong>Bản ghi trong bản demo này là một câu trong bộ ngữ liệu mở FLEURS
   (Google, CC BY 4.0) — không phải băng riêng của một gia đình.</strong> Nó không nhắc đến giỗ;
   vì thế phần mười năm giỗ ở dưới nói thẳng là chưa có ngày nào, chứ không điền vào chỗ trống.</p>
@@ -82,7 +89,7 @@
   <h2><span class="ch-no" aria-hidden="true">II</span>Bản đọc lại</h2>
   <p class="ch-en" lang="en">Reading copy</p>
   
-<p class="lede">Nguyên văn bản whisper nghe được. Chỗ in nhạt, có chấm dưới là chỗ phowhisper nghe khác;
+<p class="lede">Nguyên văn những gì whisper nghe được. Chữ nhạt, có chấm dưới là chỗ phowhisper nghe khác;
   cả hai cách nghe đều được giữ, không bên nào được chọn làm sự thật.</p>
 
 <label class="toggle no-print" for="marks">
@@ -132,7 +139,7 @@
   <h2><span class="ch-no" aria-hidden="true">V</span>Mười năm giỗ</h2>
   <p class="ch-en" lang="en">Ten years</p>
   
-<p class="lede">Từ ngày âm trong lời kể, lịch tính ra ngày dương cho mười năm tới. Mô hình không được sinh ra
+<p class="lede">Từ ngày âm trong lời kể, lịch tính ra ngày dương cho mười năm tới. Mô hình không được phép sinh ra
   ngày nào; nó chỉ được nhắc lại lời.</p>
 <p class="empty">Lần chạy này không có ngày giỗ nào sống sót, nên không có bảng mười năm. Bản ghi là một câu trong bộ ngữ liệu FLEURS — nó không nhắc đến giỗ, và chúng tôi không điền ngày vào chỗ trống. <b>Một cuốn sổ trung thực phải có quyền để trống.</b></p>
 
@@ -213,7 +220,7 @@
     <rect x="9" y="9" width="46" height="46" rx="2.6" fill="none" stroke="#f7f2e8" stroke-width="2.3"/>
     <circle cx="32" cy="35.5" r="5.2" fill="#f7f2e8"/>
   </svg> <b>Sổ Giỗ</b> · bản demo tĩnh</p>
-  <p>Dựng lúc 07:59 · 28 tháng 10, 2026 (+07) từ
+  <p>Dựng lúc 08:02 · 28 tháng 10, 2026 (+07) từ
     <span class="chip">data/runs/smoke-001/run.json</span>
     và <span class="chip">data/oracle/report.json</span>.
     Không có yêu cầu mạng nào khi mở trang: chữ, dấu và mã đều nằm trong thư mục này.</p>
